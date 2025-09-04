@@ -1,0 +1,55 @@
+/* Simple styling for ReadtheDocs theme */
+
+/* Image Placeholders */
+img[alt*="Placeholder"] {
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+  padding: 20px;
+  background: #f8f9fa;
+  display: block;
+  width: 100%;
+  min-height: 150px;
+  text-align: center;
+  color: #666;
+  font-weight: normal;
+}
+
+/* Code blocks */
+pre {
+  background: #f8f9fa;
+  border: 1px solid #e1e4e8;
+  border-radius: 3px;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+table th {
+  background: #f6f8fa;
+  padding: 8px 12px;
+  border: 1px solid #d1d5da;
+}
+
+table td {
+  padding: 8px 12px;
+  border: 1px solid #d1d5da;
+}
+
+/* Simple navigation for pages */
+.wy-nav-content-wrap {
+  margin-left: 300px;
+}
+
+.wy-nav-side {
+  width: 300px;
+}
+
+/* Right sidebar table of contents */
+.rst-content .toctree-wrapper > p.caption {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}

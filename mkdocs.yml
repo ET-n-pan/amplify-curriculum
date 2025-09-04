@@ -1,0 +1,122 @@
+site_name: "Amplify Gen2 学習カリキュラム"
+site_description: "Guide for AWS Amplify development using Vue.js 3 with TypeScript, UI5 Web Components, and SAP integration"
+site_author: "Nilei Pan"
+
+theme:
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - typescript
+    - javascript
+    - bash
+    - json
+
+nav:
+  - ホーム: index.md
+  - Prerequisites: prerequisites.md
+  - 準備:
+    - Day 1 - キックオフ & セットアップ: foundation/day01-kickoff-setup.md
+    - Day 2 - Amplify Gen2基礎: foundation/day02-amplify-gen2-basics.md
+    - Day 3 - Authentication (Cognito): foundation/day03-authentication.md
+  - UI開発:
+    - Day 4 - UI5 Web ComponentsをVueで利用(試作)①: ui-development/day04-ui5-components-1.md
+    - Day 5 - UI5 Web ComponentsをVueで利用(試作)②: ui-development/day05-ui5-components-2.md
+    - Day 6 - AG Gridを使ったExcelライクな画面表現を試作: ui-development/day06-ag-grid.md
+  - データ管理:
+    - Day 7 - Amplify Dataの基本: data-management/day07-amplify-data.md
+    - Day 8 - SAP ODataの理解（SandBoxでの叩き方）: data-management/day08-sap-odata.md
+    - Day 9 - バックエンド連携①: data-management/day09-backend-integration-1.md
+    - Day 10 - バックエンド連携②: data-management/day10-backend-integration-2.md
+  - アプリケーション開発:
+    - Day 11 - ドメイン決定 & API Design: application/day11-domain-api-design.md
+    - Day 12 - フロントエンド実装&更新処理実装①: application/day12-frontend-implementation-1.md
+    - Day 13 - フロントエンド実装②: application/day13-frontend-implementation-2.md
+    - Day 14 - エラーハンドリングなど: application/day14-error-handling.md
+  - 振り返り:
+    - Day 15 - 仕上げ&振り返り: completion/day15-final-review.md
+  - 付録:
+    - トラブルシューティング: appendices/troubleshooting.md
+    - ベストプラクティス: appendices/best-practices.md
+    - リソース: appendices/resources.md
+
+plugins:
+  - search:
+      lang: en
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      slide_effect: slide
+      width: 100%
+      height: auto
+      zoomable: true
+      draggable: true
+      skip_classes:
+        - custom-skip-class-name
+  - git-revision-date-localized:
+      type: timeago
+      fallback_to_build_date: true
+      enable_creation_date: true
+  # - with-pdf:
+  #     author: "Nilei Pan"
+  #     cover: true
+  #     cover_title: "AWS Amplify Development Manual"
+  #     cover_subtitle: "Complete Guide for Vue.js 3 + TypeScript + SAP Integration"
+  #     back_cover: true
+  #     output_path: "pdf/AWS-Amplify-Development-Manual.pdf"
+  #     enabled_if_env: ENABLE_PDF_EXPORT
+  #     debug_html: false
+  #     show_anchors: false
+  #     verbose: false
+  #     render_js: true
+  #     toc_title: "Table of Contents"
+  #     heading_shift: false
+  #     toc_level: 3
+  #     ordered_chapter_level: 2
+  #     headless_chrome_path: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      title: "On this page"
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+      use_pygments: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra_css:
+  - stylesheets/extra.css
+
+# extra_javascript:
+#   - javascripts/copy-code.js
