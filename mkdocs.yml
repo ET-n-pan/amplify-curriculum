@@ -14,7 +14,6 @@ theme:
 
 nav:
   - ホーム: index.md
-  - Prerequisites: prerequisites.md
   - 準備:
     - Day 1 - キックオフ & セットアップ: foundation/day01-kickoff-setup.md
     - Day 2 - Amplify Gen2基礎: foundation/day02-amplify-gen2-basics.md
