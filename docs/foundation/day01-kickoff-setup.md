@@ -19,7 +19,11 @@ https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
 #### nodejsインストールページ
 https://nodejs.org/ja/download
-![nodejsインストールページ-install](../images/screenshots/d1-install-nodejs.png)
+![nodejs-install](../images/screenshots/d1-install-nodejs.png)
+
+#### Gitインストールページ
+https://git-scm.com/downloads/win
+![git-install](../images/screenshots/d1-install-git.png)
 
 ### オプション２：コマンドラインで環境構築
 #### Powershellを管理者として実行
@@ -71,6 +75,8 @@ npm install
 ```
 # ローカルでプロジェクトを起動
 npm run dev
+
+# ctrl+cでプロジェクトを終了
 ```
 
 ![npm-run](../images/screenshots/d1-npm-run.png)

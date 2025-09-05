@@ -43,17 +43,25 @@ $env:AWS_SESSION_TOKEN="先ほど生成したSessionToken変更"
 npx ampx sandbox
 ```
 
+### Amplifyコンソール画面でサンドボックスを確認
+![sandbox-check](../images/screenshots/d2-sandbox-create.png)
+
+### サンドボックスが正常にデプロイ済みを確認
+![sandbox-confirm](../images/screenshots/d2-sandbox-confirm.png)
+
 ### 新しいターミナルを起動して、プロジェクトを起動
-![env-setting](../images/screenshots/d2-new-terminal.png)
+![new-terminal](../images/screenshots/d2-new-terminal.png)
 
 ### フロントエンド起動
 フロントエンドは未編集なのでデフォルトのページのままで正解
-![env-setting](../images/screenshots/d2-success.png)
+![success](../images/screenshots/d2-success.png)
 
+
+### 確認完了後、二つのターミナルでctrl+cでプロセスを終了
 ### 現在プロジェクト構成
 
 ```
-amplify-training-project/
+amplify-vue-ts-project/
 ├── amplify/
 │   ├── auth/                    # 認証用設定
 │   ├── data/                    # データモデルとAPIスキーマ
@@ -66,15 +74,6 @@ amplify-training-project/
 └── amplify_outputs.json         # Amplify生成した設定ファイル
 ```
 
-
-
-### サンドボックスとは
-サンドボックスフルスタックのテスティングや開発ローカルで作動する環境
-
-- **Runs locally** ローカル環境でAWSサービスを利用
-- **Isolates development** 本番環境と分離
-- **Hot reloads** リアルタイムでバックエンドの編集
-- **Auto-cleanup** 不要のリソースを自動整理
 
 ## トラブルシューティング
 
