@@ -34,7 +34,7 @@ $env:AWS_ACCESS_KEY_ID="先ほど生成したAccessKeyIdに変更"
 $env:AWS_SECRET_ACCESS_KEY="先ほど生成したSecretAccessKeyに変更"
 $env:AWS_SESSION_TOKEN="先ほど生成したSessionToken変更"
 ```
-```
+
 ### ターミナルにコピペして実行
 ![env-setting](../images/screenshots/d2-env-setting.png)
 
