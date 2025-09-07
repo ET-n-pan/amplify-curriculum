@@ -1,6 +1,7 @@
 # Day 2: Amplify Gen2基礎
 
 ## ゴール
+!!! success "Day 2 Goals"
 - VueプロジェクトでAmplifyを初期化する
 - Amplify CLIとSandboxの起動
 - Amplifyバックエンドをデプロイ

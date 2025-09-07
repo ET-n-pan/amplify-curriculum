@@ -2,10 +2,11 @@
 
 
 ## ゴール
-- フロントエンドにログイン機能を実装する
-- Vue Routerを使用したページ遷移の実装
-- デフォルト（ホーム）ページの設定
-- Amazon Cognitoユーザープールでのユーザー管理
+!!! success "Day 3 Goals"
+    - フロントエンドにログイン機能を実装する
+    - Vue Routerを使用したページ遷移の実装
+    - デフォルト（ホーム）ページの設定
+    - Amazon Cognitoユーザープールでのユーザー管理
 
 ## ルーターコンポーネントのインストール
 プロジェクトフォルダーを開き、
@@ -20,7 +21,7 @@ npm run dev
 ```
 
 ## プロジェクトフォルダー確認と作成
-src/　フォルダーの下でlayout/と
+src/フォルダーの下でlayout/とrouter/を作成
 ```
 amplify-vue-ts-project/
 ├── amplify/
@@ -33,7 +34,7 @@ amplify-vue-ts-project/
 ├── src/
 │   ├── asset/               # 静的ファイル（画像、アイコン、フォント等）
 │   ├── components/          # 再利用可能なVueコンポーネント（ボタン、フォーム等）
-│   ├── layout/              # →フォルダーを作成。ページレイアウトコンポーネント（ヘッダー、フッター、サイドバー）
+│   ├── layout/              # →フォルダーを作成。ページレイアウトコンポーネント
 │   ├── router/              # →フォルダーを作成。ルーティング設定（ページ遷移、認証ガード）
 │   ├── App.vue              # アプリケーションのルートコンポーネント
 │   ├── main.ts              # アプリケーションエントリーポイント（Vue初期化）
@@ -59,7 +60,7 @@ amplify-vue-ts-project/
     </authenticator>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { Authenticator } from "@aws-amplify/ui-vue";
 import "@aws-amplify/ui-vue/styles.css";
 </script>
