@@ -38,13 +38,10 @@ amplify-vue-ts-project/
 ├── src/
 │   ├── asset/               
 │   ├── components/
-│       ├── base/               # -> フォルダーを作成。基本的なUI5コンポーネント
-│           └── UserContent.vue # -> ファイルを作成。ユーザーコンテンツ表示用のUI5カードコンポーネント
 │   ├── layout/
 │   ├── router/
 │   ├── pages/                  # -> フォルダーを作成。アプリの各ページコンポーネント
-│       ├── Orders2Page.vue     # -> ファイルを作成。注文管理ページ
-│       └── SapUploadPage.vue   # -> ファイルを作成。SAPデータアップロードページ
+│       └── Orders2Page.vue     # -> ファイルを作成。注文管理ページ
 │   ├── stores/                 # -> フォルダーを作成。Piniaストア（状態管理）
 │       ├── form-store.js       # -> ファイルを作成。フォームデータ管理用のPiniaストア
 │       └── global-store.js     # -> ファイルを作成。グローバル状態管理用のPiniaストア
@@ -119,45 +116,47 @@ import "@ui5/webcomponents-icons/dist/da.js";
 注文ページとSAPアップロードページのルートを追加
 ```
 # src/router/index.ts
+// Vue Router: ページ遷移を管理するライブラリのインポート
+import { createRouter, createWebHashHistory, type RouteRecordRaw } from "vue-router";
 
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-
+// TypeScript: ルート設定の型定義
 const routes: RouteRecordRaw[] = [
-    {
-        path: '/', // ルートパス：ホームページ
-        name: 'Home', // ルート名
-        component: () => import("../layout/MainLayout.vue"), 
-    },
-    {
-    path: "/orders2", // 注文ページのパス
+  {
+    path: "/",                                           // ルートパス: ホームページのURL
+    name: "home",                                        // ルート名: プログラムでナビゲーション時に使用
+    component: () => import("../layout/MainLayout.vue"), // 遅延読み込み: 必要時にコンポーネントを読み込み
+  },
+  {
+    path: "/orders2",                                    // 注文ページのパス
     component: () => import("../layout/MainLayout.vue"), // 親レイアウト: 共通のヘッダー・フッターを表示
-    children: [ // 子ルート: 親レイアウト内に表示されるページ
+    children: [                                          // 子ルート: 親レイアウト内に表示されるページ
       {
-        path: "", // 空パス: /orders2 にアクセス時に表示される子コンポーネント
-        name: "orders2", // ルート名: プログラムでナビゲーション時に使用
+        path: "",                                        // 空パス: /orders2 にアクセス時に表示される子コンポーネント
+        name: "orders2",                                 // ルート名: プログラムでナビゲーション時に使用
         component: () => import("../pages/Orders2Page.vue"), // 実際の注文ページコンポーネント
       },
     ],
   },
   {
-    path: "/upload5", // アップロードページのパス
+    path: "/plan3",                                    // アップロードページのパス
     component: () => import("../layout/MainLayout.vue"), // 同じレイアウトを使用
     children: [
       {
-        path: "", // /upload5 アクセス時の子コンポーネント
-        name: "upload5",
-        component: () => import("../pages/SapUploadPage.vue"), // SAPアップロード機能のページ
+        path: "",                                        // AgGridアクセス時の子コンポーネント
+        name: "",
+        component: () => import("../pages/AgGridPage.vue"), // AgGridPage コンポーネントを表示
       },
     ],
   },
 ];
 
+// ルーター作成: 上記のルート設定でルーターインスタンスを作成
 const router = createRouter({
-  history: createWebHashHistory(),
-  routes,
+  history: createWebHashHistory(), // ハッシュモード: URL に # が付く (例: domain.com/#/orders2)
+  routes, // ルート設定を適用
 });
 
-export default router; // ルーターをエクスポート
+export default router; // 他のファイルで使用できるようにエクスポート
 ``` 
 
 ## MainLayout.vueにヘッダー追加
@@ -175,7 +174,7 @@ Mainlayout.vueファイルを以下のコードに更新
             <ui5-shellbar notifications-count="5" show-notifications @ui5-profile-click="">
 
                 <!-- メニューボタン -->
-                <ui5-button icon="menu2" slot="startButton"></ui5-button>
+                <ui5-button icon="menu2" slot="startButton" @click="toggleSidebar"></ui5-button>
 
                 <!-- 戻るボタン -->
                 <ui5-button icon="nav-back" slot="startButton"></ui5-button>
@@ -272,6 +271,48 @@ const profile = () => {
 ```
 ### ユーザーアイコンをクリックすると以下のようなメニューが表示される
 ![user-menu](../images/screenshots/d4-user-profile.png)
+
+
+## sidebarコンポーネントの追加
+`<ui5-navigation-layout>`の中に`<ui5-side-navigation>`コンポーネントを追加して、サイドナビゲーションを実装
+```
+<!-- src/layout/MainLayout.vue -->
+<!-- sidebar -->
+<ui5-side-navigation slot="sideContent" @selection-change="changeMenu">
+  <ui5-side-navigation-item v-for="item in navItems" :key="item.path" :text="item.label" :icon="item.icon" :data-route="item.path" />
+</ui5-side-navigation>
+```
+`<script setup>`の中に以下のコードを追加
+```
+import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
+import NavigationLayoutMode from "@ui5/webcomponents-fiori/dist/types/NavigationLayoutMode.js";
+
+
+
+// ナビゲーションアイテム
+const navItems = [
+  { path: "/plan3", label: "AgGridテーブル", icon: "table-chart" },
+  { path: "/orders2", label: "注文情報試作", icon: "my-sales-order" },
+];
+// サイドバーの表示・非表示を切り替える関数
+const toggleSidebar = () => {
+  if (layoutRef.value) {
+    layoutRef.value.mode = layoutRef.value.isSideCollapsed() ? NavigationLayoutMode.Expanded : NavigationLayoutMode.Collapsed;
+  }
+};
+// メニュー選択変更イベントハンドラ
+const changeMenu = (event) => {
+  const selectedItem = event.detail.item;
+  const route = selectedItem.getAttribute("data-route");
+  if (route) {
+    router.push(route);
+  }
+};
+
+```
+
+### メニューボタンをクリックすると以下のようにサイドバーが表示される
+![sidebar](../images/screenshots/d4-side-bar.png)
 
 
 ## トラブルシューティング
