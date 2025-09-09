@@ -1,28 +1,28 @@
 # Day 6: Ag-Grid
 
-## ゴール
+# ゴール
 !!! success "Day 6 Goals"
-- Ag-Gridのインストール
-- 基本的なエクセルライクテーブルの実装
+    - Ag-Gridのインストール
+    - セルを編集可能なエクセルライクテーブルの実装
+    - セル編集時に他のセルを自動計算で更新
 
-## Ag-Gridインストール
-### ターミナルで以下のコマンドを実行
+# Ag-Gridインストール
+## ターミナルで以下のコマンドを実行
 ```
 npm install -D sass-embedded
 npm install ag-grid-community@latest ag-grid-vue3@latest
 ```
 
-## Ag-Gridの実装
-### `src/components/base/AgGridTable.vue`を以下のコードに置き換え
+# Ag-Gridの実装
+---
+## Step 1: 最小限のグリッド表示
 ```
 <template>
   <div class="mt-20 mx-5">
-    <ui5-title level="H2" size="H2">AgGridTable</ui5-title>
+    <ui5-title level="H2">注文一覧（ag-Grid）</ui5-title>
     <ag-grid-vue
       :columnDefs="columnDefs"
-      :headerHeight="30"
-      :rowHeight="35"
-      :rowData="formStore.orders"
+      :rowData="rowData"
       :defaultColDef="defaultColDef"
       :theme="theme"
       style="height: 240px"
@@ -35,113 +35,37 @@ import { ref } from "vue";
 import { AgGridVue } from "ag-grid-vue3";
 import { themeAlpine, AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import "@ui5/webcomponents/dist/Title.js";
-import { useFormStore } from "../../stores/form-store";
 
-// コミュニティ版のモジュール登録
+// ag-Grid v33以降は必須
 ModuleRegistry.registerModules([AllCommunityModule]);
 const theme = ref(themeAlpine);
 
-// フォームストアの使用
-const formStore = useFormStore();
-
-// Emits for parent component
-const emit = defineEmits(['selection-changed']);
-
-// デフォルトのカラム定義
-const defaultColDef = {
-  sortable: true,
-  filter: true,
-  resizable: true,
-  editable: true
-};
-
-// 通貨文字列を数値に変換する関数
-const parseCurrency = (val) => {
-  if (typeof val === "string") {
-    return parseFloat(val.replace(/[¥,]/g, "")) || 0;
-  }
-  return val || 0;
-};
-
-// 数値を通貨形式の文字列に変換する関数
-const formatCurrency = (val) => {
-  const num = parseFloat(val);
-  if (isNaN(num)) return "";
-  return `¥${num.toLocaleString()}`;
-};
-
-const recalculateEstimateCost = (params) => {
-  const data = params.data;
-  const quantity = parseCurrency(data.quantity);
-  const unitPrice = parseCurrency(data.unitPrice);
-  data.estimatedCost = quantity * unitPrice;
-
-  // テーブルとストアの両方を更新
-  params.api.applyTransaction({ update: [data] });
-  formStore.updateOrder(data.id, data);
-};
-
-const columnDefs = ref([
-  {
-    headerName: "注文ID",
-    field: "id",
-    flex: 1,
-    minWidth: 120
-  },
-  {
-    headerName: "顧客コード",
-    field: "customerCode",
-    flex: 1,
-  },
-  {
-    headerName: "商品コード",
-    field: "productCode",
-    flex: 1,
-  },
-  {
-    headerName: "数量",
-    field: "quantity",
-    flex: 1,
-    editable: true,
-    type: 'numericColumn',
-    onCellValueChanged: recalculateEstimateCost,
-  },
-  {
-    headerName: "単価",
-    field: "unitPrice",
-    flex: 1,
-    editable:true,
-    type: 'numericColumn',
-    valueFormatter: (params) => formatCurrency(params.value),
-    valueParser: (params) => parseCurrency(params.newValue),
-    onCellValueChanged: recalculateEstimateCost,
-  },
-  {
-    headerName: "見積り",
-    field: "estimatedCost",
-    flex: 1,
-    type: 'numericColumn',
-    valueFormatter: (params) => formatCurrency(params.value),
-    valueParser: (params) => parseCurrency(params.newValue),
-    onCellValueChanged: recalculateEstimateCost,
-  },
-  {
-    headerName: "納期",
-    field: "deliveryDate",
-    flex: 1,
-  },
-  {
-    headerName: "作成日時",
-    field: "createdAt",
-    flex: 1,
-  }
+// テスト用の仮データ
+const rowData = ref([
+  { id: 1, customerCode: "CUST001", productCode: "PROD-A", quantity: 10 }
 ]);
 
-</script>
+// グリッドの基本設定
+const defaultColDef = {
+  sortable: true,    // ソート可能
+  filter: true,      // フィルター可能
+  resizable: true    // 列幅変更可能
+};
 
+// 表示する列の定義
+const columnDefs = ref([
+  { headerName: "注文ID", field: "id", flex: 1 },
+  { headerName: "顧客コード", field: "customerCode", flex: 1 },
+  { headerName: "商品コード", field: "productCode", flex: 1 },
+  { headerName: "数量", field: "quantity", flex: 1 }
+]);
+</script>
 ```
 
-### `src/pages/AgGridPage`を作成し、以下のコードを追加
+
+
+
+## `src/pages/AgGridPage`を作成し、以下のコードを追加
 ```
 <template>
   <div class="mx-10 my-10">
@@ -150,21 +74,184 @@ const columnDefs = ref([
 </template>
 
 <script setup >
-import AgGridTable from "../components/base/AgGridTable.vue";
+import AgGridTable from "@/components/base/AgGridTable.vue";
 </script>
 ```
 
-##　UIの確認
-
-### `npm run dev`でローカルサーバーを起動し、http://localhost:5173/#/plan3 にアクセス
+## `npm run dev`でローカルサーバーを起動し、ag-Gridの画面にアクセス
 ![ag-grid-success](../images/screenshots/d6-agtable.png)
 
-### 数量や単価を変更し、見積りが自動計算されることを確認
+---
+
+## ハンズオン1: ストアのデータをAg-Gridに表示
+上のコードを修正し、Day5で作ったストアのデータを表示しましょう。
+
+###　ヒント
+- `useFormStore`をインポート
+- `rowData`を仮データからストアのデータに変更
+
+<details>
+<summary>解答例</summary>
+```
+// インポート追加
+import { useFormStore } from "@/stores/form-store";
+const formStore = useFormStore();
+
+// rowDataを変更
+const rowData = formStore.orders; // refは不要（ストアが既にリアクティブ）
+```
+</details>
+
+&nbsp;
+
+###　確認ポイント
+- Day5で作成した注文情報が表示されていること
+- 新しく注文を追加した場合、Ag-Gridの表示も更新されること
+
+## ハンズオン2: セル編集と列の追加
+- `columnDefs`を修正し、以下の列を追加しましょう。
+    - 単価（unitPrice）
+    - 見積り（estimatedCost）
+    - 作成日（createdAt）
+    - 納期（deliveryDate）
+- `defaultColDef`に1行追加し、全ての列を編集可能にしましょう。
+
+###　ヒント
+- `columnDefs`に列を追加
+- AgGridのドキュメントを参考に：https://www.ag-grid.com/vue-data-grid/cell-editing/
+
+<details>
+<summary>解答例</summary>
+```
+const defaultColDef = {
+  sortable: true,
+  filter: true,
+  resizable: true,
+  editable: true // 追加
+};
+
+const columnDefs = ref([
+  { headerName: "注文ID", field: "id", flex: 1 },
+  { headerName: "顧客コード", field: "customerCode", flex: 1 },
+  { headerName: "商品コード", field: "productCode", flex: 1 },
+  { headerName: "数量", field: "quantity", flex: 1 },
+  // 以下を追加
+  { headerName: "単価", field: "unitPrice", flex: 1 },
+  { headerName: "見積金額", field: "estimatedCost", flex: 1 },
+  { headerName: "納期", field: "deliveryDate", flex: 1 },
+  { headerName: "作成日", field: "createdAt", flex: 1 }
+]);
+```
+</details>
+&nbsp;
+###　確認ポイント
+- 追加した列が表示されていること
+- どのセルでもクリックすると編集可能になっていること
+![ag-grid-editable](../images/screenshots/d6-table-editable.png)
+<hr>
+
+## Step 2: 見積りの自動計算
+通貨フォマット関数を追加
+```
+// 通貨を扱うヘルパー関数
+// "¥1,000"のような文字列を数値に変換
+const parseCurrency = (val) => {
+  if (typeof val === "string") {
+    return parseFloat(val.replace(/[¥,]/g, "")) || 0;
+  }
+  return val || 0;
+};
+// 数値を"¥1,000"のような通貨フォーマットに変換
+const formatCurrency = (val) => {
+  const num = parseFloat(val);
+  if (isNaN(num)) return "";
+  return `¥${num.toLocaleString()}`;
+};
+```
+自動計算関数
+```
+// 見積り自動計算
+const recalculateEstimateCost = (params) => {
+  const data = params.data;
+  const quantity = parseCurrency(data.quantity);
+  const unitPrice = parseCurrency(data.unitPrice);
+  
+  // 見積金額を計算
+  data.estimatedCost = quantity * unitPrice;
+  
+  // グリッドを更新
+  params.api.applyTransaction({ update: [data] });
+  
+  // ストアも更新（永続化のため）
+  formStore.updateOrder(data.id, data);
+};
+```
+セル編集終了時に自動計算関数を呼び出す
+```
+{ headerName: "数量", field: "quantity", flex: 1,
+  onCellValueChanged: recalculateEstimateCost // 追加
+},
+{
+  headerName: "単価", field: "unitPrice", flex: 1,
+  onCellValueChanged: recalculateEstimateCost // 追加
+}
+```
+
+### 確認ポイント
+- 数量や単価を変更し、見積りが自動計算されること
 ![ag-grid-edit](../images/screenshots/d6-table-auto-cal.png)
+---
+## ハンズオン3: 金額の通貨フォーマット
+単価と見積りの列に通貨フォーマットを追加しましょう。
+### ヒント
+- `valueFormatter`プロパティを使用
+- `formatCurrency`関数を使用
 
-### 画面右上のメニューから注文情報試作にアクセスし、注文情報試作画面に遷移できることを確認
-![navigate-orders2](../images/screenshots/d6-navigate-orders2.png)
+<details>
+<summary>解答例</summary>
+```
+{
+  headerName: "単価", field: "unitPrice", flex: 1,
+  onCellValueChanged: recalculateEstimateCost,
+  valueFormatter: (params) => formatCurrency(params.value) // 追加
+},
+{
+  headerName: "見積金額", field: "estimatedCost", flex: 1,
+  valueFormatter: (params) => formatCurrency(params.value) // 追加
+}
+```
+</details>
+&nbsp;
 
-### 注文情報で注文を追加し、AgGridテーブルに反映されることを確認
-![add-order](../images/screenshots/d6-add-order.png)
-![add-order-grid](../images/screenshots/d6-add-order-aggrid.png)
+### 確認ポイント
+- 単価と見積りのセルが"¥1,000"のような通貨フォーマットで表示されていること
+![ag-grid-currency](../images/screenshots/d6-table-currency.png)
+
+---
+
+## チャレンジタスク
+- 注文IDの列を編集不可にする
+- 全てのセルをページをリロードしても編集内容が残るようにする
+
+# トラブルシューティング
+- Ag-Gridのスタイルが適用されない場合
+  - `main.js`に以下のインポートがあるか確認
+  ```
+  import 'ag-grid-community/styles/ag-grid.css';
+  import 'ag-grid-community/styles/ag-theme-alpine.css';
+  ```
+
+- モジュールが登録されていないエラーが出る場合
+  - `AgGridVue`のインポートと`ModuleRegistry.registerModules`のコードがあるか確認
+  ```
+  import { AgGridVue } from 'ag-grid-vue3';
+  import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+  
+  ModuleRegistry.registerModules([AllCommunityModule]);
+  ```
+
+# 参考資料
+- Ag-Grid公式ドキュメント（Vue3）: https://www.ag-grid.com/vue-data-grid/
+- Ag-Grid公式ドキュメント（セル編集）: https://www.ag-grid.com/vue-data-grid/cell-editing/
+
+

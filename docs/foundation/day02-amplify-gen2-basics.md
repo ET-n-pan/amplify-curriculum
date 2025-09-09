@@ -2,9 +2,9 @@
 
 ## ゴール
 !!! success "Day 2 Goals"
-- VueプロジェクトでAmplifyを初期化する
-- Amplify CLIとSandboxの起動
-- Amplifyバックエンドをデプロイ
+    - VueプロジェクトでAmplifyを初期化する
+    - Amplify CLIとSandboxの起動
+    - Amplifyバックエンドをデプロイ
 
 ## Amplifyインストール
 ### vscodeでプロジェクトフォルダーを開く

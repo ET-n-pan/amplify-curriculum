@@ -10,6 +10,16 @@
     - オーダー管理ページとSAPデータアップロードページを実装する
 
 
+## 前提知識キャッチアップ
+### Piniaストアとは
+アプリケーション全体でデータを共有する仕組みです。
+- グローバルストア: ユーザー情報やアプリの状態を管理
+- フォームストア: 注文入力フォームの状態とロジックを管理
+公式ドキュメント: https://pinia.vuejs.org/introduction.html
+
+
+
+
 ## プロジェクト起動
 ```
 npm run dev
@@ -78,7 +88,7 @@ export const useGlobalStore = defineStore("global", {
 `<script setup>`の下に以下のコードを追加/変更
 ```
 import { ref } from "vue";　ーー＞　 import { ref, getCurrentInstance } from "vue"; 
-import { useGlobalStore } from "../stores/global-store"; 
+import { useGlobalStore } from "@/stores/global-store"; 
 
 const globalStore = useGlobalStore();
 
