@@ -375,7 +375,7 @@ const deleteOrder = () => {
 #### 動作確認
 ![order-page](../images/screenshots/d5-order-page-structure.png)
 
-## Hands-on 2: フォームの実装
+## ハンズオン 2: フォームの実装
 ### 注文入力フォームの実装
 `<ui5-panel>`内に以下のコードを追加
 ```
@@ -499,7 +499,7 @@ const deleteOrder = () => {
 
 
 
-## Hands-on 2: 注文追加と削除機能の実装
+## ハンズオン 2: 注文追加と削除機能の実装
 `formStore`でTODOとなっている部分を実装しましょう。
 ### 注文追加の実装
 

@@ -162,7 +162,7 @@ app.use(router);
 app.mount('#app');
 ```
 
-### Hands-on: Style.cssインポート
+### ハンズオン 1: Style.cssインポート
 style.cssをインポートしましょう。
 #### ヒント
 - `import`を使用

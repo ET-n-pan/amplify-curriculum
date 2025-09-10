@@ -4,8 +4,10 @@
 ## ゴール
 
 !!! success "Day 4 Goals"
-    - Vue.jsプロジェクトにUI5 Web Componentsをインストールして設定する
-    - Fiori風UI5コンポーネントを実装する
+    - UI5 Web Componentsのインストールと設定
+    - ナビゲーションバーの実装
+    - サイドバーの実装
+    - ユーザーメニューの実装
 
 
 ## UI5 Web Componentsのインストール
@@ -57,7 +59,7 @@ amplify-vue-ts-project/
 ```
 
 
-## UI5FormComp.js更新
+## Step 1: UI5FormComp.js更新
 src/lib/UI5FormComp.jsを以下のコードに更新
 ```
 // src/lib/UI5FormComp.js
@@ -91,7 +93,7 @@ import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/da.js";
 ```
 
-## router/index.ts更新
+## Step 2: router/index.ts更新
 ルーター設定ファイルを以下のコードに更新
 
 注文ページとSAPアップロードページのルートを追加
@@ -130,7 +132,7 @@ const router = createRouter({
 export default router; // 他のファイルで使用できるようにエクスポート
 ``` 
 
-## MainLayout.vueにヘッダー追加
+## Step 3: MainLayout.vueにヘッダー追加
 Mainlayout.vueファイルを以下のコードに更新
 ```
 # src/layout/MainLayout.vue
@@ -144,30 +146,8 @@ Mainlayout.vueファイルを以下のコードに更新
             <!-- シェルバーの設定: 通知数、通知表示、プロフィールクリックイベント -->
             <ui5-shellbar notifications-count="5" show-notifications @ui5-profile-click="">
 
-                <!-- メニューボタン -->
-                <ui5-button icon="menu2" slot="startButton" @click="toggleSidebar"></ui5-button>
+                // TODO: ユーザーメニューコンポーネントをここに追加
 
-                <!-- 戻るボタン -->
-                <ui5-button icon="nav-back" slot="startButton"></ui5-button>
-
-                <!-- ブランドロゴとタイトル -->
-                <ui5-shellbar-branding slot="branding">
-                    <img slot="logo" src="https://ui5.github.io/webcomponents/images/sap-logo-svg.svg" />
-                </ui5-shellbar-branding>
-
-                <!-- トライアルタグ -->
-                <ui5-tag color-scheme="7" slot="content" design="Information">Trial</ui5-tag>
-                
-                <!-- スペーサー -->
-                <ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
-                
-                <!-- 検索フィールド -->
-                <ui5-input placeholder="Instructions" slot="searchField"></ui5-input>
-                
-                <!-- ユーザーアバター -->
-                <ui5-avatar slot="profile">
-                    <img :src="defaultAvatar" />
-                </ui5-avatar>
             </ui5-shellbar>
         </ui5-navigation-layout>
         <main style="padding: 20px;">
@@ -193,9 +173,64 @@ const defaultAvatar = "https://ui5.sap.com/resources/sap/m/themes/base/img/Perso
 </script>
 ```
 ### ログイン後に以下のようなナビゲーションバーが表示される
+通知アイコンが表示されるが、クリックしてもまだ何も起こらない
+![nav-bar-incomplete](../images/screenshots/d4-nav-bar-incomplete.png)
+
+## ハンズオン 1: ナビゲーションバーの完成
+
+以下の3つのコンポーネントを追加して、ナビゲーションバーを完成させましょう
+
+- ユーザーメニューアイコン
+- サイドバーメニューコンポーネント
+- サーチバーコンポーネント
+- SAPロゴコンポーネント
+- トライアルタグ
+
+### 完成図：
 ![mainlayout](../images/screenshots/d4-nav-bar.png)
 
-## user-menuコンポーネントを追加
+### ヒント
+- それぞれのコンポーネントは`<ui5-shellbar>`の中に追加
+- 公式ドキュメントを参考に実装
+    - [ShellBar](https://ui5.github.io/webcomponents/components/fiori/ShellBar/)
+    - [ShellBarSearch](https://ui5.github.io/webcomponents/components/fiori/ShellBarSearch/)
+    - [ShellBarBranding](https://ui5.github.io/webcomponents/components/fiori/ShellBarBranding/)
+
+<details>
+<summary>解答例</summary>
+```
+<!-- シェルバーの設定: 通知数、通知表示、プロフィールクリックイベント -->
+<ui5-shellbar notifications-count="5" show-notifications @ui5-profile-click="onProfileClick">
+    
+    <!-- メニューボタン -->
+    <ui5-button icon="menu2" slot="startButton" @click="toggleSidebar"></ui5-button>
+    
+    <!-- 戻るボタン -->
+    <ui5-button icon="nav-back" slot="startButton" ></ui5-button>
+    
+    <!-- ブランドロゴとタイトル -->
+    <ui5-shellbar-branding slot="branding">
+        <img slot="logo" src="https://ui5.github.io/webcomponents/images/sap-logo-svg.svg" />
+    </ui5-shellbar-branding>
+    
+    <!-- トライアルタグ -->
+    <ui5-tag color-scheme="7" slot="content" design="Information">Trial</ui5-tag>
+    
+    <!-- 検索フィールド -->
+    <ui5-input placeholder="Instructions" slot="searchField"></ui5-input>
+    
+    <!-- ユーザーアバター -->
+    <ui5-avatar slot="profile">
+        <img :src="defaultAvatar" />
+    </ui5-avatar>
+</ui5-shellbar>
+```
+</details>
+&nbsp;
+
+---
+
+## Step 4: user-menuコンポーネントを追加
 `<ui5-navigation-layout>`の中に`<ui5-user-menu>`コンポーネントを追加して、ユーザーアカウントメニューを実装
 ```# src/layout/MainLayout.vue
 <!-- ユーザーメニュー、サインアウトイベント -->
@@ -244,7 +279,7 @@ const profile = () => {
 ![user-menu](../images/screenshots/d4-user-profile.png)
 
 
-## sidebarコンポーネントの追加
+## Step 5: sidebarコンポーネントの追加
 `<ui5-navigation-layout>`の中に`<ui5-side-navigation>`コンポーネントを追加して、サイドナビゲーションを実装
 ```
 <!-- src/layout/MainLayout.vue -->

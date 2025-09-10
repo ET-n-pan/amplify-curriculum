@@ -78,7 +78,7 @@ import AgGridTable from "@/components/base/AgGridTable.vue";
 </script>
 ```
 
-### Hands-on 1: '/src/router/index.ts'にルートを追加
+### ハンズオン 1: '/src/router/index.ts'にルートを追加
 `/src/router/index.ts`にTODOの部分を追加し、`/ag-grid`で上のページにアクセスできるようにしましょう。
 #### ヒント
 - 既存のルートを参考に、`path`と`component`を指定
@@ -100,6 +100,7 @@ import AgGridTable from "@/components/base/AgGridTable.vue";
 },
 ```
 </details>
+&nbsp;
 
 
 ### `npm run dev`でローカルサーバーを起動し、ag-Gridの画面にアクセス
@@ -107,7 +108,7 @@ import AgGridTable from "@/components/base/AgGridTable.vue";
 
 ---
 
-### Hands-on 1: ストアのデータをAg-Gridに表示
+### ハンズオン 2: ストアのデータをAg-Gridに表示
 上のコードを修正し、Day5で作ったストアのデータを表示しましょう。
 
 #### ヒント
@@ -132,7 +133,7 @@ const rowData = formStore.orders; // refは不要（ストアが既にリアク�
 - Day5で作成した注文情報が表示されていること
 - 新しく注文を追加した場合、Ag-Gridの表示も更新されること
 
-### Hands-on 2: セル編集と列の追加
+### ハンズオン 3: セル編集と列の追加
 - `columnDefs`を修正し、以下の列を追加しましょう。
     - 単価（unitPrice）
     - 見積り（estimatedCost）
@@ -225,7 +226,7 @@ const recalculateEstimateCost = (params) => {
 - 数量や単価を変更し、見積りが自動計算されること
 ![ag-grid-edit](../images/screenshots/d6-table-auto-cal.png)
 ---
-### Hands-on 3: 金額の通貨フォーマット
+### ハンズオン 4: 金額の通貨フォーマット
 単価と見積りの列に通貨フォーマットを追加しましょう。
 #### ヒント
 - `valueFormatter`プロパティを使用

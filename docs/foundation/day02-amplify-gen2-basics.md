@@ -17,9 +17,10 @@
 
 ### Amplify環境構築
 ターミナルに以下のコマンドをコピペして実行
+amplifyのインストール、ui-vueとamplifyの初期化のコマンドです
 ```
 npm install aws-amplify
-npm install @aws-amplify/ui-vue
+npm add @aws-amplify/ui-vue
 npm create amplify@latest
 ```
 
