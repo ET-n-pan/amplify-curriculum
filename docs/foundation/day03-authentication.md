@@ -42,6 +42,50 @@ amplify-vue-ts-project/
 │   └── (...)
 └── amplify_outputs.json     # Amplify生成した設定ファイル（APIエンドポイント、認証情報）
 ```
+## tsconfig.json更新
+```
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+    "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@stores/*": ["src/stores/*"]
+    }
+  }
+}
+```
+
+## vite.config.ts更新
+プロジェクトルートのvite.config.tsを以下のコードに更新
+```
+// vite.config.js
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('ui5-')
+        }
+      }
+    })
+  ],
+  resolve: {
+    alias: {
+      '@': '/src'
+    }
+  }
+})
+```
 
 ## ルーター、レイアウトファイル作成
 ![router](../images/screenshots/d3-create-file.png)
@@ -74,7 +118,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: '/', // ルートパス：ホームページ
         name: 'Home', // ルート名
-        component: () => import("../layout/MainLayout.vue"), 
+        component: () => import("@/layout/MainLayout.vue"), 
     }
     // 他のルートをここに追加できます
 ];

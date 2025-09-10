@@ -55,26 +55,7 @@ amplify-vue-ts-project/
 │   └── (...)
 └── amplify_outputs.json
 ```
-## vite.config.ts更新
-プロジェクトルートのvite.config.tsを以下のコードに更新
-```
-// vite.config.js
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
 
-export default defineConfig({
-  plugins: [
-    vue({
-      template: {
-        // UI5 Web Componentsをカスタム要素として認識させる設定
-        compilerOptions: {
-          isCustomElement: (tag) => tag.startsWith('ui5-')
-        }
-      }
-    })
-  ]
-})
-```
 
 ## UI5FormComp.js更新
 src/lib/UI5FormComp.jsを以下のコードに更新
