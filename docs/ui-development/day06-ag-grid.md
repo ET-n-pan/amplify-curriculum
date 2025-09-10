@@ -1,21 +1,21 @@
 # Day 6: Ag-Grid
 
-# ゴール
+## ゴール
 !!! success "Day 6 Goals"
     - Ag-Gridのインストール
     - セルを編集可能なエクセルライクテーブルの実装
     - セル編集時に他のセルを自動計算で更新
 
-# Ag-Gridインストール
-## ターミナルで以下のコマンドを実行
+## Ag-Gridインストール
+### ターミナルで以下のコマンドを実行
 ```
 npm install -D sass-embedded
 npm install ag-grid-community@latest ag-grid-vue3@latest
 ```
 
-# Ag-Gridの実装
+## Ag-Gridの実装
 ---
-## Step 1: 最小限のグリッド表示
+### Step 1: 最小限のグリッド表示
 ```
 <template>
   <div class="mt-20 mx-5">
@@ -65,7 +65,7 @@ const columnDefs = ref([
 
 
 
-## `src/pages/AgGridPage`を作成し、以下のコードを追加
+### `src/pages/AgGridPage`を作成し、以下のコードを追加
 ```
 <template>
   <div class="mx-10 my-10">
@@ -78,15 +78,39 @@ import AgGridTable from "@/components/base/AgGridTable.vue";
 </script>
 ```
 
-## `npm run dev`でローカルサーバーを起動し、ag-Gridの画面にアクセス
+### Hands-on 1: '/src/router/index.ts'にルートを追加
+`/src/router/index.ts`にTODOの部分を追加し、`/ag-grid`で上のページにアクセスできるようにしましょう。
+#### ヒント
+- 既存のルートを参考に、`path`と`component`を指定
+- `component`は`@/pages/AgGridPage.vue`を指定
+
+<details>
+<summary>解答例</summary>
+```
+{
+    path: "/plan3",                                    // アップロードページのパス
+    component: () => import("../layout/MainLayout.vue"), // 同じレイアウトを使用
+    children: [
+      {
+        path: "",                                        // AgGridアクセス時の子コンポーネント
+        name: "",
+        component: () => import("../pages/AgGridPage.vue"), // AgGridPage コンポーネントを表示
+      },
+    ],
+},
+```
+</details>
+
+
+### `npm run dev`でローカルサーバーを起動し、ag-Gridの画面にアクセス
 ![ag-grid-success](../images/screenshots/d6-agtable.png)
 
 ---
 
-## Hands-on 1: ストアのデータをAg-Gridに表示
+### Hands-on 1: ストアのデータをAg-Gridに表示
 上のコードを修正し、Day5で作ったストアのデータを表示しましょう。
 
-###　ヒント
+#### ヒント
 - `useFormStore`をインポート
 - `rowData`を仮データからストアのデータに変更
 
@@ -104,11 +128,11 @@ const rowData = formStore.orders; // refは不要（ストアが既にリアク�
 
 &nbsp;
 
-###　確認ポイント
+####　確認ポイント
 - Day5で作成した注文情報が表示されていること
 - 新しく注文を追加した場合、Ag-Gridの表示も更新されること
 
-## Hands-on 2: セル編集と列の追加
+### Hands-on 2: セル編集と列の追加
 - `columnDefs`を修正し、以下の列を追加しましょう。
     - 単価（unitPrice）
     - 見積り（estimatedCost）
@@ -116,7 +140,7 @@ const rowData = formStore.orders; // refは不要（ストアが既にリアク�
     - 納期（deliveryDate）
 - `defaultColDef`に1行追加し、全ての列を編集可能にしましょう。
 
-###　ヒント
+#### ヒント
 - `columnDefs`に列を追加
 - AgGridのドキュメントを参考に：https://www.ag-grid.com/vue-data-grid/cell-editing/
 
@@ -144,13 +168,13 @@ const columnDefs = ref([
 ```
 </details>
 &nbsp;
-###　確認ポイント
+#### 確認ポイント
 - 追加した列が表示されていること
 - どのセルでもクリックすると編集可能になっていること
 ![ag-grid-editable](../images/screenshots/d6-table-editable.png)
 <hr>
 
-## Step 2: 見積りの自動計算
+### Step 2: 見積りの自動計算
 通貨フォマット関数を追加
 ```
 // 通貨を扱うヘルパー関数
@@ -197,13 +221,13 @@ const recalculateEstimateCost = (params) => {
 }
 ```
 
-### 確認ポイント
+#### 確認ポイント
 - 数量や単価を変更し、見積りが自動計算されること
 ![ag-grid-edit](../images/screenshots/d6-table-auto-cal.png)
 ---
-## Hands-on 3: 金額の通貨フォーマット
+### Hands-on 3: 金額の通貨フォーマット
 単価と見積りの列に通貨フォーマットを追加しましょう。
-### ヒント
+#### ヒント
 - `valueFormatter`プロパティを使用
 - `formatCurrency`関数を使用
 
@@ -223,17 +247,17 @@ const recalculateEstimateCost = (params) => {
 </details>
 &nbsp;
 
-### 確認ポイント
+#### 確認ポイント
 - 単価と見積りのセルが"¥1,000"のような通貨フォーマットで表示されていること
 ![ag-grid-currency](../images/screenshots/d6-table-currency.png)
 
 ---
 
-## チャレンジタスク
+### チャレンジタスク
 - 注文IDの列を編集不可にする
 - 全てのセルをページをリロードしても編集内容が残るようにする
 
-# トラブルシューティング
+## トラブルシューティング
 - Ag-Gridのスタイルが適用されない場合
   - `main.js`に以下のインポートがあるか確認
   ```
@@ -250,7 +274,7 @@ const recalculateEstimateCost = (params) => {
   ModuleRegistry.registerModules([AllCommunityModule]);
   ```
 
-# 参考資料
+## 参考資料
 - Ag-Grid公式ドキュメント（Vue3）: https://www.ag-grid.com/vue-data-grid/
 - Ag-Grid公式ドキュメント（セル編集）: https://www.ag-grid.com/vue-data-grid/cell-editing/
 

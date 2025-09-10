@@ -2,9 +2,10 @@
 
 ## ゴール
 !!! success "Day 2 Goals"
-    - VueプロジェクトでAmplifyを初期化する
-    - Amplify CLIとSandboxの起動
-    - Amplifyバックエンドをデプロイ
+    - Amplify Gen2のインストール
+    - Amplifyサンドボックスの起動
+    - フロントエンドの起動と確認
+    - プロジェクト構成の理解
 
 ## Amplifyインストール
 ### vscodeでプロジェクトフォルダーを開く
@@ -13,6 +14,14 @@
 ![vs-trust](../images/screenshots/d2-vs-trust.png)
 ### ターミナルオープン
 ![vs-terminal](../images/screenshots/d2-vs-terminal.png)
+
+### Amplify環境構築
+ターミナルに以下のコマンドをコピペして実行
+```
+npm install aws-amplify
+npm install @aws-amplify/ui-vue
+npm create amplify@latest
+```
 
 ### AWSホームページでCloudShellを選択
 ![click-shell](../images/screenshots/d2-click-cloudshell.png)

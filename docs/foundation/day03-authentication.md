@@ -91,12 +91,13 @@ export default router; // ルーターをエクスポート
 ## main.tsファイル更新
 ```
 import { createApp } from 'vue'
-import './style.css'
+// TODO: style.cssをインポート
+
 import App from './App.vue'
 import router from "./router/index.ts"; 
 import { Amplify } from "aws-amplify";
 import { parseAmplifyConfig } from "aws-amplify/utils";
-import outputs from "../amplify_outputs.json";
+import outputs from "@/amplify_outputs.json";
 
 // Amplify設定: AWSサービスとの接続情報を設定
 const amplifyConfig = parseAmplifyConfig(outputs);
@@ -116,6 +117,23 @@ app.use(router);
 // DOM要素にマウント: アプリケーションを画面に表示
 app.mount('#app');
 ```
+
+### Hands-on: Style.cssインポート
+style.cssをインポートしましょう。
+#### ヒント
+- `import`を使用
+- `./style.css`を指定
+
+<details>
+<summary>解答例</summary>
+```
+import { createApp } from 'vue'
+import './style.css' // 追加
+import App from './App.vue'
+```
+</details>
+&nbsp;
+
 
 ## App.vueファイル更新
 ```
