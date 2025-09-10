@@ -262,8 +262,8 @@ import NavigationLayoutMode from "@ui5/webcomponents-fiori/dist/types/Navigation
 
 // ナビゲーションアイテム
 const navItems = [
-  { path: "/plan3", label: "AgGridテーブル", icon: "table-chart" },
-  { path: "/orders2", label: "注文情報試作", icon: "my-sales-order" },
+  { path: "/aggrid", label: "AgGridテーブル", icon: "table-chart" },
+  { path: "/ui5-order", label: "注文情報試作", icon: "my-sales-order" },
 ];
 // サイドバーの表示・非表示を切り替える関数
 const toggleSidebar = () => {
