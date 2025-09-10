@@ -112,7 +112,7 @@ import "@aws-amplify/ui-vue/styles.css";
 
 ```
 # router/index.ts
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -124,7 +124,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(), // HTML5の履歴モードを使用
+    history: createWebHashHistory(), // ハッシュモードの履歴管理
     routes, // ルート定義を設定
 });
 
