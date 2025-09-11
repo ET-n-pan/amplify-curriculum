@@ -232,7 +232,9 @@ const defaultAvatar = "https://ui5.sap.com/resources/sap/m/themes/base/img/Perso
 
 ## Step 4: user-menuコンポーネントを追加
 `<ui5-navigation-layout>`の中に`<ui5-user-menu>`コンポーネントを追加して、ユーザーアカウントメニューを実装
-```# src/layout/MainLayout.vue
+
+```
+# src/layout/MainLayout.vue
 <!-- ユーザーメニュー、サインアウトイベント -->
 <ui5-user-menu ref="userMenuRef" @sign-out-click="signOut">
     <!-- ユーザーアカウント情報 -->
@@ -249,6 +251,7 @@ const defaultAvatar = "https://ui5.sap.com/resources/sap/m/themes/base/img/Perso
     <ui5-user-menu-item icon="action-settings" text="Setting" data-id="setting"></ui5-user-menu-item>
 </ui5-user-menu>
 ```
+
 `<script setup>`の中に以下のコードを追加
 ```
 import { ref } from "vue";
