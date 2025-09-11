@@ -80,6 +80,20 @@ export const useGlobalStore = defineStore("global", {
 - `setUser`アクションでCognitoから取得したユーザー情報を保存
 - `idToken`も保存（後でAPIリクエストに使用）
 
+## Step 2: Main.ts更新
+### Piniaのセットアップ
+`src/main.ts`を以下のコードを追加
+```
+// piniaのインポート
+import { createPinia } from "pinia";
+
+// Piniaインスタンスを作成
+const pinia = createPinia();
+
+// PiniaをVueアプリに登録
+app.use(pinia);
+```
+
 ## Step 2: MainLayout.vue更新
 ### テンプレートの修正
 `src/layouts/MainLayout.vue`の`<authenticator>`タグ内を修正
@@ -299,7 +313,7 @@ export const useFormStore = defineStore("form", {
 
 
 ## Step 4: 注文管理ページの実装
-Orders2Page.vueを以下の構造で実装
+`Orders2Page.vue`を以下の構造で実装
 ```
 <template>
   <div class="mx-5 my-5">

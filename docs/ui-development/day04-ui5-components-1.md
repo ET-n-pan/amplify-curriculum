@@ -142,17 +142,19 @@ Mainlayout.vueファイルを以下のコードに更新
         <!-- UI5のシェルバーを追加 -->
 
         <!-- UI5のナビゲーションレイアウトを追加 -->
-        <ui5-navigation-layout>
+        <ui5-navigation-layout ref="layoutRef">
             <!-- シェルバーの設定: 通知数、通知表示、プロフィールクリックイベント -->
             <ui5-shellbar notifications-count="5" show-notifications @ui5-profile-click="">
 
                 // TODO: ユーザーメニューコンポーネントをここに追加
 
             </ui5-shellbar>
-        </ui5-navigation-layout>
-        <main style="padding: 20px;">
+
+          <!-- mainコンテンツエリア -->
+          <main style="padding: 20px;">
             <router-view />
-        </main>
+          </main>
+        </ui5-navigation-layout>
     </template>
     </authenticator>
 </template>
