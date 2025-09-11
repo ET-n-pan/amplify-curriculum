@@ -23,8 +23,8 @@ nav:
     - Day 5 - UI5 Web ComponentsをVueで利用(試作)②: ui-development/day05-ui5-components-2.md
     - Day 6 - AG Gridを使ったExcelライクな画面表現を試作: ui-development/day06-ag-grid.md
   - データ管理:
-    - Day 7 - Amplify Dataの基本: data-management/day07-amplify-data.md
-    - Day 8 - SAP ODataの理解（SandBoxでの叩き方）: data-management/day08-sap-odata.md
+    - Day 7 - HTTP API、SAP ODATAの基本: data-management/day07-sap-odata.md
+    - Day 8 - Amplify Dataの基本: data-management/day08-amplify-data.md
     - Day 9 - バックエンド連携①: data-management/day09-backend-integration-1.md
     - Day 10 - バックエンド連携②: data-management/day10-backend-integration-2.md
   - アプリケーション開発:
