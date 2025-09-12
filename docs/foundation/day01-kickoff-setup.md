@@ -10,19 +10,24 @@
 ## 環境セットアップ
 
 ### オプション１：インストーラーで環境構築
-#### vscodeインストールページ
+#### Visual Studio Codeインストールページ
+ソースコードを記述するためのエディタである、Visual Studio Codeをインストールします。  
+（以下、vscodeと省略する場合があります）  
 https://code.visualstudio.com/
 ![vscode-install](../images/screenshots/d1-install-vscode.png)
 
-#### aws-cliインストールページ
+#### AWSコマンドラインインターフェースインストールページ
+AWS のサービスを管理するための統合ツールである、AWSコマンドラインインターフェース(AWS CLI)をインストールします。  
 https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 ![aws-install](../images/screenshots/d1-install-aws-cli.png)
 
-#### nodejsインストールページ
+#### Node.jsインストールページ
+JavaScript実行環境となるNode.jsをインストールします。  
 https://nodejs.org/ja/download
 ![nodejs-install](../images/screenshots/d1-install-nodejs.png)
 
 #### Gitインストールページ
+ソースコードなどのバージョン管理ツールであるGitをインストールします。
 https://git-scm.com/downloads/win
 ![git-install](../images/screenshots/d1-install-git.png)
 
@@ -56,13 +61,15 @@ node -v; npm -v; aws --version; code --version
 ```
 ![env-version](../images/screenshots/d1-env-version.png)
 
+---
+
 ## Vue3 + TypeScriptプロジェクト設定
 
 ```bash
 # Vue3+Typescriptプロジェクトを作成
 npm create vite@latest amplify-vue-ts-app
 ```
-![install-vue](../images/screenshots/d1-install-vue.png)
+![install-vue](../images/screenshots/d1-install-vite.png)
 ![install-typescript](../images/screenshots/d1-install-Typescript.png)
 
 ```
@@ -77,7 +84,7 @@ npm install
 # ローカルでプロジェクトを起動
 npm run dev
 
-# ctrl+cでプロジェクトを終了
+# ページの表示を確認したら、ctrl+cでプロジェクトを終了
 ```
 
 ![npm-run](../images/screenshots/d1-npm-run.png)
