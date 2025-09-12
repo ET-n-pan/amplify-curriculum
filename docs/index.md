@@ -2,35 +2,19 @@
 
 ## ゴール
 * Amplify Gen2のコードファスト(TypeScript)で、Auth・Data・Functionsの基本を扱える
-* Vue + TypescriptでUI5 Web Componentを使い、Fiori風の一覧→明細→更新の一連UIを構築
+* Vue + TypescriptでUI5 Web Componentを使い、Fiori風の一覧→明細→更新の一連UIを構築する
 * SAP ODataにAmplifyのバックエンド側(HTTPデータソース/Lambda)経由で安全に連携する
-* Git連携のブランチごとのフルスタック自動デプロイ化、改修の正しい反映手順を理解
+* Git連携のブランチごとのフルスタック自動デプロイ化、改修の正しい反映手順を理解する
 
-## スケジュール
+## サンプルアプリケーション
+本学習カリキュラムでは、〇〇業務を題材として、入力データ（単票登録およびファイルアップロードによる一括登録）を、SAP S/4HANAへ連携するアドオンアプリケーションを開発します。
+完成した画面のイメージは以下の図の通りです。
+![完成した画面のイメージ](../images/screenshots/xxxxxxxxxx.png)
 
-**基礎 (1-3日目)**
-- 環境確認、Vue3+Typescriptの起動
-- Amplify Gen2 CLI (Command Line Interface)、Sandboxの起動
-- AWS Auth導入、Cognitoサインイン/アウト実装
 
-**UI 開発 (4-6日目)**
-- SAP UI5 web component利用、Fiori風UIで、いくつかのコンポーネントの再現
-- 簡単な計算式を埋め込んだUIをAgGridの利用で試作
-
-**データ管理 (7-10日目)**
-- Amplify Dataの基本
-- SAP ODataの理解（SandBoxでの叩き方)
-- バックエンド連携
-
-**アプリケーション 開発 (11-14日目)**
-- ドメイン決定&API Design
-- フロントエンド実装&更新処理実装①
-- エラーハンドリングなど
-
-**仕上がり (15日目)**
-- コードレビューと最適化
-- 実装戦略
-- パフォマンス監視
+## アーキテクチャ
+本学習カリキュラムで題材とするアプリケーションのアークテクチャ構成は以下の図の通りです。
+![アーキテクチャ構成図](../images/screenshots/xxxxxxxxxx.png)
 
 ## テクノロジー
 | Technology | Version | Purpose |
@@ -43,7 +27,32 @@
 | AWS Cognito | - | 認証とユーザー管理 |
 | SAP OData | v2/v4 | Enterprise data integration |
 
-## 次に
-1. [Day 1: Kickoff & Setup](foundation/day01-kickoff-setup.md)から環境をセットアップ
-2. 順番にハンズオン実施
-3. 問題発生時に付録のトラブルシューティングを参照
+## スケジュール
+
+**準備 (1-3日目)**
+- 環境確認、Vue3+Typescriptの起動
+- Amplify Gen2 CLI (Command Line Interface)、Sandboxの起動
+- AWS Auth導入、Cognitoサインイン/アウト実装
+
+**UI開発 (4-6日目)**
+- SAP UI5 web component利用、Fiori風UIで、いくつかのコンポーネントの再現
+- 簡単な計算式を埋め込んだUIをAgGridの利用で試作
+
+**データ管理 (7-10日目)**
+- Amplify Dataの基本
+- SAP ODataの理解（SandBoxでの叩き方)
+- バックエンド連携
+
+**アプリケーション開発 (11-14日目)**
+- ドメイン決定&API Design
+- フロントエンド実装&更新処理実装①
+- エラーハンドリングなど
+
+**振り返り (15日目)**
+- コードレビューと最適化
+- 実装戦略
+- パフォマンス監視
+
+## 学習を開始するには
+[Day 1: キックオフ & セットアップ](foundation/day01-kickoff-setup.md)より環境をセットアップし、順番にハンズオンを実施してください。
+問題発生時には付録の[トラブルシューティング](appendices\troubleshooting.md)を参照してください。
