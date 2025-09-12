@@ -27,7 +27,7 @@ https://nodejs.org/ja/download
 ![nodejs-install](../images/screenshots/d1-install-nodejs.png)
 
 #### Gitインストールページ
-ソースコードなどのバージョン管理ツールであるGitをインストールします。
+ソースコードなどのバージョン管理ツールであるGitをインストールします。  
 https://git-scm.com/downloads/win
 ![git-install](../images/screenshots/d1-install-git.png)
 
