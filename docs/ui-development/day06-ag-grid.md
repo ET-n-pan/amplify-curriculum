@@ -88,12 +88,12 @@ import AgGridTable from "@/components/base/AgGridTable.vue";
 <summary>解答例</summary>
 ```
 {
-    path: "/plan3",                                    // アップロードページのパス
+    path: "/aggrid",                                    // アップロードページのパス
     component: () => import("../layout/MainLayout.vue"), // 同じレイアウトを使用
     children: [
       {
         path: "",                                        // AgGridアクセス時の子コンポーネント
-        name: "",
+        name: "ag-grid",                                 // ルート名
         component: () => import("../pages/AgGridPage.vue"), // AgGridPage コンポーネントを表示
       },
     ],
@@ -238,11 +238,18 @@ const recalculateEstimateCost = (params) => {
 {
   headerName: "単価", field: "unitPrice", flex: 1,
   onCellValueChanged: recalculateEstimateCost,
-  valueFormatter: (params) => formatCurrency(params.value) // 追加
+
+  ////// 追加 //////
+  // 通貨フォーマットを適用
+  valueFormatter: (params) => formatCurrency(params.value) 
+  /////////////////
 },
 {
   headerName: "見積金額", field: "estimatedCost", flex: 1,
-  valueFormatter: (params) => formatCurrency(params.value) // 追加
+
+  ////// 追加 //////
+  valueFormatter: (params) => formatCurrency(params.value)
+  ////////////////
 }
 ```
 </details>

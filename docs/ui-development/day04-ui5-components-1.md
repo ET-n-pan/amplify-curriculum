@@ -33,8 +33,6 @@ amplify-vue-ts-project/
 ├── amplify/
 │   ├── auth/                
 │   ├── data/                
-│   ├── functions/           
-│   ├── storage/             
 │   ├── backend.ts           
 │   └── package.json         
 ├── src/
@@ -45,12 +43,12 @@ amplify-vue-ts-project/
 │   ├── pages/                  # -> フォルダーを作成。アプリの各ページコンポーネント
 │       └── Orders2Page.vue     # -> ファイルを作成。注文管理ページ
 │   ├── stores/                 # -> フォルダーを作成。Piniaストア（状態管理）
-│       ├── form-store.js       # -> ファイルを作成。フォームデータ管理用のPiniaストア
-│       └── global-store.js     # -> ファイルを作成。グローバル状態管理用のPiniaストア
+│       ├── form-store.ts       # -> ファイルを作成。フォームデータ管理用のPiniaストア
+│       └── global-store.ts     # -> ファイルを作成。グローバル状態管理用のPiniaストア
 │   ├── composables/            # -> フォルダーを作成。再利用可能なロジック
-│       └── useToast.js         # -> ファイルを作成。トースト通知用のComposable
+│       └── useToast.ts         # -> ファイルを作成。トースト通知用のComposable
 │   ├── lib/                    # -> フォルダーを作成。ユーティリティ関数、APIクライアント
-│       └── UI5FormComp.js      # -> ファイルを作成。UI5フォーム関連のユーティリティ
+│       └── UI5FormComp.ts      # -> ファイルを作成。UI5フォーム関連のユーティリティ
 │   ├── App.vue              
 │   ├── main.ts              
 │   ├── style.scss              # style.css → style.scssに変更、中身を空にする。グローバルスタイル（共通CSS）
@@ -110,12 +108,12 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/layout/MainLayout.vue"), // 遅延読み込み: 必要時にコンポーネントを読み込み
   },
   {
-    path: "/orders2",                                    // 注文ページのパス
+    path: "/ui5-order",                                    // 注文ページのパス
     component: () => import("@/layout/MainLayout.vue"), // 親レイアウト: 共通のヘッダー・フッターを表示
     children: [                                          // 子ルート: 親レイアウト内に表示されるページ
       {
-        path: "",                                        // 空パス: /orders2 にアクセス時に表示される子コンポーネント
-        name: "orders2",                                 // ルート名: プログラムでナビゲーション時に使用
+        path: "",                                        // 空パス: /ui5-order にアクセス時に表示される子コンポーネント
+        name: "ui5-order",                                 // ルート名: プログラムでナビゲーション時に使用
         component: () => import("@/pages/Orders2Page.vue"), // 実際の注文ページコンポーネント
       },
     ],
@@ -160,7 +158,7 @@ Mainlayout.vueファイルを以下のコードに更新
 </template>
 
 <script setup lang="ts">
-import "../lib/UI5FormComp.js";
+import "@/lib/UI5FormComp.js";
 import { Authenticator } from "@aws-amplify/ui-vue";
 import { I18n } from "aws-amplify/utils";
 import {translations} from "@aws-amplify/ui";

@@ -8,6 +8,9 @@
     - ODataクエリオプションの使用方法の理解
 
 ## HTTP APIの基礎
+
+---
+
 ### HTTPの基本概念
 HTTPは、WebブラウザとWebサーバー間でデータを送受信するためのプロトコルです。APIの理解には以下の要素が重要です。
 
@@ -89,8 +92,27 @@ DELETE /api/customers/123       # 顧客の削除
 - **フィルタリング機能**: `$filter`, `$orderby`などのクエリオプション
 
 ## SAP APIサンドボックスの使用方法
-// TODO
 
+---
+
+### SAP ODataサービスの理解
+#### ODataとは
+OData（Open Data Protocol）は、RESTful APIの設計に基づいたデータアクセスプロトコルです。
+
+### SAP Business Accelerator Hubの利用
+[Payment-サンプルODataサービス](https://api.sap.com/api/payment/overview)を利用します。
+
+![odata-sandbox](../images/screenshots/d7-odata-sandbox.png)
+
+#### クエリオプションの説明
+| クエリオプション | 説明 | 例 |
+|------------------|------|----|
+| `$top`        | 取得する件数の上限を指定 | `$top=5` |
+| `$skip`       | 取得する件数のオフセットを指定 | `$skip=10` |
+| `$filter`     | 条件に基づくデータのフィルタリング | `$filter=amount gt 100` |
+| `$inlinecount` | クエリ結果の総件数を取得 | `$inlinecount=allpages` |
+| `$orderby`    | ソート順の指定 | `$orderby=created_at desc` |
+| `$select`     | 取得するフィールドの指定 | `$select=id,amount` |
 
 ## Rest ClientでAPIを試す
 ### Step 1: Rest Clientのセットアップ
@@ -169,8 +191,7 @@ Headers:
 ```
 ![error-response](../images/screenshots/d7-error-response.png)
 
-## ハンズオン演習
-### ハンズオン 1: POSTを使ったデータ作成
+## ハンズオン 1: POSTを使ったデータ作成
 新しい注文データを作成するPOSTリクエストを実行してみましょう。
 
 ```
@@ -195,7 +216,7 @@ Body:
 - ステータスコード HTTP/1.1 201 Created が返却されること
 - JSONレスポンスが正しく取得できること
 
-### ハンズオン 2: 作成したデータの取得
+## ハンズオン 2: 作成したデータの取得
 GETリクエストとODataクエリオプションを使って、先ほど作成した注文データのみを取得してみましょう。
 
 ####　ヒント
@@ -216,21 +237,21 @@ Headers:
 - レスポンスの内容が正しいこと
 - ステータスコード HTTP/1.1 200 OK が返却されること
 
-
-### ハンズオン 3: 商品マスタの検索
-商品マスタAPIを使用して商品情報を検索してみましょう。
-
-```http
-GET /s4hanacloud/sap/opu/odata/sap/API_PRODUCT_SRV/A_Product
+## ハンズオン 3: PATCHを使ったデータ更新
+PATCHリクエストを使って、先ほど作成した注文データの`quantity`を更新してみましょう。
 ```
+PATCH https://8q5zg2p8tj.us-east-1.awsapprunner.com/odata/v4/order/OrderData('your-created-id')
+Headers:
+  Content-Type: application/json
 
-
-### ハンズオン 4: エラーハンドリングの確認
-わざと間違ったリクエストを作成してエラーレスポンスを確認してみましょう。
-
-1. 不正なAPIキーの使用
-2. 存在しないフィールドでのフィルタリング
-3. 権限エラーの確認
+{
+  "quantity":
+}
+```
+#### 確認ポイント
+1. ステータスコード HTTP/1.1 200 OK が返却されること
+2. レスポンスの内容が正しいこと
+3. GETリクエストで更新後のデータを取得し、`quantity`が更新されていること
 
 
 ## トラブルシューティング

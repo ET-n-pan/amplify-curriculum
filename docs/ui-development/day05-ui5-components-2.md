@@ -162,14 +162,14 @@ import { defineStore } from "pinia";
 
 
 // 商品ごとの単価を定義
-const productPrices = {
+const productPrices: { [key: string]: number } = {
 	PROD001: 1000,
 	PROD002: 2000,
 	PROD003: 3000,
 };
 
 // 商品コードに基づいて単価を設定
-function updateUnitPrice(productCode) {
+function updateUnitPrice(productCode : string): number {
 	return productPrices[productCode] || 0;
 }
 
@@ -201,13 +201,13 @@ export const useFormStore = defineStore("form", {
     validateForm() {
 		const errors = [];
 		
-		if (!this.customerCode.trim()) {
+		if (this.customerCode.trim() === "") {
 			errors.push("顧客コードは必須です");
 		}
 		
 		// TODO: 商品コードのバリデーションを追加
-		
-		if (!this.quantity || parseInt(this.quantity) <= 0) {
+
+		if (this.quantity.trim() === "" || parseInt(this.quantity) <= 0) {
 			errors.push("数量は1以上の数値を入力してください");
 		}
 
@@ -217,16 +217,16 @@ export const useFormStore = defineStore("form", {
     },
     
 	// 注文数量更新
-	updateOrderQuantity(orderId, newQuantity) {
-		const order = this.orders.find(o => o.id === orderId);
+	updateOrderQuantity(orderId: any, newQuantity: any) {
+		const order = this.orders.find((o: { id: any; }) => o.id === orderId);
 		if (order) {
 			order.quantity = newQuantity;
 			localStorage.setItem('orders', JSON.stringify(this.orders));
 		}
 	},
 	// 注文情報更新
-	updateOrder(orderId, updatedData) {
-		const orderIndex = this.orders.findIndex(o => o.id === orderId);
+	updateOrder(orderId: any, updatedData: any) {
+		const orderIndex = this.orders.findIndex((o: { id: any; }) => o.id === orderId);
 		if (orderIndex !== -1) {
 			this.orders[orderIndex] = { ...this.orders[orderIndex], ...updatedData };
 			localStorage.setItem('orders', JSON.stringify(this.orders));
@@ -279,9 +279,9 @@ export const useFormStore = defineStore("form", {
     },
 
 	// 選択した注文を削除
-    deleteOrder(selectionElement, messageElement) {
-        if (!selectionElement) {
-			if (messageElement) {
+    deleteOrder(selectionElement: { selected: string; } | null, messageElement: { open: boolean; innerText: string; } | null) {
+        if (selectionElement == null) {
+			if (messageElement != null) {
 				messageElement.open = true;
 				messageElement.innerText = "選択機能が見つかりません。";
 			}
@@ -290,7 +290,7 @@ export const useFormStore = defineStore("form", {
 		const selectedRows = selectionElement.selected.split(' ');
 
 		if (selectedRows.length === 0 || (selectedRows.length === 1 && selectedRows[0] === '')) {
-			if (messageElement) {
+			if (messageElement != null) {
 				messageElement.open = true;
 				messageElement.innerText = "削除する注文を選択してください。";
 			}
@@ -298,13 +298,13 @@ export const useFormStore = defineStore("form", {
 		}
 
 		// 選択された注文を削除
-		this.orders = this.orders.filter(order => !selectedRows.includes(order.id));
+		this.orders = this.orders.filter((order: { id: any; }) => !selectedRows.includes(order.id));
 
 		// TODO: localStorageに保存
 		
 		// TODO: 選択状態をクリア
 
-		if (messageElement) {
+		if (messageElement != null) {
 			messageElement.open = true;
 			messageElement.innerText = `${selectedRows.length}件の注文を削除しました。`;
 		}
@@ -336,8 +336,8 @@ export const useFormStore = defineStore("form", {
   </div>
 </template>
 
-<script setup >
-	import { useFormStore } from "../stores/form-store";
+<script setup lang="ts">
+import { useFormStore } from "@/stores/form-store";
 import "@ui5/webcomponents/dist/Panel.js";
 import "@ui5/webcomponents/dist/Form.js";
 import "@ui5/webcomponents/dist/FormGroup.js";
@@ -360,12 +360,12 @@ import "@ui5/webcomponents/dist/DatePicker.js";
 import "@ui5/webcomponents/dist/TextArea.js";
 import { ref } from "vue";
 
-const messageRef = ref(null);
-const selectionRef = ref(null);
+const messageRef = ref<any>(null);
+const selectionRef = ref<any>(null);
 const formStore = useFormStore();
 
 // トースト表示関数
-const showToast = (msg) => {
+const showToast = (msg: string) => {
 	if (messageRef.value) {
 		messageRef.value.innerText = msg;
 		messageRef.value.open = true;
@@ -374,12 +374,8 @@ const showToast = (msg) => {
 
 // 注文追加関数
 const addOrder = () => {
-	const {success, errorMessage} = formStore.addOrder();
-	if (!success){
-		showToast(errorMessage);
-	}else{
-		showToast("注文が追加されました。");
-	}
+	const {success, message} = formStore.addOrder();
+	showToast(message);
 }
 
 // 注文削除関数
@@ -391,7 +387,7 @@ const deleteOrder = () => {
 #### 動作確認
 ![order-page](../images/screenshots/d5-order-page-structure.png)
 
-## ハンズオン 2: フォームの実装
+## ハンズオン 1: フォームの実装
 ### 注文入力フォームの実装
 `<ui5-panel>`内に以下のコードを追加
 ```
@@ -475,6 +471,8 @@ const deleteOrder = () => {
 ```
 </details>
 &nbsp;
+
+
 ### 動作確認
 ![order-form-complete](../images/screenshots/d5-order-form-complete.png)
 
@@ -571,6 +569,10 @@ const deleteOrder = () => {
 			return { success: false, message: errorMessage };
 		}
 		
+		// 数量と単価を数値に変換
+		const quantityNum = parseInt(this.quantity);
+		const unitPriceNum = updateUnitPrice(this.productCode);
+
 		// 新しい注文オブジェクトを作成
 		const newOrder = {
 			id: Date.now().toString(36) + Math.random().toString(36).substring(2, 8),
@@ -578,11 +580,12 @@ const deleteOrder = () => {
 			productCode: this.productCode,
 			quantity: this.quantity,
 			unitPrice: updateUnitPrice(this.productCode),
-			estimatedCost: (parseInt(this.quantity) * parseInt(updateUnitPrice(this.productCode))),
+			estimatedCost: quantityNum * unitPriceNum,
 			deliveryDate: this.deliveryDate,
 			status: "新規",
 			createdAt: new Date().toLocaleString(),
 		};
+		
 		// 注文リストに追加
 		this.orders.push(newOrder);
 		// localStorageに保存
@@ -596,9 +599,9 @@ const deleteOrder = () => {
 `deleteOrder`
 ```
 // 選択した注文を削除
-    deleteOrder(selectionElement, messageElement) {
-        if (!selectionElement) {
-			if (messageElement) {
+    deleteOrder(selectionElement: { selected: string; } | null, messageElement: { open: boolean; innerText: string; } | null) {
+        if (selectionElement == null) {
+			if (messageElement != null) {
 				messageElement.open = true;
 				messageElement.innerText = "選択機能が見つかりません。";
 			}
@@ -607,16 +610,22 @@ const deleteOrder = () => {
 		const selectedRows = selectionElement.selected.split(' ');
 
 		if (selectedRows.length === 0 || (selectedRows.length === 1 && selectedRows[0] === '')) {
-			if (messageElement) {
+			if (messageElement != null) {
 				messageElement.open = true;
 				messageElement.innerText = "削除する注文を選択してください。";
 			}
 			return;
 		}
 		this.orders = this.orders.filter(order => !selectedRows.includes(order.id));
+
+
+		/////// 追加 ///////
+		// localStorageに保存
 		localStorage.setItem('orders', JSON.stringify(this.orders));
+		// 選択状態をクリア
 		selectionElement.selected = '';
-		if (messageElement) {
+		////////////////////
+		if (messageElement != null) {
 			messageElement.open = true;
 			messageElement.innerText = `${selectedRows.length}件の注文を削除しました。`;
 		}
@@ -629,22 +638,28 @@ const deleteOrder = () => {
     validateForm() {
 		const errors = [];
 		
-		if (!this.customerCode.trim()) {
+		if (this.customerCode.trim() === "") {
 			errors.push("顧客コードは必須です");
 		}
-		
-		if (!this.productCode) {
+
+		/////// 追加 //////
+		// 商品コードのバリデーションを追加
+		if (this.productCode === null || (this.productCode in productPrices) === false) {
 			errors.push("商品を選択してください");
 		}
-		
-		if (!this.quantity || parseInt(this.quantity) <= 0) {
+		//////////////////
+
+
+		if (this.quantity.trim() === "" || parseInt(this.quantity) <= 0) {
 			errors.push("数量は1以上の数値を入力してください");
 		}
 		
-		if (!this.deliveryDate) {
+		/////// 追加 //////
+		if (this.deliveryDate === null || this.deliveryDate.trim() === "") {
 			errors.push("納期は必須です");
 		}
-		
+		//////////////////
+
 		return errors;
     }
 ```
