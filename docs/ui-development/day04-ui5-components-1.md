@@ -11,7 +11,7 @@
 
 
 ## UI5 Web Componentsのインストール
-プロジェクトフォルダーを開き、以下のコマンドをVScodeターミナルにコピペして実行
+プロジェクトフォルダーを開き、以下のコマンドをVScodeターミナルにコピー&ペーストして実行します。
 ```
 npm install pinia@latest
 npm install -D sass-embedded

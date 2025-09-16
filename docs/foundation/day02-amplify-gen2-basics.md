@@ -19,7 +19,7 @@
     本学習ではコマンドプロンプトではなくPowerShellを使用してください。
 
 ### Amplify環境構築
-ターミナルに以下のコマンドをコピペして実行  
+ターミナルに以下のコマンドをコピー&ペーストして実行します  
 amplifyのインストール、ui-vueとamplifyの初期化のコマンドです
 ```
 npm install aws-amplify
@@ -30,7 +30,7 @@ npm create amplify@latest
 ### AWSホームページでCloudShellを選択
 ![click-shell](../images/screenshots/d2-click-cloudshell.png)
 
-### CloudShellに以下のコマンドをコピペして実行
+### CloudShellに以下のコマンドをコピー&ペーストして実行
 ![shell-command](../images/screenshots/d2-cloudshell-command.png)
 ```
 aws sts assume-role \
@@ -49,7 +49,7 @@ $env:AWS_SECRET_ACCESS_KEY="先ほど生成したSecretAccessKeyに変更"
 $env:AWS_SESSION_TOKEN="先ほど生成したSessionToken変更"
 ```
 
-### ターミナルにコピペして実行
+### ターミナルにコピー&ペーストして実行
 ![env-setting](../images/screenshots/d2-env-setting.png)
 
 !!! warning "AccessKeyIdなどの設定について"
