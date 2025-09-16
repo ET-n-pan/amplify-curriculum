@@ -161,7 +161,6 @@ const setUserData = async (user) => {
 // stores/form-store.ts
 import { defineStore } from "pinia";
 
-
 // 商品ごとの単価を定義
 const productPrices: { [key: string]: number } = {
 	PROD001: 1000,
@@ -170,22 +169,25 @@ const productPrices: { [key: string]: number } = {
 };
 
 // 商品コードに基づいて単価を設定
-function updateUnitPrice(productCode : string): number {
-	return productPrices[productCode] || 0;
+function updateUnitPrice(product_code : string): number {
+	return productPrices[product_code] || 0;
 }
 
 export const useFormStore = defineStore("form", {
 	state: () => ({
 		// フォームデータ初期化
-		customerCode: "15112009",
-		productCode: "PROD001",
+		ID: "",
+		customer_code: "15112009",
+		product_code: "PROD001",
 		quantity: "1",
-		unitPrice: updateUnitPrice("PROD001").toString(),
-		deliveryDate: new Date().toISOString().split('T')[0],
+		unit_price: updateUnitPrice("PROD001").toString(),
+		delivery_date: new Date().toISOString().split('T')[0],
+		created_at: new Date().toISOString(),
+		status: "新規",
+		estimated_cost: "1000",
 
 		// 注文リストをlocalStorageから取得
 		orders: JSON.parse(localStorage.getItem('orders') || '[]'),
-
 		// ページネーション
 		page: 1,
 	}),
@@ -195,21 +197,21 @@ export const useFormStore = defineStore("form", {
 		// フォームリセット
 		reset() {
 			// TODO: フォームの初期値にリセット
-			this.deliveryDate = new Date().toISOString().split('T')[0];
+			this.delivery_date = new Date().toISOString().split('T')[0];
 		},
     
     // フォームバリデーション
     validateForm() {
 		const errors = [];
 		
-		if (this.customerCode.trim() === "") {
-			errors.push("顧客コードは必須です");
+		if (this.customer_code === null || this.customer_code.trim() === "") {
+				errors.push("顧客コードは必須です");
 		}
 		
 		// TODO: 商品コードのバリデーションを追加
 
-		if (this.quantity.trim() === "" || parseInt(this.quantity) <= 0) {
-			errors.push("数量は1以上の数値を入力してください");
+		if (this.quantity === null || parseInt(this.quantity) <= 0) {
+				errors.push("数量は1以上の数値を入力してください");
 		}
 
 		// TODO: 納期のバリデーションを追加
@@ -219,7 +221,7 @@ export const useFormStore = defineStore("form", {
     
 	// 注文数量更新
 	updateOrderQuantity(orderId: any, newQuantity: any) {
-		const order = this.orders.find((o: { id: any; }) => o.id === orderId);
+		const order = this.orders.find((o: { ID: any; }) => o.ID === orderId);
 		if (order) {
 			order.quantity = newQuantity;
 			localStorage.setItem('orders', JSON.stringify(this.orders));
@@ -227,7 +229,7 @@ export const useFormStore = defineStore("form", {
 	},
 	// 注文情報更新
 	updateOrder(orderId: any, updatedData: any) {
-		const orderIndex = this.orders.findIndex((o: { id: any; }) => o.id === orderId);
+		const orderIndex = this.orders.findIndex((o: { ID: any; }) => o.ID === orderId);
 		if (orderIndex !== -1) {
 			this.orders[orderIndex] = { ...this.orders[orderIndex], ...updatedData };
 			localStorage.setItem('orders', JSON.stringify(this.orders));
@@ -247,18 +249,18 @@ export const useFormStore = defineStore("form", {
 		// 新しい注文オブジェクトを作成
 		// 数量と単価を数値に変換
 		const quantityNum = parseInt(this.quantity);
-		const unitPriceNum = updateUnitPrice(this.productCode);
+		const unitPriceNum = updateUnitPrice(this.product_code);
 		
 		
-		// 新規注文オブジェクトの作成
+		// 新しい注文オブジェクトを作成
 		const newOrder = {
-			id: Date.now().toString(36) + Math.random().toString(36).substring(2, 8),
-			customerCode: this.customerCode,
-			productCode: null, // TODO: ここを設定してください
-			quantity: null, // TODO: ここを設定してください
-			unitPrice: updateUnitPrice(this.productCode),
-			estimatedCost: null, // TODO: ここを計算してください
-			deliveryDate: this.deliveryDate,
+			ID: Date.now().toString(36) + Math.random().toString(36).substring(2, 8),
+			customer_code: this.customer_code,
+			product_code: this.product_code,
+			quantity: this.quantity,
+			unit_price: updateUnitPrice(this.product_code),
+			estimated_cost: (parseInt(this.quantity) * updateUnitPrice(this.product_code)),
+			delivery_date: this.delivery_date,
 			status: "新規",
 			createdAt: new Date().toLocaleString(),
 		};
@@ -270,7 +272,7 @@ export const useFormStore = defineStore("form", {
 		
 		// フォームをリセット
 		this.reset();
-		return true;
+		return { success: true, message: "注文が追加されました。", order: newOrder };
     },
     
 	// 全注文クリア
@@ -299,7 +301,7 @@ export const useFormStore = defineStore("form", {
 		}
 
 		// 選択された注文を削除
-		this.orders = this.orders.filter((order: { id: any; }) => !selectedRows.includes(order.id));
+		this.orders = this.orders.filter((order: { ID: any; }) => !selectedRows.includes(order.ID));
 
 		// TODO: localStorageに保存
 		
@@ -397,12 +399,12 @@ const deleteOrder = () => {
 <ui5-form>
 	<ui5-form-item>
 		<ui5-label slot="labelContent" required>顧客コード:</ui5-label>
-		<ui5-input v-model="formStore.customerCode"></ui5-input>
+		<ui5-input v-model="formStore.customer_code"></ui5-input>
 	</ui5-form-item>
 
 	<ui5-form-item>
 		<!-- TODO: ここに商品コードのラベルを追加 -->
-		<ui5-select v-model="formStore.productCode">
+		<ui5-select v-model="formStore.product_code">
 			<ui5-option value="">選択してください</ui5-option>
 			<ui5-option value="PROD001">商品A</ui5-option>
 			<ui5-option value="PROD002">商品B</ui5-option>
@@ -417,7 +419,7 @@ const deleteOrder = () => {
 
 	<ui5-form-item>
 		<!-- TODO: ここに納期のラベルを追加 -->
-		<ui5-date-picker v-model="formStore.deliveryDate"></ui5-date-picker>
+		<ui5-date-picker v-model="formStore.delivery_date"></ui5-date-picker>
 	</ui5-form-item>
 
 	<div style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
@@ -440,12 +442,12 @@ const deleteOrder = () => {
 <ui5-form>
 	<ui5-form-item>
 		<ui5-label slot="labelContent" required>顧客コード:</ui5-label>
-		<ui5-input v-model="formStore.customerCode"></ui5-input>
+		<ui5-input v-model="formStore.customer_code"></ui5-input>
 	</ui5-form-item>
 
 	<ui5-form-item>
 		<ui5-label slot="labelContent" required>商品:</ui5-label>
-		<ui5-select v-model="formStore.productCode">
+		<ui5-select v-model="formStore.product_code">
 			<ui5-option value="">選択してください</ui5-option>
 			<ui5-option value="PROD001">商品A</ui5-option>
 			<ui5-option value="PROD002">商品B</ui5-option>
@@ -460,7 +462,7 @@ const deleteOrder = () => {
 
 	<ui5-form-item>
 		<ui5-label slot="labelContent" required>納期:</ui5-label>
-		<ui5-date-picker v-model="formStore.deliveryDate"></ui5-date-picker>
+		<ui5-date-picker v-model="formStore.delivery_date"></ui5-date-picker>
 	</ui5-form-item>
 
 </ui5-form>
@@ -503,13 +505,13 @@ const deleteOrder = () => {
 	<ui5-illustrated-message slot="noData" name="NoData"></ui5-illustrated-message>
 
 	<!-- オーダー一覧 -->
-	<ui5-table-row v-for="order in formStore.orders" :row-key="order.id" :key="order.id">
-		<ui5-table-cell><ui5-label>{{ order.id }}</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>{{ order.customerCode }}</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>{{ order.productCode }}</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-input :value="order.quantity" @input="formStore.updateOrderQuantity(order.id, $event.target.value)"></ui5-input></ui5-table-cell>
-		<ui5-table-cell><ui5-label>{{ order.deliveryDate }}</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>{{ order.createdAt }}</ui5-label></ui5-table-cell>
+	<ui5-table-row v-for="order in formStore.orders" :row-key="order.ID" :key="order.ID">
+		<ui5-table-cell><ui5-label>{{ order.ID }}</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>{{ order.customer_code }}</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>{{ order.product_code }}</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-input :value="String(order.quantity)" @input="formStore.updateOrderQuantity(order.ID, $event.target.value)"></ui5-input></ui5-table-cell>
+		<ui5-table-cell><ui5-label>{{ order.delivery_date }}</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>{{ order.created_at }}</ui5-label></ui5-table-cell>
 	</ui5-table-row>
 
 </ui5-table>
@@ -544,8 +546,8 @@ const deleteOrder = () => {
 
 - `addOrder`アクションの新規注文オブジェクトの作成
 
-    - `productCode`と`quantity`はそれぞれ`this.productCode`、`this.quantity`を設定
-    - `estimatedCost`は`quantityNum * unitPriceNum`で計算
+    - `product_code`と`quantity`はそれぞれ`this.product_code`、`this.quantity`を設定
+    - `estimated_cost`は`quantityNum * unitPriceNum`で計算
 
 - `deleteOrder`アクションのlocalStorage保存と選択状態クリア
 
@@ -556,7 +558,7 @@ const deleteOrder = () => {
 
 - `reset`アクションのフォームリセット
 
-    - `customerCode`、`productCode`、`quantity`を初期値に設定
+    - `customer_code`、`product_code`、`quantity`を初期値に設定
 
 
 <details>
@@ -564,41 +566,37 @@ const deleteOrder = () => {
 `addOrder`
 ```
 // 注文追加
-    addOrder() {
-		const validationErrors = this.validateForm();
-		
-		if (validationErrors.length > 0) {
-			// エラーメッセージ表示
-			const errorMessage = validationErrors.join('\n');
-			return { success: false, message: errorMessage };
-		}
-		
-		// 数量と単価を数値に変換
-		const quantityNum = parseInt(this.quantity);
-		const unitPriceNum = updateUnitPrice(this.productCode);
+addOrder() {
+	const validationErrors = this.validateForm();
+	
+	if (validationErrors.length > 0) {
+		// エラーメッセージ表示
+		const errorMessage = validationErrors.join('\n');
+		return { success: false, message: errorMessage };
+	}
+	
+	// 新しい注文オブジェクトを作成
+	const newOrder = {
+		ID: Date.now().toString(36) + Math.random().toString(36).substring(2, 8),
+		customer_code: this.customer_code,
+		product_code: this.product_code,
+		quantity: this.quantity,
+		unit_price: updateUnitPrice(this.product_code),
+		estimated_cost: (parseInt(this.quantity) * updateUnitPrice(this.product_code)),
+		delivery_date: this.delivery_date,
+		status: "新規",
+		created_at: new Date().toLocaleString(),
+	};
 
-		// 新しい注文オブジェクトを作成
-		const newOrder = {
-			id: Date.now().toString(36) + Math.random().toString(36).substring(2, 8),
-			customerCode: this.customerCode,
-			productCode: this.productCode,
-			quantity: this.quantity,
-			unitPrice: updateUnitPrice(this.productCode),
-			estimatedCost: quantityNum * unitPriceNum,
-			deliveryDate: this.deliveryDate,
-			status: "新規",
-			createdAt: new Date().toLocaleString(),
-		};
-		
-		// 注文リストに追加
-		this.orders.push(newOrder);
-		// localStorageに保存
-		localStorage.setItem('orders', JSON.stringify(this.orders));
-		
-		// フォームをリセット
-		this.reset();
-		return { success: true, message: "注文が追加されました。"};
-    },
+	// 注文リストに追加
+	this.orders.push(newOrder);
+	// localStorageに保存
+	localStorage.setItem('orders', JSON.stringify(this.orders));
+	
+	// フォームをリセット
+	this.reset();
+	return { success: true, message: "注文が追加されました。", order: newOrder };
+},
 ```
 `deleteOrder`
 ```
@@ -620,7 +618,7 @@ const deleteOrder = () => {
         }
         return;
       }
-      this.orders = this.orders.filter(order => !selectedRows.includes(order.id));
+      this.orders = this.orders.filter(order => !selectedRows.includes(order.ID));
 
 
       /////// 追加 ///////
@@ -641,13 +639,13 @@ const deleteOrder = () => {
     validateForm() {
       const errors = [];
 
-      if (this.customerCode.trim() === "") {
+      if (this.customer_code.trim() === "") {
         errors.push("顧客コードは必須です");
       }
 
       /////// 追加 //////
       // 商品コードのバリデーションを追加
-      if (this.productCode === null || (this.productCode in productPrices) === false) {
+      if (this.product_code === null || (this.product_code in productPrices) === false) {
         errors.push("商品を選択してください");
       }
       //////////////////
@@ -658,7 +656,7 @@ const deleteOrder = () => {
       }
 
       /////// 追加 //////
-      if (this.deliveryDate === null || this.deliveryDate.trim() === "") {
+      if (this.delivery_date === null || this.delivery_date.trim() === "") {
         errors.push("納期は必須です");
       }
       //////////////////
@@ -671,10 +669,10 @@ const deleteOrder = () => {
 // フォームリセット
 // 具体的な初期値は要件に応じて調整してください
 reset() {
-	this.customerCode = "15112009";
+	this.customer_code = "15112009";
 	this.quantity = "1";
-	this.unitPrice = updateUnitPrice(this.productCode).toString();
-	this.deliveryDate = new Date().toISOString().split('T')[0];
+	this.unitPrice = updateUnitPrice(this.product_code).toString();
+	this.delivery_date = new Date().toISOString().split('T')[0];
 },
 ```
 </details>

@@ -45,7 +45,7 @@ const theme = ref(themeAlpine);
 
 // テスト用の仮データ
 const rowData = ref([
-  { id: 1, customerCode: "CUST001", productCode: "PROD-A", quantity: 10 }
+  { id: 1, customer_code: "CUST001", product_code: "PROD-A", quantity: 10 }
 ]);
 
 // グリッドの基本設定
@@ -58,8 +58,8 @@ const defaultColDef = {
 // 表示する列の定義
 const columnDefs = ref([
   { headerName: "注文ID", field: "id", flex: 1 },
-  { headerName: "顧客コード", field: "customerCode", flex: 1 },
-  { headerName: "商品コード", field: "productCode", flex: 1 },
+  { headerName: "顧客コード", field: "customer_code", flex: 1 },
+  { headerName: "商品コード", field: "product_code", flex: 1 },
   { headerName: "数量", field: "quantity", flex: 1 }
 ]);
 </script>
@@ -136,10 +136,10 @@ const rowData = formStore.orders; // refは不要（ストアが既にリアク�
 
 ### ハンズオン 3: セル編集と列の追加
 - `columnDefs`を修正し、以下の列を追加しましょう。
-    - 単価（unitPrice）
-    - 見積り（estimatedCost）
-    - 作成日（createdAt）
-    - 納期（deliveryDate）
+    - 単価（unit_price）
+    - 見積り（estimated_cost）
+    - 作成日（created_at）
+    - 納期（delivery_date）
 - `defaultColDef`に1行追加し、全ての列を編集可能にしましょう。
 
 #### ヒント
@@ -158,14 +158,14 @@ const defaultColDef = {
 
 const columnDefs = ref([
   { headerName: "注文ID", field: "id", flex: 1 },
-  { headerName: "顧客コード", field: "customerCode", flex: 1 },
-  { headerName: "商品コード", field: "productCode", flex: 1 },
+  { headerName: "顧客コード", field: "customer_code", flex: 1 },
+  { headerName: "商品コード", field: "product_code", flex: 1 },
   { headerName: "数量", field: "quantity", flex: 1 },
   // 以下を追加
-  { headerName: "単価", field: "unitPrice", flex: 1 },
-  { headerName: "見積金額", field: "estimatedCost", flex: 1 },
-  { headerName: "納期", field: "deliveryDate", flex: 1 },
-  { headerName: "作成日", field: "createdAt", flex: 1 }
+  { headerName: "単価", field: "unit_price", flex: 1 },
+  { headerName: "見積金額", field: "estimated_cost", flex: 1 },
+  { headerName: "納期", field: "delivery_date", flex: 1 },
+  { headerName: "作成日", field: "created_at", flex: 1 }
 ]);
 ```
 </details>
@@ -201,7 +201,7 @@ const formatCurrency = (val) => {
 const recalculateEstimateCost = (params) => {
   const data = params.data;
   const quantity = parseCurrency(data.quantity);
-  const unitPrice = parseCurrency(data.unitPrice);
+  const unitPrice = parseCurrency(data.unit_price);
   
   // 見積金額を計算
   data.estimatedCost = quantity * unitPrice;
@@ -219,7 +219,7 @@ const recalculateEstimateCost = (params) => {
   onCellValueChanged: recalculateEstimateCost // 追加
 },
 {
-  headerName: "単価", field: "unitPrice", flex: 1,
+  headerName: "単価", field: "unit_price", flex: 1,
   onCellValueChanged: recalculateEstimateCost // 追加
 }
 ```
@@ -238,7 +238,7 @@ const recalculateEstimateCost = (params) => {
 <summary>解答例</summary>
 ```
 {
-  headerName: "単価", field: "unitPrice", flex: 1,
+  headerName: "単価", field: "unit_price", flex: 1,
   onCellValueChanged: recalculateEstimateCost,
 
   ////// 追加 //////
@@ -247,7 +247,7 @@ const recalculateEstimateCost = (params) => {
   /////////////////
 },
 {
-  headerName: "見積金額", field: "estimatedCost", flex: 1,
+  headerName: "見積金額", field: "estimated_cost", flex: 1,
 
   ////// 追加 //////
   valueFormatter: (params) => formatCurrency(params.value)

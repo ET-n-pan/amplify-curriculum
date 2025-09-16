@@ -127,7 +127,6 @@ Day2を参考に、AWS CloudShellでAWS SecretIDとAWS AccessKeyを取得し、�
 
 !!! info "注意"
     - 取得したSecretIDとAccessKeyは60分で期限切れになるので、必要に応じて再取得してください。
-    - CloudShellのリージョンは`ap-northeast-1`（東京）に設定してください。
     - Amplify Dataのコードを変更した場合、サンドボックスを起動する必要があります。
 
 ```
@@ -137,6 +136,7 @@ npx ampx sandbox
 ![sandbox-update](../images/screenshots/d8-sandbox-update.png)
 
 ### ブラウザ開発者ツールでデータが取得できていることを確認
+F12キーを押して開発者ツールを開き、コンソールタブで以下のように表示されていれば成功です。
 ![data-fetch-success](../images/screenshots/d8-data-fetch-success.png)
 
 #### 確認ポイント
