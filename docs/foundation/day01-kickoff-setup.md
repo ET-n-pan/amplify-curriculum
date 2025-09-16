@@ -13,22 +13,22 @@
 #### Visual Studio Codeインストールページ
 ソースコードを記述するためのエディタである、Visual Studio Codeをインストールします。  
 （以下、vscodeと省略する場合があります）  
-https://code.visualstudio.com/
+[公式サイト](https://code.visualstudio.com/)
 ![vscode-install](../images/screenshots/d1-install-vscode.png)
 
 #### AWSコマンドラインインターフェースインストールページ
 AWS のサービスを管理するための統合ツールである、AWSコマンドラインインターフェース(AWS CLI)をインストールします。  
-https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+[公式サイト](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 ![aws-install](../images/screenshots/d1-install-aws-cli.png)
 
 #### Node.jsインストールページ
 JavaScript実行環境となるNode.jsをインストールします。  
-https://nodejs.org/ja/download
+[公式サイト](https://nodejs.org/ja/download)
 ![nodejs-install](../images/screenshots/d1-install-nodejs.png)
 
 #### Gitインストールページ
 ソースコードなどのバージョン管理ツールであるGitをインストールします。  
-https://git-scm.com/downloads/win
+[公式サイト](https://git-scm.com/downloads/win)
 ![git-install](../images/screenshots/d1-install-git.png)
 
 ### オプション２：コマンドラインで環境構築
