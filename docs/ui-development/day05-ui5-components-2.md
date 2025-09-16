@@ -21,11 +21,11 @@
 ## 前提知識キャッチアップ
 ### Piniaストアとは
 
-アプリケーション全体でデータを共有する仕組みです。
+アプリケーション全体でデータを共有する仕組みです。  
+[公式ドキュメント](https://pinia.vuejs.org/introduction.html)
 
 - グローバルストア: ユーザー情報やアプリの状態を管理
 - フォームストア: 注文入力フォームの状態とロジックを管理
-公式ドキュメント: https://pinia.vuejs.org/introduction.html
 
 ### localStorageとは
 ブラウザにデータを保存する仕組みです。ページをリロードしてもデータが保持されます。
@@ -37,10 +37,10 @@ npm run dev
 
 ## Step1: Global-storeファイル更新
 ### ユーザー情報管理の実装
-`src/stores/global-store.ts`を以下のコードで置き換える
+`src/stores/global-store.ts`を以下のコードで置き換えます。
 
 ```
-<!-- src/stores/global-store.ts -->
+// src/stores/global-store.ts
 import { defineStore } from "pinia";
 
 export const useGlobalStore = defineStore("global", {
@@ -84,7 +84,8 @@ export const useGlobalStore = defineStore("global", {
 
 ## Step 2: Main.ts更新
 ### Piniaのセットアップ
-`src/main.ts`を以下のコードを追加
+`src/main.ts`に以下のコードを追加します。
+
 ```
 // piniaのインポート
 import { createPinia } from "pinia";
@@ -96,9 +97,9 @@ const pinia = createPinia();
 app.use(pinia);
 ```
 
-## Step 2: MainLayout.vue更新
+## Step 3: MainLayout.vue更新
 ### テンプレートの修正
-`src/layouts/MainLayout.vue`の`<authenticator>`タグ内を修正
+`src/layouts/MainLayout.vue`の`<authenticator>`タグ内を修正します。
 
 **修正箇所**
 ```
@@ -112,7 +113,7 @@ app.use(pinia);
 ```
 
 ### ユーザーメニューの更新
-`<ui5-user-menu-account>`タグを以下のコードで置き換え
+`<ui5-user-menu-account>`タグを以下のコードで置き換えます。
 
 ```
 <ui5-user-menu-account
@@ -129,8 +130,7 @@ app.use(pinia);
 
 ### スクリプト部分の修正
 
-
-`<script setup>`の下に以下のコードを追加/変更
+`<script setup>`の下に以下のコードを追加/変更します。
 ```
 import { ref } from "vue";　ーー＞　 import { ref, getCurrentInstance } from "vue"; 
 import { useGlobalStore } from "@/stores/global-store"; 
@@ -151,11 +151,12 @@ const setUserData = async (user) => {
 
 
 ### 動作確認
-ユーザープロフィールが正しく表示されることを確認
+ユーザープロフィールが正しく表示されることを確認します。
 ![mainlayout-update](../images/screenshots/d5-user-profile-real.png)
 
-## Step 3: フォームストアの作成
-### `src/stores/form-store.ts`を作成し、以下のコードを追加
+## Step 4: フォームストアの作成
+`src/stores/form-store.ts`を作成し、以下のコードを追加します。
+
 ```
 // stores/form-store.ts
 import { defineStore } from "pinia";
@@ -314,8 +315,9 @@ export const useFormStore = defineStore("form", {
 ```
 
 
-## Step 4: 注文管理ページの実装
-`Orders2Page.vue`を以下の構造で実装
+## Step 5: 注文管理ページの実装
+`Orders2Page.vue`を以下の内容で実装します。
+
 ```
 <template>
   <div class="mx-5 my-5">
@@ -389,7 +391,8 @@ const deleteOrder = () => {
 
 ## ハンズオン 1: フォームの実装
 ### 注文入力フォームの実装
-`<ui5-panel>`内に以下のコードを追加
+`<ui5-panel>`内に以下のコードを追加します。
+
 ```
 <ui5-form>
 	<ui5-form-item>
@@ -478,8 +481,9 @@ const deleteOrder = () => {
 
 ---
 
-## Step 5: 注文一覧テーブルの実装
-ボタンの下に以下のコードを追加
+## Step 6: 注文一覧テーブルの実装
+ボタンの下に以下のコードを追加します。
+
 ```
 <!-- エラーメッセージ表示用トースト -->
 <ui5-toast id="message" ref="messageRef"></ui5-toast>
@@ -600,68 +604,67 @@ const deleteOrder = () => {
 ```
 // 選択した注文を削除
     deleteOrder(selectionElement: { selected: string; } | null, messageElement: { open: boolean; innerText: string; } | null) {
-        if (selectionElement == null) {
-			if (messageElement != null) {
-				messageElement.open = true;
-				messageElement.innerText = "選択機能が見つかりません。";
-			}
-			return;
-		}
-		const selectedRows = selectionElement.selected.split(' ');
+      if (selectionElement == null) {
+        if (messageElement != null) {
+          messageElement.open = true;
+          messageElement.innerText = "選択機能が見つかりません。";
+        }
+        return;
+      }
+      const selectedRows = selectionElement.selected.split(' ');
 
-		if (selectedRows.length === 0 || (selectedRows.length === 1 && selectedRows[0] === '')) {
-			if (messageElement != null) {
-				messageElement.open = true;
-				messageElement.innerText = "削除する注文を選択してください。";
-			}
-			return;
-		}
-		this.orders = this.orders.filter(order => !selectedRows.includes(order.id));
+      if (selectedRows.length === 0 || (selectedRows.length === 1 && selectedRows[0] === '')) {
+        if (messageElement != null) {
+          messageElement.open = true;
+          messageElement.innerText = "削除する注文を選択してください。";
+        }
+        return;
+      }
+      this.orders = this.orders.filter(order => !selectedRows.includes(order.id));
 
 
-		/////// 追加 ///////
-		// localStorageに保存
-		localStorage.setItem('orders', JSON.stringify(this.orders));
-		// 選択状態をクリア
-		selectionElement.selected = '';
-		////////////////////
-		if (messageElement != null) {
-			messageElement.open = true;
-			messageElement.innerText = `${selectedRows.length}件の注文を削除しました。`;
-		}
+      /////// 追加 ///////
+      // localStorageに保存
+      localStorage.setItem('orders', JSON.stringify(this.orders));
+      // 選択状態をクリア
+      selectionElement.selected = '';
+      ////////////////////
+      if (messageElement != null) {
+        messageElement.open = true;
+        messageElement.innerText = `${selectedRows.length}件の注文を削除しました。`;
+      }
     }
-  }
 ```
 `validateForm`
 ```
 // フォームバリデーション
     validateForm() {
-		const errors = [];
-		
-		if (this.customerCode.trim() === "") {
-			errors.push("顧客コードは必須です");
-		}
+      const errors = [];
 
-		/////// 追加 //////
-		// 商品コードのバリデーションを追加
-		if (this.productCode === null || (this.productCode in productPrices) === false) {
-			errors.push("商品を選択してください");
-		}
-		//////////////////
+      if (this.customerCode.trim() === "") {
+        errors.push("顧客コードは必須です");
+      }
+
+      /////// 追加 //////
+      // 商品コードのバリデーションを追加
+      if (this.productCode === null || (this.productCode in productPrices) === false) {
+        errors.push("商品を選択してください");
+      }
+      //////////////////
 
 
-		if (this.quantity.trim() === "" || parseInt(this.quantity) <= 0) {
-			errors.push("数量は1以上の数値を入力してください");
-		}
-		
-		/////// 追加 //////
-		if (this.deliveryDate === null || this.deliveryDate.trim() === "") {
-			errors.push("納期は必須です");
-		}
-		//////////////////
+      if (this.quantity.trim() === "" || parseInt(this.quantity) <= 0) {
+        errors.push("数量は1以上の数値を入力してください");
+      }
 
-		return errors;
-    }
+      /////// 追加 //////
+      if (this.deliveryDate === null || this.deliveryDate.trim() === "") {
+        errors.push("納期は必須です");
+      }
+      //////////////////
+
+      return errors;
+    },
 ```
 `reset`
 ```
