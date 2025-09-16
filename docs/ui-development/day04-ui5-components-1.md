@@ -27,7 +27,17 @@ npm run dev
 ```
 
 ## プロジェクトフォルダー確認と作成
-src/フォルダーの下で以下のフォルダーとファイルを作成
+src/フォルダー配下に、以下のフォルダーとファイルを作成します。  
+また、既存ファイルを修正します。
+
+* src/pages/Orders2Page.vue
+* src/stores/form-store.ts
+* src/stores/global-store.ts
+* src/composables/useToast.ts
+* src/lib/UI5FormComp.ts
+* src/style.scss （修正）
+* src/main.ts （修正）
+
 ```
 amplify-vue-ts-project/
 ├── amplify/
@@ -50,7 +60,7 @@ amplify-vue-ts-project/
 │   ├── lib/                    # -> フォルダーを作成。ユーティリティ関数、APIクライアント
 │       └── UI5FormComp.ts      # -> ファイルを作成。UI5フォーム関連のユーティリティ
 │   ├── App.vue              
-│   ├── main.ts              
+│   ├── main.ts                 # style.cssのファイル名変更を反映する。
 │   ├── style.scss              # style.css → style.scssに変更、中身を空にする。グローバルスタイル（共通CSS）
 │   └── (...)
 └── amplify_outputs.json
@@ -58,7 +68,7 @@ amplify-vue-ts-project/
 
 
 ## Step 1: UI5FormComp.js更新
-src/lib/UI5FormComp.jsを以下のコードに更新
+src/lib/UI5FormComp.jsを以下のコードに更新します。
 ```
 // src/lib/UI5FormComp.js
 import "@ui5/webcomponents/dist/Avatar.js";
@@ -89,14 +99,16 @@ import "@ui5/webcomponents-icons/dist/nav-back.js";
 import "@ui5/webcomponents-icons/dist/sys-help.js";
 import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/da.js";
+
+import "@ui5/webcomponents-icons/dist/AllIcons.js";
 ```
 
 ## Step 2: router/index.ts更新
-ルーター設定ファイルを以下のコードに更新
+ルーター設定ファイルを以下のコードに更新します。
 
-注文ページとSAPアップロードページのルートを追加
+注文ページとSAPアップロードページのルートを追加します。
 ```
-# src/router/index.ts
+// src/router/index.ts
 // Vue Router: ページ遷移を管理するライブラリのインポート
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from "vue-router";
 
@@ -131,9 +143,9 @@ export default router; // 他のファイルで使用できるようにエクス
 ``` 
 
 ## Step 3: MainLayout.vueにヘッダー追加
-Mainlayout.vueファイルを以下のコードに更新
+Mainlayout.vueファイルを以下のコードに更新します。
 ```
-# src/layout/MainLayout.vue
+<!-- src/layout/MainLayout.vue -->
 <template>
   <authenticator>
     <template v-slot="{ user, signOut }">
@@ -172,13 +184,14 @@ I18n.setLanguage("ja");
 const defaultAvatar = "https://ui5.sap.com/resources/sap/m/themes/base/img/Person.png";
 </script>
 ```
+
 ### ログイン後に以下のようなナビゲーションバーが表示される
-通知アイコンが表示されるが、クリックしてもまだ何も起こらない
+通知アイコンが表示されますが、クリックしてもまだ何も起こりません。
 ![nav-bar-incomplete](../images/screenshots/d4-nav-bar-incomplete.png)
 
 ## ハンズオン 1: ナビゲーションバーの完成
 
-以下の3つのコンポーネントを追加して、ナビゲーションバーを完成させましょう
+以下の3つのコンポーネントを追加して、ナビゲーションバーを完成させましょう。
 
 - ユーザーメニューアイコン
 - サイドバーメニューコンポーネント
@@ -231,10 +244,10 @@ const defaultAvatar = "https://ui5.sap.com/resources/sap/m/themes/base/img/Perso
 ---
 
 ## Step 4: user-menuコンポーネントを追加
-`<ui5-navigation-layout>`の中に`<ui5-user-menu>`コンポーネントを追加して、ユーザーアカウントメニューを実装
+`<ui5-navigation-layout>`の中に`<ui5-user-menu>`コンポーネントを追加して、ユーザーアカウントメニューを実装します。
 
 ```
-# src/layout/MainLayout.vue
+<!-- src/layout/MainLayout.vue -->
 <!-- ユーザーメニュー、サインアウトイベント -->
 <ui5-user-menu ref="userMenuRef" @sign-out-click="signOut">
     <!-- ユーザーアカウント情報 -->
@@ -252,7 +265,7 @@ const defaultAvatar = "https://ui5.sap.com/resources/sap/m/themes/base/img/Perso
 </ui5-user-menu>
 ```
 
-`<script setup>`の中に以下のコードを追加
+`<script setup>`の中に以下のコードを追加します。
 ```
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -283,7 +296,7 @@ const profile = () => {
 
 
 ## Step 5: sidebarコンポーネントの追加
-`<ui5-navigation-layout>`の中に`<ui5-side-navigation>`コンポーネントを追加して、サイドナビゲーションを実装
+`<ui5-navigation-layout>`の中に`<ui5-side-navigation>`コンポーネントを追加して、サイドナビゲーションを実装します。
 ```
 <!-- src/layout/MainLayout.vue -->
 <!-- sidebar -->
@@ -291,7 +304,7 @@ const profile = () => {
   <ui5-side-navigation-item v-for="item in navItems" :key="item.path" :text="item.label" :icon="item.icon" :data-route="item.path" />
 </ui5-side-navigation>
 ```
-`<script setup>`の中に以下のコードを追加
+`<script setup>`の中に以下のコードを追加します。
 ```
 import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 import NavigationLayoutMode from "@ui5/webcomponents-fiori/dist/types/NavigationLayoutMode.js";
@@ -327,7 +340,9 @@ const changeMenu = (event) => {
 ## トラブルシューティング
 
 ### 画面が真っ白になる場合
-Viteのキャッシュが原因の可能性があります。以下のコマンドを実行してキャッシュをクリアし、再度プロジェクトを起動してください。
+Viteのキャッシュが原因の可能性があります。  
+`node_modules/.vite`ディレクトリを削除した後で`npm run dev`を実行して再度プロジェクトを起動してください。  
+（参考）Linux等のシェル環境を利用している場合は、以下のコマンドを実行してください。  
 ```
 rm -rf node_modules/.vite
 npm run dev
