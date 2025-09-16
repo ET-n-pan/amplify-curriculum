@@ -7,15 +7,18 @@
     - セル編集時に他のセルを自動計算で更新
 
 ## Ag-Gridインストール
-### ターミナルで以下のコマンドを実行
+ターミナルで以下のコマンドを実行します。
 ```
 npm install -D sass-embedded
 npm install ag-grid-community@latest ag-grid-vue3@latest
 ```
 
-## Ag-Gridの実装
 ---
+
+## Ag-Gridの実装
 ### Step 1: 最小限のグリッド表示
+
+`src/components/base/AgGridTable.vue`を作成し、以下のコードを追加します。
 ```
 <template>
   <div class="mt-20 mx-5">
@@ -62,10 +65,7 @@ const columnDefs = ref([
 </script>
 ```
 
-
-
-
-### `src/pages/AgGridPage`を作成し、以下のコードを追加
+`src/pages/AgGridPage`を作成し、以下のコードを追加します。
 ```
 <template>
   <div class="mx-10 my-10">
@@ -78,8 +78,12 @@ import AgGridTable from "@/components/base/AgGridTable.vue";
 </script>
 ```
 
-### ハンズオン 1: '/src/router/index.ts'にルートを追加
-`/src/router/index.ts`にTODOの部分を追加し、`/ag-grid`で上のページにアクセスできるようにしましょう。
+### ハンズオン 1: 作成したグリッド表示画面へのルートを追加する
+`/src/router/index.ts`のTODO部分を追加し、`/aggrid`で上のページにアクセスできるようにしましょう。  
+`npm run dev`でローカルサーバーを起動し、AG-Gridの画面にアクセスして確認します。  
+![ag-grid-success](../images/screenshots/d6-agtable.png)
+
+
 #### ヒント
 - 既存のルートを参考に、`path`と`component`を指定
 - `component`は`@/pages/AgGridPage.vue`を指定
@@ -100,16 +104,11 @@ import AgGridTable from "@/components/base/AgGridTable.vue";
 },
 ```
 </details>
-&nbsp;
-
-
-### `npm run dev`でローカルサーバーを起動し、ag-Gridの画面にアクセス
-![ag-grid-success](../images/screenshots/d6-agtable.png)
 
 ---
 
-### ハンズオン 2: ストアのデータをAg-Gridに表示
-上のコードを修正し、Day5で作ったストアのデータを表示しましょう。
+### ハンズオン 2: ストアのデータをAg-Gridに表示する
+Step1で実装したコードを修正し、Day5で作ったストアのデータを表示しましょう。
 
 #### ヒント
 - `useFormStore`をインポート
@@ -133,6 +132,8 @@ const rowData = formStore.orders; // refは不要（ストアが既にリアク�
 - Day5で作成した注文情報が表示されていること
 - 新しく注文を追加した場合、Ag-Gridの表示も更新されること
 
+---
+
 ### ハンズオン 3: セル編集と列の追加
 - `columnDefs`を修正し、以下の列を追加しましょう。
     - 単価（unitPrice）
@@ -143,7 +144,7 @@ const rowData = formStore.orders; // refは不要（ストアが既にリアク�
 
 #### ヒント
 - `columnDefs`に列を追加
-- AgGridのドキュメントを参考に：https://www.ag-grid.com/vue-data-grid/cell-editing/
+- AgGridの[ドキュメント](https://www.ag-grid.com/vue-data-grid/cell-editing/)を参考にする
 
 <details>
 <summary>解答例</summary>
@@ -169,6 +170,7 @@ const columnDefs = ref([
 ```
 </details>
 &nbsp;
+
 #### 確認ポイント
 - 追加した列が表示されていること
 - どのセルでもクリックすると編集可能になっていること
@@ -176,7 +178,7 @@ const columnDefs = ref([
 <hr>
 
 ### Step 2: 見積りの自動計算
-通貨フォマット関数を追加
+通貨フォマット関数を追加します。
 ```
 // 通貨を扱うヘルパー関数
 // "¥1,000"のような文字列を数値に変換
@@ -193,7 +195,7 @@ const formatCurrency = (val) => {
   return `¥${num.toLocaleString()}`;
 };
 ```
-自動計算関数
+自動計算関数を追加します。
 ```
 // 見積り自動計算
 const recalculateEstimateCost = (params) => {
@@ -211,7 +213,7 @@ const recalculateEstimateCost = (params) => {
   formStore.updateOrder(data.id, data);
 };
 ```
-セル編集終了時に自動計算関数を呼び出す
+セル編集終了時に自動計算関数を呼び出すように指定します。
 ```
 { headerName: "数量", field: "quantity", flex: 1,
   onCellValueChanged: recalculateEstimateCost // 追加
@@ -283,7 +285,5 @@ const recalculateEstimateCost = (params) => {
   ```
 
 ## 参考資料
-- Ag-Grid公式ドキュメント（Vue3）: https://www.ag-grid.com/vue-data-grid/
-- Ag-Grid公式ドキュメント（セル編集）: https://www.ag-grid.com/vue-data-grid/cell-editing/
-
-
+- [Ag-Grid公式ドキュメント（Vue3）](https://www.ag-grid.com/vue-data-grid/)
+- [Ag-Grid公式ドキュメント（セル編集）](https://www.ag-grid.com/vue-data-grid/cell-editing/)
