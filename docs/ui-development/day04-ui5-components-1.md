@@ -185,7 +185,8 @@ const defaultAvatar = "https://ui5.sap.com/resources/sap/m/themes/base/img/Perso
 </script>
 ```
 
-### ログイン後に以下のようなナビゲーションバーが表示される
+### 動作確認
+ログイン後に以下のようなナビゲーションバーが表示されます。  
 通知アイコンが表示されますが、クリックしてもまだ何も起こりません。
 ![nav-bar-incomplete](../images/screenshots/d4-nav-bar-incomplete.png)
 
@@ -291,7 +292,8 @@ const profile = () => {
   router.push({ name: "Profile" });
 };
 ```
-### ユーザーアイコンをクリックすると以下のようなメニューが表示される
+### 動作確認
+ユーザーアイコンをクリックすると以下のようなメニューが表示されます。  
 ![user-menu](../images/screenshots/d4-user-profile.png)
 
 
@@ -333,7 +335,8 @@ const changeMenu = (event) => {
 
 ```
 
-### メニューボタンをクリックすると以下のようにサイドバーが表示される
+### 動作確認
+メニューボタンをクリックすると以下のようにサイドバーが表示されます。  
 ![sidebar](../images/screenshots/d4-side-bar.png)
 
 
