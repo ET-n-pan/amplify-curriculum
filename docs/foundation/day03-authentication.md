@@ -9,11 +9,11 @@
     - Amazon Cognitoユーザープールでのユーザー管理
 
 ## ルーターコンポーネントのインストール
-プロジェクトフォルダーを開き、
+ターミナルでプロジェクトフォルダーを開き、以下のコマンドを実行します。
 ```
 npm install vue-router
 ```
-warningメッセージは想定内
+依存関係に関するwarningメッセージが出力されますが、想定内のものであるため、そのまま先に進めてください。
 
 ```
 #このままフロントエンドを起動
@@ -21,14 +21,12 @@ npm run dev
 ```
 
 ## プロジェクトフォルダー確認と作成
-src/フォルダーの下でlayout/とrouter/を作成
+src/フォルダーの下にlayout/とrouter/を作成します。
 ```
 amplify-vue-ts-project/
 ├── amplify/
 │   ├── auth/                # 認証用設定
 │   ├── data/                # データモデルとAPIスキーマ
-│   ├── functions/           # Lambda 関数
-│   ├── storage/             # ストレージ 設定
 │   ├── backend.ts           # バックエンド設定ファイル
 │   └── package.json         # バックエンド依存
 ├── src/
@@ -43,6 +41,8 @@ amplify-vue-ts-project/
 └── amplify_outputs.json     # Amplify生成した設定ファイル（APIエンドポイント、認証情報）
 ```
 ## tsconfig.json更新
+プロジェクトルート（amplify-vue-ts-appディレクトリ直下）にあるtsconfig.jsonを以下のように更新します。
+
 ```
 {
   "files": [],
@@ -63,9 +63,9 @@ amplify-vue-ts-project/
 ```
 
 ## vite.config.ts更新
-プロジェクトルートのvite.config.tsを以下のコードに更新
+プロジェクトルートのvite.config.tsを以下のコードに更新します。
 ```
-// vite.config.js
+// vite.config.ts
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
@@ -90,9 +90,9 @@ export default defineConfig({
 ## ルーター、レイアウトファイル作成
 ![router](../images/screenshots/d3-create-file.png)
 
-作成後に以下のコードをファイルに貼り付ける
+ファイル作成後、各ファイルに以下のコードを貼り付けてください。
 ```
-# layout/MainLayout.vue
+<!-- layout/MainLayout.vue -->
 <template>
     <!-- Authenticator: AWS Amplify UI コンポーネント - 自動でログイン画面とメイン画面を切り替え -->
     <authenticator>
@@ -111,7 +111,7 @@ import "@aws-amplify/ui-vue/styles.css";
 ```
 
 ```
-# router/index.ts
+// router/index.ts
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
@@ -193,7 +193,9 @@ import App from './App.vue'
 </script>
 ```
 
-## フロントエンドが正常にログインページに変更の確認
+## フロントエンドの変更とサインアップの確認
+以下のように、フロントエンドがログインページに変更されていること、およびサインアップが可能なことを確認します。  
+
 ![login](../images/screenshots/d3-sign-up.png)
 
 ![mail](../images/screenshots/d3-mail-check.png)
