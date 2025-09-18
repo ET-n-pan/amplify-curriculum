@@ -63,6 +63,12 @@ node -v; npm -v; aws --version; code --version
 
 ---
 
+## Visual Studio Code Extensionのインストール
+以下の拡張機能をインストールします。
+
+### Vueシンタックスハイライト
+![vue](../images/screenshots/d1-vue-extensions.png)
+
 ## Vue3 + TypeScriptプロジェクト設定
 
 ```bash
