@@ -9,12 +9,12 @@
 ## サンプルアプリケーション
 本学習カリキュラムでは、受注業務を題材として、入力データ（単票登録およびファイルアップロードによる一括登録）をSAP S/4HANAへ連携する、アドオンアプリケーションを開発します。  
 完成した画面のイメージは以下の図の通りです。  
-![完成した画面のイメージ](../images/screenshots/xxxxxxxxxx.png)
+![完成した画面のイメージ](../images/screenshots/index-frontend-complete.png)
 
 
 ## アーキテクチャ
 本学習カリキュラムで題材とするアプリケーションのアークテクチャ構成は以下の図の通りです。  
-![アーキテクチャ構成図](../images/screenshots/xxxxxxxxxx.png)
+![アーキテクチャ構成図](../images/screenshots/index-architecture.png)
 
 ## テクノロジー
 | Technology | Version | Purpose |
@@ -25,7 +25,7 @@
 | UI5 Web Components | Latest | Enterprise-grade UI components |
 | AG Grid | Community/Enterprise | データ可視化 |
 | AWS Cognito | - | 認証とユーザー管理 |
-| SAP OData | v2/v4 | Enterprise data integration |
+| SAP OData | v4 | Enterprise data integration |
 
 ## スケジュール
 
@@ -44,9 +44,9 @@
 - バックエンド連携
 
 **アプリケーション開発 (11-14日目)**
-- ドメイン決定&API Design
-- フロントエンド実装&更新処理実装①
+- フィルタリング、ソート、ページング、ファイルアップロードなどの機能追加
 - エラーハンドリングなど
+- ドメイン&API設計
 
 **振り返り (15日目)**
 - コードレビューと最適化

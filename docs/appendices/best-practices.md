@@ -1,55 +1,51 @@
-# Best Practices
+# ベストプラクティス
 
-This guide outlines industry best practices for AWS Amplify development, focusing on code quality, security, performance, and maintainability.
+このガイドでは、AWS Amplify開発におけるコード品質、セキュリティ、パフォーマンス、および保守性に重点を置いた業界のベストプラクティスを概説します。
 
-## Project Structure and Organization
+## プロジェクト構造と組織化
 
-![Project Organization Best Practices Placeholder](../images/diagrams/project-organization-placeholder.png)
-
-### Frontend Structure
+### フロントエンド構造
 
 ```
 src/
-├── components/           # Reusable UI components
-│   ├── common/          # Generic components (Button, Modal, etc.)
-│   ├── forms/           # Form-specific components
-│   └── layout/          # Layout components (Header, Sidebar)
-├── views/               # Page-level components
-├── stores/              # Pinia state management
-├── composables/         # Vue 3 composition functions
-├── services/            # API and business logic
-├── types/               # TypeScript type definitions
-├── utils/               # Utility functions
-├── assets/              # Static assets
-└── router/              # Vue Router configuration
+├── components/           # 再利用可能なUIコンポーネント
+│   ├── common/          # 汎用コンポーネント（Button、Modalなど）
+│   ├── forms/           # フォーム専用コンポーネント
+│   └── layout/          # レイアウトコンポーネント（Header、Sidebar）
+├── views/               # ページレベルコンポーネント
+├── stores/              # Pinia状態管理
+├── composables/         # Vue 3 Composition関数
+├── services/            # APIとビジネスロジック
+├── types/               # TypeScript型定義
+├── utils/               # ユーティリティ関数
+├── assets/              # 静的アセット
+└── router/              # Vue Routerの設定
 ```
 
-### Backend Structure
+### バックエンド構造
 
 ```
 amplify/
-├── auth/                # Authentication resources
-├── data/                # GraphQL schema and resolvers
-├── functions/           # Lambda functions
-├── storage/             # File storage configuration
-├── custom/              # Custom CloudFormation resources
-└── backend.ts           # Main backend configuration
+├── auth/                # 認証リソース
+├── data/                # GraphQLスキーマとリソルバー
+├── functions/           # Lambda関数
+├── storage/             # ファイルストレージ設定
+├── custom/              # カスタムCloudFormationリソース
+└── backend.ts           # メインバックエンド設定
 ```
 
-!!! tip "Organization Principles"
-    - **Feature-based grouping**: Group related functionality together
-    - **Clear separation of concerns**: Keep UI, business logic, and data separate
-    - **Consistent naming conventions**: Use kebab-case for files, PascalCase for components
-    - **Logical hierarchy**: Organize from general to specific
+!!! tip "組織化の原則"
+    - **機能ベースのグループ化**: 関連する機能をまとめる
+    - **関心の明確な分離**: UI、ビジネスロジック、データを分離する
+    - **一貫した命名規則**: ファイルにはkebab-case、コンポーネントにはPascalCaseを使用
+    - **論理的階層**: 一般的なものから具体的なものへと整理
 
-## TypeScript Best Practices
+## TypeScriptベストプラクティス
 
-![TypeScript Best Practices Placeholder](../images/screenshots/typescript-best-practices-placeholder.png)
-
-### Type Definitions
+### 型定義
 
 ```typescript
-// Define comprehensive interfaces
+// 包括的なインターフェースを定義
 interface User {
   readonly id: string
   email: string
@@ -68,22 +64,22 @@ interface UserPreferences {
   }
 }
 
-// Use utility types for flexibility
+// 柔軟性のためにユーティリティ型を使用
 type CreateUserInput = Omit<User, 'id' | 'createdAt'>
 type UpdateUserInput = Partial<Pick<User, 'name' | 'preferences'>>
 ```
 
-### API Response Types
+### APIレスポンス型
 
 ```typescript
-// Generate types from GraphQL schema
+// GraphQLスキーマから型を生成
 import type { Schema } from '../amplify/data/resource'
 
 type TodoType = Schema['Todo']['type']
 type CreateTodoInput = Schema['Todo']['createType']
 type UpdateTodoInput = Schema['Todo']['updateType']
 
-// Create wrapper types for API responses
+// APIレスポンス用のラッパー型を作成
 interface ApiResponse<T> {
   data: T
   errors?: Array<{
@@ -92,7 +88,7 @@ interface ApiResponse<T> {
   }>
 }
 
-// Use discriminated unions for state management
+// 状態管理に判別可能ユニオンを使用
 type LoadingState<T> =
   | { status: 'idle' }
   | { status: 'loading' }
@@ -100,11 +96,11 @@ type LoadingState<T> =
   | { status: 'error'; error: string }
 ```
 
-### Component Props
+### コンポーネントProps
 
 ```vue
 <script setup lang="ts">
-// Use generic interfaces for reusable components
+// 再利用可能なコンポーネントにジェネリックインターフェースを使用
 interface TableColumn<T> {
   key: keyof T
   label: string
@@ -119,80 +115,78 @@ interface Props<T = any> {
   onRowClick?: (row: T) => void
 }
 
-// Provide defaults and constraints
+// デフォルトと制約を提供
 const props = withDefaults(defineProps<Props>(), {
   loading: false
 })
 
-// Use computed properties for derived state
+// 派生状態に算出プロパティを使用
 const sortedData = computed(() => {
-  // Sorting logic here
+  // ソートロジックをここに
   return props.data
 })
 </script>
 ```
 
-## Vue.js 3 Best Practices
+## Vue.js 3ベストプラクティス
 
-![Vue 3 Best Practices Placeholder](../images/screenshots/vue3-best-practices-placeholder.png)
-
-### Composition API Patterns
+### Composition APIパターン
 
 ```vue
 <script setup lang="ts">
-// Use composables for reusable logic
+// 再利用可能なロジックにはcomposablesを使用
 import { useAuthenticatedUser } from '@/composables/useAuth'
 import { usePagination } from '@/composables/usePagination'
 import { useAsyncData } from '@/composables/useAsyncData'
 
-// Destructure only what you need
+// 必要なものだけを分割代入
 const { user, isAuthenticated } = useAuthenticatedUser()
 const { currentPage, pageSize, totalPages } = usePagination()
 
-// Use reactive references appropriately
+// リアクティブ参照を適切に使用
 const searchTerm = ref('')
 const isLoading = ref(false)
 const todos = ref<TodoType[]>([])
 
-// Prefer computed over watchers when possible
+// 可能な限りwatcherよりcomputedを優先
 const filteredTodos = computed(() =>
   todos.value.filter(todo =>
     todo.content.toLowerCase().includes(searchTerm.value.toLowerCase())
   )
 )
 
-// Use watchers for side effects
+// 副作用にはwatcherを使用
 watch(searchTerm, async (newTerm) => {
   if (newTerm.length > 2) {
     await fetchTodos(newTerm)
   }
 }, { debounce: 300 })
 
-// Cleanup in onUnmounted
+// onUnmountedでクリーンアップ
 onUnmounted(() => {
-  // Cancel subscriptions, clear timers, etc.
+  // サブスクリプションのキャンセル、タイマーのクリアなど
 })
 </script>
 ```
 
-### State Management with Pinia
+### Piniaを使った状態管理
 
 ```typescript
 // stores/todos.ts
 export const useTodosStore = defineStore('todos', () => {
-  // State
+  // 状態
   const todos = ref<TodoType[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
 
-  // Getters (computed)
+  // ゲッター (computed)
   const completedTodos = computed(() =>
     todos.value.filter(todo => todo.completed)
   )
 
   const todoCount = computed(() => todos.value.length)
 
-  // Actions
+  // アクション
   const fetchTodos = async (): Promise<void> => {
     loading.value = true
     error.value = null
@@ -201,7 +195,7 @@ export const useTodosStore = defineStore('todos', () => {
       const response = await client.models.Todo.list()
       todos.value = response.data
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Unknown error'
+      error.value = err instanceof Error ? err.message : '不明なエラー'
     } finally {
       loading.value = false
     }
@@ -214,40 +208,38 @@ export const useTodosStore = defineStore('todos', () => {
         todos.value.push(response.data)
       }
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to create todo'
+      error.value = err instanceof Error ? err.message : 'Todoの作成に失敗しました'
       throw err
     }
   }
 
   return {
-    // State
+    // 状態
     todos: readonly(todos),
     loading: readonly(loading),
     error: readonly(error),
     
-    // Getters
+    // ゲッター
     completedTodos,
     todoCount,
     
-    // Actions
+    // アクション
     fetchTodos,
     addTodo
   }
 })
 ```
 
-## Amplify Backend Best Practices
+## Amplifyバックエンドベストプラクティス
 
-![Backend Best Practices Placeholder](../images/diagrams/backend-best-practices-placeholder.png)
-
-### GraphQL Schema Design
+### GraphQLスキーマ設計
 
 ```typescript
 // amplify/data/resource.ts
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend'
 
 const schema = a.schema({
-  // Use descriptive model names
+  // 説明的なモデル名を使用
   BlogPost: a.model({
     title: a.string().required(),
     content: a.string().required(),
@@ -258,13 +250,13 @@ const schema = a.schema({
     tags: a.string().array(),
     viewCount: a.integer().default(0),
     
-    // Relationships
+    // 関係
     author: a.belongsTo('Author', 'authorId'),
     category: a.belongsTo('Category', 'categoryId'),
     comments: a.hasMany('Comment', 'postId'),
   })
   .authorization((allow) => [
-    // Fine-grained authorization
+    // 細かい許可設定
     allow.owner().to(['create', 'update', 'delete']),
     allow.authenticated().to(['read']),
     allow.groups(['admin']).to(['create', 'update', 'delete']),
@@ -281,7 +273,7 @@ const schema = a.schema({
     bio: a.string(),
     avatarUrl: a.url(),
     
-    // Relationships
+    // 関係
     posts: a.hasMany('BlogPost', 'authorId'),
   })
   .authorization((allow) => [
@@ -293,7 +285,7 @@ const schema = a.schema({
     name: a.string().required(),
     description: a.string(),
     
-    // Relationships
+    // 関係
     posts: a.hasMany('BlogPost', 'categoryId'),
   })
   .authorization((allow) => [
@@ -306,7 +298,7 @@ const schema = a.schema({
     postId: a.id().required(),
     authorId: a.id().required(),
     
-    // Relationships
+    // 関係
     post: a.belongsTo('BlogPost', 'postId'),
     author: a.belongsTo('Author', 'authorId'),
   })
@@ -317,7 +309,7 @@ const schema = a.schema({
 })
 ```
 
-### Authentication Configuration
+### 認証設定
 
 ```typescript
 // amplify/auth/resource.ts
@@ -377,34 +369,32 @@ export const auth = defineAuth({
 })
 ```
 
-## Security Best Practices
+## セキュリティベストプラクティス
 
-![Security Best Practices Placeholder](../images/diagrams/security-best-practices-placeholder.png)
-
-### Frontend Security
+### フロントエンドセキュリティ
 
 ```typescript
-// Environment variable validation
+// 環境変数の検証
 const config = {
   apiUrl: import.meta.env.VITE_API_URL,
   region: import.meta.env.VITE_AWS_REGION,
-  // Never expose sensitive keys in frontend
+  // フロントエンドで機密キーを公開しない
 }
 
-// Validate required environment variables
+// 必要な環境変数を検証
 Object.entries(config).forEach(([key, value]) => {
   if (!value) {
-    throw new Error(`Missing required environment variable: ${key}`)
+    throw new Error(`必要な環境変数が不足しています: ${key}`)
   }
 })
 
-// Input validation and sanitization
+// 入力検証とサニタイゼーション
 import { z } from 'zod'
 
 const CreateTodoSchema = z.object({
   content: z.string()
-    .min(1, 'Content is required')
-    .max(500, 'Content too long')
+    .min(1, 'コンテンツが必要です')
+    .max(500, 'コンテンツが長すぎます')
     .trim(),
   priority: z.enum(['low', 'medium', 'high']).default('medium'),
   dueDate: z.date().optional(),
@@ -414,31 +404,31 @@ const validateTodoInput = (input: unknown) => {
   try {
     return CreateTodoSchema.parse(input)
   } catch (error) {
-    throw new Error(`Invalid input: ${error.message}`)
+    throw new Error(`無効な入力: ${error.message}`)
   }
 }
 ```
 
-### Backend Security
+### バックエンドセキュリティ
 
 ```typescript
-// Lambda function with proper error handling
+// 適切なエラーハンドリングを持つLambda関数
 export const handler: AppSyncResolverHandler<any, any> = async (event) => {
   console.log('Event: ', JSON.stringify(event, null, 2))
 
   try {
-    // Validate user is authenticated
+    // ユーザーが認証されていることを検証
     if (!event.identity?.sub) {
-      throw new Error('Unauthorized')
+      throw new Error('許可されていません')
     }
 
-    // Input validation
+    // 入力検証
     const { content } = event.arguments.input
     if (!content || content.trim().length === 0) {
-      throw new Error('Content is required')
+      throw new Error('コンテンツが必要です')
     }
 
-    // Business logic here
+    // ビジネスロジックをここに
     const result = await processRequest(event.arguments.input, event.identity.sub)
 
     return {
@@ -448,47 +438,24 @@ export const handler: AppSyncResolverHandler<any, any> = async (event) => {
   } catch (error) {
     console.error('Error:', error)
     
-    // Don't expose internal error details
+    // 内部エラーの詳細を公開しない
     const message = error instanceof Error 
       ? error.message 
-      : 'Internal server error'
+      : '内部サーバーエラー'
     
     throw new Error(message)
   }
 }
 ```
 
-### Secrets Management
 
-```typescript
-// amplify/backend.ts
-import { defineBackend } from '@aws-amplify/backend'
-import { auth } from './auth/resource'
-import { data } from './data/resource'
+## パフォーマンスベストプラクティス
 
-const backend = defineBackend({
-  auth,
-  data,
-})
-
-// Add secrets for external API integration
-backend.addOutput({
-  custom: {
-    sapApiEndpoint: process.env.SAP_API_ENDPOINT,
-    // Never commit actual secrets - use AWS Secrets Manager
-  }
-})
-```
-
-## Performance Best Practices
-
-![Performance Best Practices Placeholder](../images/diagrams/performance-best-practices-placeholder.png)
-
-### Frontend Performance
+### フロントエンドパフォーマンス
 
 ```vue
 <script setup lang="ts">
-// Use lazy loading for heavy components
+// 重いコンポーネントに遅延読み込みを使用
 const HeavyChart = defineAsyncComponent({
   loader: () => import('@/components/HeavyChart.vue'),
   loadingComponent: LoadingSpinner,
@@ -497,10 +464,10 @@ const HeavyChart = defineAsyncComponent({
   timeout: 3000,
 })
 
-// Implement virtual scrolling for large lists
+// 大きなリストに仮想スクロールを実装
 import { RecycleScroller } from 'vue-virtual-scroller'
 
-// Use pagination instead of loading all data
+// すべてのデータを読み込む代わりにページネーションを使用
 const { data: todos, loading, error } = usePagination({
   queryFn: (page, limit) => client.models.Todo.list({
     limit,
@@ -509,23 +476,23 @@ const { data: todos, loading, error } = usePagination({
   pageSize: 20
 })
 
-// Debounce search inputs
+// 検索入力のデバウンス
 import { debounce } from 'lodash-es'
 
 const debouncedSearch = debounce(async (term: string) => {
   await searchTodos(term)
 }, 300)
 
-// Optimize bundle size
+// バンドルサイズの最適化
 import { defineAsyncComponent } from 'vue'
-// Instead of: import SomeHeavyComponent from './SomeHeavyComponent.vue'
+// 次の代わりに: import SomeHeavyComponent from './SomeHeavyComponent.vue'
 const SomeHeavyComponent = defineAsyncComponent(() => 
   import('./SomeHeavyComponent.vue')
 )
 </script>
 ```
 
-### Backend Performance
+### バックエンドパフォーマンス
 
 ```typescript
 // Use batch operations
@@ -568,7 +535,7 @@ const getCachedTodos = async (userId: string) => {
 }
 ```
 
-### GraphQL Query Optimization
+### GraphQLクエリ最適化
 
 ```typescript
 // Use specific field selection
@@ -600,11 +567,9 @@ const fetchTodosPage = async (limit = 20, nextToken?: string) => {
 }
 ```
 
-## Testing Best Practices
+## テストベストプラクティス
 
-![Testing Best Practices Placeholder](../images/screenshots/testing-best-practices-placeholder.png)
-
-### Unit Testing
+### 単体テスト
 
 ```typescript
 // tests/components/TodoItem.test.ts
@@ -643,7 +608,7 @@ describe('TodoItem', () => {
 })
 ```
 
-### Integration Testing
+### 結合テスト
 
 ```typescript
 // tests/stores/todos.test.ts
@@ -690,11 +655,9 @@ describe('Todos Store', () => {
 })
 ```
 
-## Deployment and DevOps
+## デプロイとDevOps
 
-![Deployment Best Practices Placeholder](../images/diagrams/deployment-best-practices-placeholder.png)
-
-### Environment Management
+### 環境管理
 
 ```yaml
 # .github/workflows/deploy.yml
@@ -739,7 +702,7 @@ jobs:
           amplify push --yes
 ```
 
-### Monitoring and Logging
+### 監視とログ
 
 ```typescript
 // utils/logger.ts
@@ -776,11 +739,11 @@ export const errorHandler = (error: Error, context: string) => {
 }
 ```
 
-!!! success "Key Takeaways"
-    - **Plan your architecture** before writing code
-    - **Use TypeScript** for better developer experience and fewer bugs
-    - **Implement proper error handling** at every layer
-    - **Follow security best practices** from day one
-    - **Optimize for performance** but don't sacrifice readability
-    - **Write tests** for critical functionality
-    - **Monitor and log** everything in production
+!!! success "重要なポイント"
+    - **コードを書く前にアーキテクチャを計画する**
+    - **より良い開発者体験とバグの減少のためにTypeScriptを使用する**
+    - **すべてのレイヤーで適切なエラーハンドリングを実装する**
+    - **初日からセキュリティベストプラクティスに従う**
+    - **パフォーマンスを最適化するが、可読性を犠牲にしない**
+    - **重要な機能にテストを書く**
+    - **本番環境ではすべてを監視しログを記録する**

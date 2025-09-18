@@ -28,10 +28,10 @@ nav:
     - Day 9 - バックエンド連携①: data-management/day09-backend-integration-1.md
     - Day 10 - バックエンド連携②: data-management/day10-backend-integration-2.md
   - アプリケーション開発:
-    - Day 11 - ドメイン決定 & API Design: application/day11-domain-api-design.md
-    - Day 12 - フロントエンド実装&更新処理実装①: application/day12-frontend-implementation-1.md
-    - Day 13 - フロントエンド実装②: application/day13-frontend-implementation-2.md
-    - Day 14 - エラーハンドリングなど: application/day14-error-handling.md
+    - Day 11 - フロントエンド実装&更新処理実装①: application/day11-frontend-implementation-1.md
+    - Day 12 - フロントエンド実装②: application/day12-frontend-implementation-2.md
+    - Day 13 - エラーハンドリングなど: application/day13-error-handling.md
+    - Day 14 - ドメイン決定 & API Design: application/day14-domain-api-design.md
   - 振り返り:
     - Day 15 - 仕上げ&振り返り: completion/day15-final-review.md
   - 付録:
@@ -41,7 +41,7 @@ nav:
 
 plugins:
   - search:
-      lang: en
+      lang: ja
   - glightbox:
       touchNavigation: true
       loop: false

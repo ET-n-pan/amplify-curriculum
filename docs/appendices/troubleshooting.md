@@ -1,57 +1,55 @@
-# Troubleshooting Guide
+# トラブルシューティングガイド
 
-This comprehensive troubleshooting guide covers common issues encountered during the AWS Amplify development training program.
+この包括的なトラブルシューティングガイドは、AWS Amplify開発トレーニングプログラム中に発生する一般的な問題をカバーします。
 
-## Environment Setup Issues
+## 環境セットアップの問題
 
-![Environment Issues Troubleshooting Placeholder](../images/screenshots/env-troubleshooting-placeholder.png)
+### Node.jsとnpmの問題
 
-### Node.js and npm Issues
-
-!!! error "Node Version Incompatibility"
-    **Symptoms**: Build fails, dependency conflicts, or CLI commands not working
+!!! error "Nodeバージョンの非互換性"
+    **症状**: ビルド失敗、依存関係の競合、またはCLIコマンドが動作しない
     
-    **Solutions**:
+    **解決策**:
     ```bash
-    # Check current Node version
+    # 現在のNodeバージョンを確認
     node --version
     
-    # Install Node Version Manager (nvm)
+    # Node Version Manager (nvm)をインストール
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
     
-    # Install and use Node 18+
+    # Node 18+をインストールして使用
     nvm install 18
     nvm use 18
     nvm alias default 18
     ```
 
-!!! error "npm Permission Errors"
-    **Symptoms**: `EACCES` errors when installing global packages
+!!! error "npmアクセス権エラー"
+    **症状**: グローバルパッケージインストール時に`EACCES`エラー
     
-    **Solutions**:
+    **解決策**:
     ```bash
-    # Configure npm to use a different directory
+    # npmが異なるディレクトリを使用するよう設定
     mkdir ~/.npm-global
     npm config set prefix '~/.npm-global'
     echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.profile
     source ~/.profile
     
-    # Alternative: Fix permissions
+    # 代替手段: アクセス権を修正
     sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
     ```
 
-### AWS CLI and Credentials
+### AWS CLIと認証情報
 
-!!! error "AWS CLI Not Found"
-    **Symptoms**: `aws: command not found`
+!!! error "AWS CLIが見つからない"
+    **症状**: `aws: command not found`
     
-    **Solutions**:
+    **解決策**:
     ```bash
-    # macOS with Homebrew
+    # HomebrewでmacOS
     brew install awscli
     
     # Windows
-    # Download from: https://awscli.amazonaws.com/AWSCLIV2.msi
+    # こちらからダウンロード: https://awscli.amazonaws.com/AWSCLIV2.msi
     
     # Linux
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -59,115 +57,111 @@ This comprehensive troubleshooting guide covers common issues encountered during
     sudo ./aws/install
     ```
 
-!!! error "Invalid Credentials"
-    **Symptoms**: `Unable to locate credentials` or permission denied errors
+!!! error "無効な認証情報"
+    **症状**: `Unable to locate credentials`またはアクセス拒否エラー
     
-    **Solutions**:
+    **解決策**:
     ```bash
-    # Reconfigure AWS CLI
+    # AWS CLIを再設定
     aws configure
     
-    # Check current configuration
+    # 現在の設定を確認
     aws configure list
     aws sts get-caller-identity
     
-    # Alternative: Use environment variables
+    # 代替手段: 環境変数を使用
     export AWS_ACCESS_KEY_ID=your_access_key
     export AWS_SECRET_ACCESS_KEY=your_secret_key
     export AWS_DEFAULT_REGION=us-east-1
     ```
 
-## Amplify CLI Issues
+## Amplify CLIの問題
 
-![Amplify CLI Issues Placeholder](../images/screenshots/amplify-cli-issues-placeholder.png)
+### インストールの問題
 
-### Installation Problems
-
-!!! error "Amplify CLI Installation Fails"
-    **Symptoms**: npm install fails or CLI commands not found
+!!! error "Amplify CLIインストール失敗"
+    **症状**: npm install失敗またはCLIコマンドが見つからない
     
-    **Solutions**:
+    **解決策**:
     ```bash
-    # Clear npm cache
+    # npmキャッシュをクリア
     npm cache clean --force
     
-    # Uninstall and reinstall
+    # アンインストールと再インストール
     npm uninstall -g @aws-amplify/cli
     npm install -g @aws-amplify/cli@latest
     
-    # Verify installation
+    # インストールを確認
     amplify --version
     which amplify
     ```
 
-### Sandbox Issues
+### サンドボックスの問題
 
-!!! error "Sandbox Deployment Fails"
-    **Symptoms**: Resources fail to deploy, timeout errors
+!!! error "サンドボックスデプロイ失敗"
+    **症状**: リソースのデプロイ失敗、タイムアウトエラー
     
-    **Solutions**:
+    **解決策**:
     ```bash
-    # Check AWS service limits
+    # AWSサービス制限を確認
     aws service-quotas get-service-quota --service-code amplify --quota-code L-123456
     
-    # Clear Amplify cache
+    # Amplifyキャッシュをクリア
     rm -rf ~/.amplify
     rm -rf .amplify
     
-    # Try different region
+    # 異なるリージョンを試す
     aws configure set region us-west-2
     
-    # Restart sandbox with verbose logging
+    # 詳細ログでサンドボックスを再開
     amplify sandbox --debug
     ```
 
-!!! error "Sandbox Stuck in Deployment"
-    **Symptoms**: Deployment hangs indefinitely
+!!! error "サンドボックスがデプロイ中にスタック"
+    **症状**: デプロイが無限にハング
     
-    **Solutions**:
+    **解決策**:
     ```bash
-    # Force stop current deployment
+    # 現在のデプロイを強制停止
     Ctrl+C
     
-    # Check CloudFormation stacks
+    # CloudFormationスタックを確認
     aws cloudformation list-stacks --stack-status-filter CREATE_IN_PROGRESS UPDATE_IN_PROGRESS
     
-    # Delete stuck resources
+    # スタックしたリソースを削除
     amplify delete
     
-    # Wait and retry
+    # 待機して再試行
     sleep 60
     amplify sandbox
     ```
 
-## Vue.js Integration Issues
+## Vue.js連携の問題
 
-![Vue Integration Issues Placeholder](../images/screenshots/vue-integration-issues-placeholder.png)
+### TypeScriptコンパイルエラー
 
-### TypeScript Compilation Errors
-
-!!! error "TypeScript Build Failures"
-    **Symptoms**: `tsc` errors, type checking failures
+!!! error "TypeScriptビルド失敗"
+    **症状**: `tsc`エラー、型チェック失敗
     
-    **Solutions**:
+    **解決策**:
     ```bash
-    # Update TypeScript
+    # TypeScriptを更新
     npm install -D typescript@latest
     
-    # Clear TypeScript cache
+    # TypeScriptキャッシュをクリア
     rm -rf node_modules/.cache
     npx tsc --build --clean
     
-    # Check tsconfig.json configuration
+    # tsconfig.json設定を確認
     npx tsc --showConfig
     ```
 
-!!! error "Module Resolution Issues"
-    **Symptoms**: Cannot resolve imports, path mapping not working
+!!! error "モジュール解決の問題"
+    **症状**: インポートを解決できない、パスマッピングが動作しない
     
-    **Solutions**:
+    **解決策**:
     ```json
-    // Update tsconfig.json
+    // tsconfig.jsonを更新
     {
       "compilerOptions": {
         "baseUrl": ".",
@@ -180,7 +174,7 @@ This comprehensive troubleshooting guide covers common issues encountered during
     ```
     
     ```typescript
-    // Update vite.config.ts
+    // vite.config.tsを更新
     import path from 'path'
     
     export default defineConfig({
@@ -192,132 +186,128 @@ This comprehensive troubleshooting guide covers common issues encountered during
     })
     ```
 
-### Amplify Configuration Issues
+### Amplify設定の問題
 
-!!! error "amplify_outputs.json Not Found"
-    **Symptoms**: Module not found error for amplify_outputs.json
+!!! error "amplify_outputs.jsonが見つからない"
+    **症状**: amplify_outputs.jsonのモジュールが見つからないエラー
     
-    **Solutions**:
+    **解決策**:
     ```bash
-    # Ensure sandbox is running
+    # サンドボックスが実行中であることを確認
     amplify sandbox
     
-    # Check if file exists
+    # ファイルが存在するか確認
     ls -la amplify_outputs.json
     
-    # Generate configuration manually
+    # 設定を手動で生成
     amplify generate config
     
-    # Create type definition if needed
+    # 必要に応じて型定義を作成
     echo 'declare module "*amplify_outputs.json"' > src/amplify_outputs.d.ts
     ```
 
-!!! error "Amplify Configuration Errors"
-    **Symptoms**: Runtime configuration errors, API calls fail
+!!! error "Amplify設定エラー"
+    **症状**: ランタイム設定エラー、API呼び出し失敗
     
-    **Solutions**:
+    **解決策**:
     ```typescript
-    // Debug configuration in main.ts
+    // main.tsで設定をデバッグ
     import outputs from '../amplify_outputs.json'
     console.log('Amplify config:', outputs)
     
-    // Validate configuration structure
+    // 設定構造を検証
     if (!outputs.auth || !outputs.data) {
-      console.error('Invalid Amplify configuration')
+      console.error('無効なAmplify設定')
     }
     
-    // Re-configure Amplify
+    // Amplifyを再設定
     import { Amplify } from 'aws-amplify'
     Amplify.configure(outputs)
     ```
 
-## Authentication Issues
+## 認証の問題
 
-![Authentication Issues Placeholder](../images/screenshots/auth-issues-placeholder.png)
+### サインアップ/サインインの問題
 
-### Sign-up/Sign-in Problems
-
-!!! error "User Already Exists"
-    **Symptoms**: SignUp operation returns UserAlreadyExistsException
+!!! error "ユーザーが既に存在"
+    **症状**: SignUp操作がUserAlreadyExistsExceptionを返す
     
-    **Solutions**:
+    **解決策**:
     ```typescript
-    // Check if user exists before sign-up
+    // サインアップ前にユーザーが存在するか確認
     import { signIn } from 'aws-amplify/auth'
     
     try {
       await signIn({ username, password })
-      // User exists, redirect to app
+      // ユーザーが存在、アプリにリダイレクト
     } catch (error) {
       if (error.name === 'UserNotFoundException') {
-        // Proceed with sign-up
+        // サインアップを続行
         await signUp({ username, password })
       }
     }
     ```
 
-!!! error "Confirmation Code Issues"
-    **Symptoms**: Invalid verification code, code expired
+!!! error "確認コードの問題"
+    **症状**: 無効な確認コード、コードの有効期限切れ
     
-    **Solutions**:
+    **解決策**:
     ```typescript
-    // Resend confirmation code
+    // 確認コードを再送
     import { resendSignUpCode } from 'aws-amplify/auth'
     
     await resendSignUpCode({ username })
     
-    // Check email/SMS for new code
-    // Ensure code is entered correctly (no spaces)
+    // 新しいコードのためにメール/SMSを確認
+    // コードが正しく入力されていることを確認（スペースなし）
     ```
 
-### Session Management
+### セッション管理
 
-!!! error "Token Expired Errors"
-    **Symptoms**: API calls return unauthorized after some time
+!!! error "トークン有効期限切れエラー"
+    **症状**: しばらくするとAPI呼び出しが許可されないを返す
     
-    **Solutions**:
+    **解決策**:
     ```typescript
-    // Implement automatic token refresh
+    // 自動トークン更新を実装
     import { fetchAuthSession, signOut } from 'aws-amplify/auth'
     
     try {
       const session = await fetchAuthSession()
       if (!session.tokens) {
-        throw new Error('No valid tokens')
+        throw new Error('有効なトークンがありません')
       }
     } catch (error) {
-      // Redirect to login
+      // ログインにリダイレクト
       await signOut()
       router.push('/login')
     }
     ```
 
-## Data/API Issues
+## データ/APIの問題
 
-![API Issues Placeholder](../images/screenshots/api-issues-placeholder.png)
+### GraphQLスキーマの問題
 
-### GraphQL Schema Issues
-
-!!! error "GraphQL Schema Sync Errors"
-    **Symptoms**: Client queries don't match backend schema
+!!! error "GraphQLスキーマ同期エラー"
+    **症状**: クライアントクエリがバックエンドスキーマと一致しない
     
-    **Solutions**:
+    **解決策**:
     ```bash
-    # Regenerate GraphQL client code
+    # GraphQLクライアントコードを再生成
     amplify generate graphql-client-code --format typescript
     
-    # Update schema and restart sandbox
-    # Edit amplify/data/resource.ts
-    # Ctrl+C to stop sandbox
+    # スキーマを更新してサンドボックスを再開
+    # amplify/data/resource.tsを編集
+    # Ctrl+Cでサンドボックスを停止
     amplify sandbox
     ```
 
-!!! error "Authorization Errors"
-    **Symptoms**: Unauthorized access to GraphQL operations
+!!! error "許可エラー"
+    **症状**: GraphQL操作への無許可アクセス
     
-    **Solutions**:
+    **解決策**:
     ```typescript
-    // Check authorization rules in schema
+    // スキーマの許可ルールを確認
     const schema = a.schema({
       Todo: a
         .model({
@@ -329,70 +319,68 @@ This comprehensive troubleshooting guide covers common issues encountered during
         ]),
     })
     
-    // Ensure user is authenticated before API calls
+    // API呼び出し前にユーザーが認証されていることを確認
     import { getCurrentUser } from 'aws-amplify/auth'
     
     try {
       await getCurrentUser()
-      // User is authenticated, proceed with API calls
+      // ユーザーが認証されている、API呼び出しを続行
     } catch (error) {
-      // Redirect to login
+      // ログインにリダイレクト
     }
     ```
 
-### Network and CORS Issues
+### ネットワークとCORSの問題
 
-!!! error "CORS Policy Errors"
-    **Symptoms**: Blocked by CORS policy in browser console
+!!! error "CORSポリシーエラー"
+    **症状**: ブラウザコンソールでCORSポリシーによってブロックされる
     
-    **Solutions**:
+    **解決策**:
     ```typescript
-    // CORS is handled automatically by Amplify
-    // Ensure you're using the correct API endpoint
+    // CORSはAmplifyによって自動的に処理されます
+    // 正しいAPIエンドポイントを使用していることを確認
     
-    // Check amplify_outputs.json for correct URLs
+    // 正しいURLのためにamplify_outputs.jsonを確認
     import outputs from '../amplify_outputs.json'
     console.log('API URL:', outputs.data?.url)
     
-    // Verify sandbox is running and accessible
+    // サンドボックスが実行中でアクセス可能であることを確認
     curl -X POST outputs.data.url -H "Content-Type: application/json"
     ```
 
-## Build and Deployment Issues
+## ビルドとデプロイの問題
 
-![Build Issues Placeholder](../images/screenshots/build-issues-placeholder.png)
+### ビルド失敗
 
-### Build Failures
-
-!!! error "Vite Build Errors"
-    **Symptoms**: Build command fails with various errors
+!!! error "Viteビルドエラー"
+    **症状**: ビルドコマンドが様々なエラーで失敗
     
-    **Solutions**:
+    **解決策**:
     ```bash
-    # Clear build cache
+    # ビルドキャッシュをクリア
     rm -rf dist
     rm -rf node_modules/.vite
     
-    # Update dependencies
+    # 依存関係を更新
     npm update
     
-    # Build with verbose output
+    # 詳細出力でビルド
     npm run build -- --debug
     
-    # Check for syntax errors
+    # 構文エラーを確認
     npx tsc --noEmit
     ```
 
-!!! error "Memory Issues During Build"
-    **Symptoms**: JavaScript heap out of memory errors
+!!! error "ビルド中のメモリ問題"
+    **症状**: JavaScriptヒープのメモリ不足エラー
     
-    **Solutions**:
+    **解決策**:
     ```bash
-    # Increase Node.js memory limit
+    # Node.jsメモリ制限を増やす
     export NODE_OPTIONS="--max-old-space-size=4096"
     npm run build
     
-    # Or modify package.json
+    # またはpackage.jsonを修正
     {
       "scripts": {
         "build": "NODE_OPTIONS=--max-old-space-size=4096 vite build"
@@ -400,18 +388,16 @@ This comprehensive troubleshooting guide covers common issues encountered during
     }
     ```
 
-## Performance Issues
+## パフォーマンスの問題
 
-![Performance Issues Placeholder](../images/screenshots/performance-issues-placeholder.png)
+### 開発サーバーの動作が遅い
 
-### Slow Development Server
-
-!!! error "Slow Hot Module Replacement (HMR)"
-    **Symptoms**: Changes take long to reflect in browser
+!!! error "遅いホットモジュールリプレースメント (HMR)"
+    **症状**: 変更がブラウザに反映されるまで時間がかかる
     
-    **Solutions**:
+    **解決策**:
     ```typescript
-    // Optimize Vite configuration
+    // Vite設定を最適化
     export default defineConfig({
       server: {
         hmr: {
@@ -425,14 +411,14 @@ This comprehensive troubleshooting guide covers common issues encountered during
     })
     ```
 
-### Large Bundle Size
+### 大きなバンドルサイズ
 
-!!! error "Bundle Size Too Large"
-    **Symptoms**: Slow loading times, large dist files
+!!! error "バンドルサイズが大きすぎる"
+    **症状**: 読み込み時間が遅い、distファイルが大きい
     
-    **Solutions**:
+    **解決策**:
     ```typescript
-    // Implement code splitting
+    // コード分割を実装
     export default defineConfig({
       build: {
         rollupOptions: {
@@ -446,77 +432,76 @@ This comprehensive troubleshooting guide covers common issues encountered during
       }
     })
     
-    // Use dynamic imports for large components
+    // 大きなコンポーネントに動的インポートを使用
     const HeavyComponent = defineAsyncComponent(() => import('./HeavyComponent.vue'))
     ```
 
-## Debug Tools and Commands
+## デバッグツールとコマンド
 
-![Debug Tools Placeholder](../images/screenshots/debug-tools-placeholder.png)
-
-### Useful Debug Commands
+### 便利なデバッグコマンド
 
 ```bash
-# Check all versions
+# すべてのバージョンを確認
 node --version
 npm --version
 aws --version
 amplify --version
 
-# AWS debugging
+# AWSデバッグ
 aws sts get-caller-identity
 aws configure list
 aws logs describe-log-groups
 
-# Amplify debugging
+# Amplifyデバッグ
 amplify status
 amplify env list
 amplify diagnose
 
-# Network debugging
+# ネットワークデバッグ
 curl -I https://api-endpoint
 nslookup api-endpoint
 ping api-endpoint
 ```
 
-### Browser Developer Tools
+### ブラウザ開発者ツール
 
-1. **Console Tab**: Check for JavaScript errors and warnings
-2. **Network Tab**: Monitor API requests and responses  
-3. **Application Tab**: Inspect local storage and session data
-4. **Sources Tab**: Set breakpoints and debug code execution
+1. **Consoleタブ**: JavaScriptエラーと警告を確認
+2. **Networkタブ**: APIリクエストとレスポンスを監視
+3. **Applicationタブ**: ローカルストレージとセッションデータを検査
+4. **Sourcesタブ**: ブレークポイントを設定してコード実行をデバッグ
 
-### Log Analysis
+### ログ分析
 
 ```bash
-# View Amplify logs
+# Amplifyログを表示
 cat ~/.amplify/logs/amplify-cli.log
 
-# View AWS CloudFormation events
+# AWS CloudFormationイベントを表示
 aws cloudformation describe-stack-events --stack-name amplify-*
 
-# View Lambda function logs
+# Lambda関数ログを表示
 aws logs tail /aws/lambda/function-name --follow
 ```
 
-## Getting Additional Help
+## 追加サポートの入手
 
-### Community Resources
+### コミュニティリソース
 
 - **AWS Amplify Discord**: [discord.gg/amplify](https://discord.gg/amplify)
 - **GitHub Issues**: [github.com/aws-amplify/amplify-cli/issues](https://github.com/aws-amplify/amplify-cli/issues)
-- **Stack Overflow**: Tag questions with `aws-amplify`
+- **Stack Overflow**: `aws-amplify`タグで質問
 - **AWS Forums**: [forums.aws.amazon.com](https://forums.aws.amazon.com)
 
-### AWS Support Options
+### AWSサポートオプション
 
-- **AWS Documentation**: [docs.amplify.aws](https://docs.amplify.aws)
-- **AWS Support Center**: For paid support plans
-- **AWS re:Post**: Community-driven Q&A platform
+- **AWSドキュメント**: [docs.amplify.aws](https://docs.amplify.aws)
+- **AWSサポートセンター**: 有料サポートプラン用
+- **AWS re:Post**: コミュニティ主導Q&Aプラットフォーム
 
-!!! tip "Before Asking for Help"
-    1. Search existing issues and documentation
-    2. Provide complete error messages and logs
-    3. Include relevant configuration files
-    4. Specify versions of all tools and dependencies
-    5. Describe steps to reproduce the issue
+!!! tip "サポートを求める前に"
+    1. 既存の問題とドキュメントを検索する
+    2. 完全なエラーメッセージとログを提供する
+    3. 関連する設定ファイルを含める
+    4. すべてのツールと依存関係のバージョンを指定する
+    5. 問題を再現する手順を説明する
+

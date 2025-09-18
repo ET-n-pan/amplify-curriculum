@@ -1,139 +1,111 @@
-# Resources & References
+# リソースと参考資料
 
-This comprehensive resource guide provides links to official documentation, tutorials, tools, and community resources for AWS Amplify development.
+この包括的なリソースガイドは、AWS Amplify開発のための公式ドキュメント、チュートリアル、ツール、コミュニティリソースへのリンクを提供します。
 
-## Official AWS Documentation
-
-![AWS Documentation Resources Placeholder](../images/screenshots/aws-docs-resources-placeholder.png)
+## AWS公式ドキュメント
 
 ### AWS Amplify Gen2
 
-| Resource | Description | Link |
+| リソース | 説明 | リンク |
 |----------|-------------|------|
-| **Official Documentation** | Complete Amplify Gen2 documentation | [docs.amplify.aws](https://docs.amplify.aws) |
-| **Getting Started Guide** | Quick start with Amplify Gen2 | [docs.amplify.aws/start](https://docs.amplify.aws/start) |
-| **Vue.js Guide** | Vue-specific Amplify implementation | [docs.amplify.aws/vue](https://docs.amplify.aws/vue) |
-| **API Reference** | Complete API documentation | [docs.amplify.aws/api](https://docs.amplify.aws/api) |
-| **CLI Reference** | Amplify CLI commands and options | [docs.amplify.aws/cli](https://docs.amplify.aws/cli) |
+| **公式ドキュメント** | 完全なAmplify Gen2ドキュメント | [docs.amplify.aws](https://docs.amplify.aws) |
+| **スタートガイド** | Amplify Gen2のクイックスタート | [docs.amplify.aws/start](https://docs.amplify.aws/start) |
+| **Vue.jsガイド** | Vue固有のAmplify実装 | [docs.amplify.aws/vue](https://docs.amplify.aws/vue) |
+| **APIリファレンス** | 完全なAPIドキュメント | [docs.amplify.aws/api](https://docs.amplify.aws/api) |
+| **CLIリファレンス** | Amplify CLIコマンドとオプション | [docs.amplify.aws/cli](https://docs.amplify.aws/cli) |
 
-### Core AWS Services
+### コアAWSサービス
 
-| Service | Documentation | Use Case |
+| サービス | ドキュメント | 使用例 |
 |---------|---------------|----------|
-| **AWS AppSync** | [docs.aws.amazon.com/appsync](https://docs.aws.amazon.com/appsync) | GraphQL API management |
-| **Amazon Cognito** | [docs.aws.amazon.com/cognito](https://docs.aws.amazon.com/cognito) | User authentication & authorization |
-| **Amazon DynamoDB** | [docs.aws.amazon.com/dynamodb](https://docs.aws.amazon.com/dynamodb) | NoSQL database |
-| **AWS Lambda** | [docs.aws.amazon.com/lambda](https://docs.aws.amazon.com/lambda) | Serverless functions |
-| **Amazon S3** | [docs.aws.amazon.com/s3](https://docs.aws.amazon.com/s3) | File storage |
-| **AWS CloudFormation** | [docs.aws.amazon.com/cloudformation](https://docs.aws.amazon.com/cloudformation) | Infrastructure as code |
+| **AWS AppSync** | [docs.aws.amazon.com/appsync](https://docs.aws.amazon.com/appsync) | GraphQL API管理 |
+| **Amazon Cognito** | [docs.aws.amazon.com/cognito](https://docs.aws.amazon.com/cognito) | ユーザー認証と許可 | 
+| **Amazon DynamoDB** | [docs.aws.amazon.com/dynamodb](https://docs.aws.amazon.com/dynamodb) | NoSQLデータベース |
+| **AWS Lambda** | [docs.aws.amazon.com/lambda](https://docs.aws.amazon.com/lambda) | サーバーレス関数 |
+| **Amazon S3** | [docs.aws.amazon.com/s3](https://docs.aws.amazon.com/s3) | ファイルストレージ |
+| **AWS CloudFormation** | [docs.aws.amazon.com/cloudformation](https://docs.aws.amazon.com/cloudformation) | コードとしてのインフラストラクチャ |
 
-## Vue.js 3 Resources
+## Vue.js 3リソース
 
-![Vue.js Resources Placeholder](../images/screenshots/vuejs-resources-placeholder.png)
+### Vue.js公式ドキュメント
 
-### Official Vue.js Documentation
-
-| Resource | Description | Link |
+| リソース | 説明 | リンク |
 |----------|-------------|------|
-| **Vue 3 Guide** | Official Vue 3 documentation | [vuejs.org/guide](https://vuejs.org/guide) |
-| **Composition API** | Vue 3 Composition API guide | [vuejs.org/guide/extras/composition-api-faq.html](https://vuejs.org/guide/extras/composition-api-faq.html) |
-| **Vue Router** | Official routing solution | [router.vuejs.org](https://router.vuejs.org) |
-| **Pinia** | State management for Vue | [pinia.vuejs.org](https://pinia.vuejs.org) |
-| **Vite** | Build tool and dev server | [vitejs.dev](https://vitejs.dev) |
+| **Vue 3ガイド** | Vue 3公式ドキュメント | [vuejs.org/guide](https://vuejs.org/guide) |
+| **Composition API** | Vue 3 Composition APIガイド | [vuejs.org/guide/extras/composition-api-faq.html](https://vuejs.org/guide/extras/composition-api-faq.html) |
+| **Vue Router** | 公式ルーティングソリューション | [router.vuejs.org](https://router.vuejs.org) |
+| **Pinia** | Vue用状態管理 | [pinia.vuejs.org](https://pinia.vuejs.org) |
+| **Vite** | ビルドツールと開発サーバー | [vitejs.dev](https://vitejs.dev) |
 
-### TypeScript Integration
+### TypeScript連携
 
-| Resource | Description | Link |
+| リソース | 説明 | リンク |
 |----------|-------------|------|
-| **TypeScript with Vue** | Official TypeScript guide | [vuejs.org/guide/typescript](https://vuejs.org/guide/typescript) |
-| **Vue TSX Support** | TypeScript JSX guide | [vuejs.org/guide/extras/render-function.html#jsx-tsx](https://vuejs.org/guide/extras/render-function.html#jsx-tsx) |
-| **TypeScript Handbook** | Complete TypeScript reference | [typescriptlang.org/docs](https://typescriptlang.org/docs) |
+| **VueでTypeScript** | TypeScript公式ガイド | [vuejs.org/guide/typescript](https://vuejs.org/guide/typescript) |
+| **Vue TSXサポート** | TypeScript JSXガイド | [vuejs.org/guide/extras/render-function.html#jsx-tsx](https://vuejs.org/guide/extras/render-function.html#jsx-tsx) |
+| **TypeScriptハンドブック** | 完全なTypeScriptリファレンス | [typescriptlang.org/docs](https://typescriptlang.org/docs) |
 
-## UI Component Libraries
+## UIコンポーネントライブラリ
 
-![UI Libraries Resources Placeholder](../images/screenshots/ui-libraries-placeholder.png)
+### SAP UI5 Webコンポーネント
 
-### SAP UI5 Web Components
-
-| Resource | Description | Link |
+| リソース | 説明 | リンク |
 |----------|-------------|------|
-| **UI5 Web Components** | Official SAP UI5 Web Components | [sap.github.io/ui5-webcomponents](https://sap.github.io/ui5-webcomponents) |
-| **Fiori Design Guidelines** | SAP Fiori design system | [experience.sap.com/fiori-design-web](https://experience.sap.com/fiori-design-web) |
-| **Vue Integration** | UI5 Web Components for Vue | [github.com/SAP/ui5-webcomponents-vue](https://github.com/SAP/ui5-webcomponents-vue) |
-| **Icon Explorer** | Browse SAP UI5 icons | [ui5.sap.com/test-resources/sap/m/demokit/iconExplorer](https://ui5.sap.com/test-resources/sap/m/demokit/iconExplorer) |
+| **UI5 Webコンポーネント** | SAP UI5 Webコンポーネント公式 | [sap.github.io/ui5-webcomponents](https://sap.github.io/ui5-webcomponents) |
+| **Fioriデザインガイドライン** | SAP Fioriデザインシステム | [experience.sap.com/fiori-design-web](https://experience.sap.com/fiori-design-web) |
+| **Vue連携** | Vue用UI5 Webコンポーネント | [github.com/SAP/ui5-webcomponents-vue](https://github.com/SAP/ui5-webcomponents-vue) |
+| **アイコンエクスプローラー** | SAP UI5アイコンを閲覧 | [ui5.sap.com/test-resources/sap/m/demokit/iconExplorer](https://ui5.sap.com/test-resources/sap/m/demokit/iconExplorer) |
 
 ### AG Grid
 
-| Resource | Description | Link |
+| リソース | 説明 | リンク |
 |----------|-------------|------|
-| **AG Grid Documentation** | Complete AG Grid guide | [ag-grid.com/vue-data-grid](https://ag-grid.com/vue-data-grid) |
-| **Vue Integration** | AG Grid with Vue 3 | [ag-grid.com/vue-data-grid/getting-started](https://ag-grid.com/vue-data-grid/getting-started) |
-| **Examples & Demos** | Interactive examples | [ag-grid.com/example](https://ag-grid.com/example) |
-| **API Reference** | Complete API documentation | [ag-grid.com/vue-data-grid/grid-api](https://ag-grid.com/vue-data-grid/grid-api) |
+| **AG Gridドキュメント** | 完全なAG Gridガイド | [ag-grid.com/vue-data-grid](https://ag-grid.com/vue-data-grid) |
+| **Vue連携** | Vue 3でのAG Grid | [ag-grid.com/vue-data-grid/getting-started](https://ag-grid.com/vue-data-grid/getting-started) |
+| **例とデモ** | インタラクティブな例 | [ag-grid.com/example](https://ag-grid.com/example) |
+| **APIリファレンス** | 完全なAPIドキュメント | [ag-grid.com/vue-data-grid/grid-api](https://ag-grid.com/vue-data-grid/grid-api) |
 
-### Alternative UI Libraries
+### 代替 UIライブラリ
 
-| Library | Description | Link |
+| ライブラリ | 説明 | リンク |
 |---------|-------------|------|
-| **Quasar** | Vue 3 component framework | [quasar.dev](https://quasar.dev) |
-| **Vuetify** | Material Design components | [vuetifyjs.com](https://vuetifyjs.com) |
-| **Element Plus** | Vue 3 component library | [element-plus.org](https://element-plus.org) |
-| **Ant Design Vue** | Enterprise-class UI components | [antdv.com](https://antdv.com) |
+| **Quasar** | Vue 3コンポーネントフレームワーク | [quasar.dev](https://quasar.dev) |
+| **Vuetify** | Material Designコンポーネント | [vuetifyjs.com](https://vuetifyjs.com) |
+| **Element Plus** | Vue 3コンポーネントライブラリ | [element-plus.org](https://element-plus.org) |
+| **Ant Design Vue** | エンタープライズクラスUIコンポーネント | [antdv.com](https://antdv.com) |
 
-## Development Tools
+## 開発ツール
 
-![Development Tools Resources Placeholder](../images/screenshots/dev-tools-placeholder.png)
+### コードエディタと拡張機能
 
-### Code Editors & Extensions
-
-| Tool | Description | Extensions |
+| ツール | 説明 | 拡張機能 |
 |------|-------------|------------|
-| **VS Code** | Microsoft's free code editor | Vue Volar, AWS Toolkit, GitLens |
-| **WebStorm** | JetBrains IDE for web development | Built-in Vue support |
-| **Vim/Neovim** | Terminal-based editors | vue-language-server, coc-vetur |
+| **VS Code** | Microsoftの無料コードエディタ | Vue Volar, AWS Toolkit, GitLens |
+| **WebStorm** | Web開発用JetBrains IDE | Vueサポート内蔵 |
+| **Vim/Neovim** | ターミナルベースエディタ | vue-language-server, coc-vetur |
 
-### Essential VS Code Extensions
 
-```json
-{
-  "recommendations": [
-    "Vue.volar",
-    "Vue.vscode-typescript-vue-plugin", 
-    "bradlc.vscode-tailwindcss",
-    "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint",
-    "ms-vscode.vscode-typescript-next",
-    "AmazonWebServices.aws-toolkit-vscode",
-    "eamodio.gitlens",
-    "PKief.material-icon-theme",
-    "ms-vscode.live-server"
-  ]
-}
-```
+### ブラウザ開発者ツール
 
-### Browser Developer Tools
-
-| Tool | Description | Platform |
+| ツール | 説明 | プラットフォーム |
 |------|-------------|----------|
-| **Vue DevTools** | Official Vue debugging extension | Chrome, Firefox, Safari |
-| **AWS X-Ray** | Distributed tracing for AWS services | Web Console |
-| **GraphQL Playground** | GraphQL query development | AppSync Console |
+| **Vue DevTools** | Vue公式デバッグ拡張機能 | Chrome, Firefox, Safari |
+| **AWS X-Ray** | AWSサービス用分散トレーシング | Webコンソール |
+| **GraphQL Playground** | GraphQLクエリ開発 | AppSyncコンソール |
 
-## Testing Resources
+## テストリソース
 
-![Testing Resources Placeholder](../images/screenshots/testing-resources-placeholder.png)
+### テストフレームワーク
 
-### Testing Frameworks
-
-| Framework | Description | Documentation |
+| フレームワーク | 説明 | ドキュメント |
 |-----------|-------------|---------------|
-| **Vitest** | Next-gen testing framework | [vitest.dev](https://vitest.dev) |
-| **Jest** | JavaScript testing framework | [jestjs.io](https://jestjs.io) |
-| **Vue Test Utils** | Official Vue testing utilities | [test-utils.vuejs.org](https://test-utils.vuejs.org) |
-| **Cypress** | End-to-end testing | [cypress.io](https://cypress.io) |
-| **Playwright** | Cross-browser testing | [playwright.dev](https://playwright.dev) |
+| **Vitest** | 次世代テストフレームワーク | [vitest.dev](https://vitest.dev) |
+| **Jest** | JavaScriptテストフレームワーク | [jestjs.io](https://jestjs.io) |
+| **Vue Test Utils** | Vue公式テストユーティリティ | [test-utils.vuejs.org](https://test-utils.vuejs.org) |
+| **Cypress** | E2Eテスト | [cypress.io](https://cypress.io) |
+| **Playwright** | クロスブラウザテスト | [playwright.dev](https://playwright.dev) |
 
-### Testing Best Practices
+### テストベストプラクティス
 
 | Resource | Description | Link |
 |----------|-------------|------|
@@ -141,67 +113,59 @@ This comprehensive resource guide provides links to official documentation, tuto
 | **Vue Testing Handbook** | Comprehensive testing guide | [lmiller1990.github.io/vue-testing-handbook](https://lmiller1990.github.io/vue-testing-handbook) |
 | **Kent C. Dodds Blog** | Testing philosophy and practices | [kentcdodds.com/blog](https://kentcdodds.com/blog) |
 
-## SAP Integration Resources
+## SAP連携リソース
 
-![SAP Integration Resources Placeholder](../images/screenshots/sap-integration-placeholder.png)
-
-### OData Services
+### ODataサービス
 
 | Resource | Description | Link |
 |----------|-------------|------|
-| **OData.org** | Official OData protocol documentation | [odata.org](https://odata.org) |
-| **SAP Gateway** | SAP's OData implementation | [help.sap.com/saphelp_gateway20sp12/helpdata/en/48/8fb8e7b6c748d1ba87ed6e05f0afb3/content.htm](https://help.sap.com/saphelp_gateway20sp12/helpdata/en/48/8fb8e7b6c748d1ba87ed6e05f0afb3/content.htm) |
-| **SAP API Business Hub** | Discover SAP APIs | [api.sap.com](https://api.sap.com) |
+| **OData.org** | 公式ODataプロトコルドキュメント | [odata.org](https://odata.org) |
+| **SAP API Business Hub** | SAP APIを探す | [api.sap.com](https://api.sap.com) |
 | **Northwind OData Service** | Public test OData service | [services.odata.org/northwind/northwind.svc](https://services.odata.org/northwind/northwind.svc) |
 
-### SAP Development
+### SAP開発
 
 | Resource | Description | Link |
 |----------|-------------|------|
 | **SAP Developer** | SAP development resources | [developers.sap.com](https://developers.sap.com) |
-| **SAP Community** | Developer community and Q&A | [community.sap.com](https://community.sap.com) |
-| **SAP Learning** | Official training materials | [learning.sap.com](https://learning.sap.com) |
-| **SAP CodeJam** | Hands-on developer events | [developers.sap.com/tutorials](https://developers.sap.com/tutorials) |
+| **SAP Community** | 開発者コミュニティとQ&A | [community.sap.com](https://community.sap.com) |
+| **SAP Learning** | 公式トレーニング教材 | [learning.sap.com](https://learning.sap.com) |
 
-## Learning Resources
+## 学習リソース
 
-![Learning Resources Placeholder](../images/screenshots/learning-resources-placeholder.png)
+### オンラインコース
 
-### Online Courses
-
-| Platform | Courses | Focus |
+| プラットフォーム | コース | フォーカス |
 |----------|---------|-------|
-| **AWS Training** | [aws.training](https://aws.training) | AWS services and certification |
-| **Vue Mastery** | [vuemastery.com](https://vuemastery.com) | Vue.js 3 and ecosystem |
-| **Frontend Masters** | [frontendmasters.com](https://frontendmasters.com) | Modern web development |
-| **Udemy** | [udemy.com](https://udemy.com) | Practical project-based learning |
-| **Pluralsight** | [pluralsight.com](https://pluralsight.com) | Technology skill development |
+| **AWS Training** | [aws.training](https://aws.training) | AWSサービスと認定 |
+| **Vue Mastery** | [vuemastery.com](https://vuemastery.com) | Vue.js 3とエコシステム |
+| **Frontend Masters** | [frontendmasters.com](https://frontendmasters.com) | モダンWeb開発 |
+| **Udemy** | [udemy.com](https://udemy.com) | 実践的プロジェクトベース学習 |
+| **Pluralsight** | [pluralsight.com](https://pluralsight.com) | 技術スキル開発 |
 
-### YouTube Channels
+### YouTubeチャンネル
 
-| Channel | Description | Focus |
+| チャンネル | 説明 | フォーカス |
 |---------|-------------|-------|
-| **AWS** | Official AWS channel | AWS services and announcements |
-| **Vue.js** | Official Vue.js channel | Framework updates and tutorials |
-| **The Net Ninja** | Web development tutorials | Practical coding tutorials |
-| **Academind** | Programming education | Full-stack development |
-| **Fireship** | Quick tech explanations | Modern web technologies |
+| **AWS** | AWS公式チャンネル | AWSサービスと発表 |
+| **Vue.js** | Vue.js公式チャンネル | フレームワーク更新とチュートリアル |
+| **The Net Ninja** | Web開発チュートリアル | 実践的コーディングチュートリアル |
+| **Academind** | プログラミング教育 | フルスタック開発 |
+| **Fireship** | 簡潔な技術解説 | モダンWeb技術 |
 
-### Books
+### 書籍
 
-| Title | Author | Description |
+| タイトル | 著者 | 説明 |
 |-------|--------|-------------|
-| **Vue.js 3 By Example** | John Au-Yeung | Practical Vue 3 projects |
-| **AWS Well-Architected Framework** | AWS | Best practices for AWS |
-| **Clean Code** | Robert C. Martin | Code quality principles |
-| **You Don't Know JS** | Kyle Simpson | JavaScript fundamentals |
-| **TypeScript Handbook** | Microsoft | Official TypeScript guide |
+| **Vue.js 3 By Example** | John Au-Yeung | 実践的なVue 3プロジェクト |
+| **AWS Well-Architected Framework** | AWS | AWSのベストプラクティス |
+| **Clean Code** | Robert C. Martin | コード品質の原則 |
+| **You Don't Know JS** | Kyle Simpson | JavaScriptの基礎 |
+| **TypeScript Handbook** | Microsoft | TypeScript公式ガイド |
 
-## Community & Support
+## コミュニティとサポート
 
-![Community Resources Placeholder](../images/screenshots/community-resources-placeholder.png)
-
-### Forums & Communities
+### フォーラムとコミュニティ
 
 | Platform | Description | Link |
 |----------|-------------|------|
@@ -209,9 +173,9 @@ This comprehensive resource guide provides links to official documentation, tuto
 | **Stack Overflow** | Programming Q&A | [stackoverflow.com](https://stackoverflow.com) |
 | **Reddit - r/AWS** | AWS discussion community | [reddit.com/r/aws](https://reddit.com/r/aws) |
 | **Reddit - r/vuejs** | Vue.js community | [reddit.com/r/vuejs](https://reddit.com/r/vuejs) |
-| **Dev.to** | Developer community | [dev.to](https://dev.to) |
+| **Dev.to** | 開発者コミュニティ | [dev.to](https://dev.to) |
 
-### Chat & Real-time Support
+### チャットとリアルタイムサポート
 
 | Platform | Description | Link |
 |----------|-------------|------|
@@ -220,21 +184,19 @@ This comprehensive resource guide provides links to official documentation, tuto
 | **AWS Slack** | AWS developer community | [awsslack.com](https://awsslack.com) |
 | **Gitter** | Various project chat rooms | [gitter.im](https://gitter.im) |
 
-### Conferences & Events
+### カンファレンスとイベント
 
-| Event | Description | When |
+| イベント | 説明 | 時期 |
 |-------|-------------|------|
-| **AWS re:Invent** | Annual AWS conference | December |
-| **Vue.js Amsterdam** | European Vue conference | February/March |
-| **AWS Community Days** | Local AWS events | Year-round |
-| **Vue.js Toronto** | Vue.js meetup | Monthly |
-| **SAP TechEd** | Annual SAP developer conference | October/November |
+| **AWS re:Invent** | 年次AWSカンファレンス | 12月 |
+| **Vue.js Amsterdam** | ヨーロッパVueカンファレンス | 2月/3月 |
+| **AWS Community Days** | ローカルAWSイベント | 年中 |
+| **Vue.js Toronto** | Vue.jsミートアップ | 毎月 |
+| **SAP TechEd** | 年次SAP開発者カンファレンス | 10月/11月 |
 
-## Tools & Utilities
+## ツールとユーティリティ
 
-![Tools and Utilities Placeholder](../images/screenshots/tools-utilities-placeholder.png)
-
-### API Testing
+### APIテスト
 
 | Tool | Description | Link |
 |------|-------------|------|
@@ -243,51 +205,49 @@ This comprehensive resource guide provides links to official documentation, tuto
 | **GraphQL Playground** | GraphQL IDE | [github.com/graphql/graphql-playground](https://github.com/graphql/graphql-playground) |
 | **cURL** | Command-line HTTP client | Built into most systems |
 
-### Database Management
+### データベース管理
 
 | Tool | Description | Platform |
 |------|-------------|----------|
 | **DynamoDB Admin** | DynamoDB GUI | [dynamodb-admin.com](https://dynamodb-admin.com) |
 | **NoSQL Workbench** | AWS DynamoDB design tool | [docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.html](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.html) |
 
-### Code Quality
+### コード品質
 
-| Tool | Description | Configuration |
+| ツール | 説明 | 設定 |
 |------|-------------|---------------|
 | **ESLint** | JavaScript linting | `.eslintrc.js` |
 | **Prettier** | Code formatting | `.prettierrc` |
 | **Husky** | Git hooks | `package.json` |
 | **lint-staged** | Lint staged files | `package.json` |
 
-### Performance & Monitoring
+### パフォーマンスと監視
 
 | Tool | Description | Link |
 |------|-------------|------|
 | **AWS CloudWatch** | AWS monitoring service | [aws.amazon.com/cloudwatch](https://aws.amazon.com/cloudwatch) |
 | **AWS X-Ray** | Distributed tracing | [aws.amazon.com/xray](https://aws.amazon.com/xray) |
-| **Lighthouse** | Web performance auditing | Built into Chrome DevTools |
+| **Lighthouse** | Webパフォーマンス監査 | Chrome DevTools内蔵 |
 | **Bundle Analyzer** | Analyze bundle size | Various implementations |
 
-## Sample Projects & Templates
+## サンプルプロジェクトとテンプレート
 
-![Sample Projects Placeholder](../images/screenshots/sample-projects-placeholder.png)
-
-### Official Examples
+### 公式例
 
 | Repository | Description | Link |
 |------------|-------------|------|
 | **Amplify Examples** | Official Amplify sample apps | [github.com/aws-samples/aws-amplify-vue](https://github.com/aws-samples/aws-amplify-vue) |
 | **Vue 3 Examples** | Official Vue 3 examples | [github.com/vuejs/vue-next/tree/master/packages/vue/examples](https://github.com/vuejs/vue-next/tree/master/packages/vue/examples) |
 
-### Starter Templates
+### スターターテンプレート
 
 | Template | Description | Framework |
 |----------|-------------|-----------|
 | **create-vue** | Official Vue 3 project scaffolding | Vue 3 + TypeScript |
-| **Vite Vue Template** | Minimal Vue 3 + Vite setup | Vue 3 + Vite |
+| **Vite Vueテンプレート** | 最小Vue 3 + Viteセットアップ | Vue 3 + Vite |
 | **Quasar CLI** | Full-featured Vue framework | Vue 3 + Quasar |
 
-### Real-world Applications
+### アプリケーション例
 
 | Project | Description | Technologies |
 |---------|-------------|-------------|
@@ -295,14 +255,12 @@ This comprehensive resource guide provides links to official documentation, tuto
 | **TodoMVC Vue** | TodoMVC implementation | Vue 3, Composition API |
 | **RealWorld Vue** | Medium clone | Vue 3, Router, State Management |
 
-## Cheat Sheets & Quick References
-
-![Cheat Sheets Placeholder](../images/screenshots/cheat-sheets-placeholder.png)
+## チートシートとクイックリファレンス
 
 ### Vue 3 Composition API
 
 ```typescript
-// Reactive state
+// リアクティブ状態
 import { ref, reactive, computed, watch } from 'vue'
 
 const count = ref(0)
@@ -314,29 +272,29 @@ watch(count, (newVal, oldVal) => {
 })
 ```
 
-### AWS Amplify CLI Commands
+### AWS Amplify CLIコマンド
 
 ```bash
-# Project initialization
+# プロジェクト初期化
 amplify init
 amplify configure
 
-# Development
+# 開発
 amplify sandbox
 amplify status
 
-# Deployment
+# デプロイ
 amplify push
 amplify publish
 
-# Cleanup
+# クリーンアップ
 amplify delete
 ```
 
-### GraphQL Query Patterns
+### GraphQLクエリパターン
 
 ```graphql
-# List with pagination
+# ページネーション付きリスト
 query ListTodos($limit: Int, $nextToken: String) {
   listTodos(limit: $limit, nextToken: $nextToken) {
     items { id content completed }
@@ -344,14 +302,14 @@ query ListTodos($limit: Int, $nextToken: String) {
   }
 }
 
-# Create mutation
+# 作成ミューテーション
 mutation CreateTodo($input: CreateTodoInput!) {
   createTodo(input: $input) {
     id content completed
   }
 }
 
-# Real-time subscription
+# リアルタイムサブスクリプション
 subscription OnCreateTodo {
   onCreateTodo {
     id content completed
@@ -359,31 +317,29 @@ subscription OnCreateTodo {
 }
 ```
 
-## Stay Updated
+## 最新情報をキャッチアップ
 
-![Stay Updated Resources Placeholder](../images/screenshots/stay-updated-placeholder.png)
+### 公式ブログと発表
 
-### Official Blogs & Announcements
-
-| Source | Description | RSS/Updates |
+| ソース | 説明 | RSS/更新 |
 |--------|-------------|-------------|
 | **AWS News Blog** | AWS service announcements | [aws.amazon.com/blogs/aws](https://aws.amazon.com/blogs/aws) |
 | **Vue.js Blog** | Vue framework updates | [blog.vuejs.org](https://blog.vuejs.org) |
 | **AWS Amplify Blog** | Amplify-specific updates | [aws.amazon.com/blogs/mobile/tag/amplify](https://aws.amazon.com/blogs/mobile/tag/amplify) |
 | **SAP Blogs** | SAP development updates | [blogs.sap.com](https://blogs.sap.com) |
 
-### Newsletters
+### ニュースレター
 
-| Newsletter | Focus | Frequency |
+| ニュースレター | フォーカス | 頻度 |
 |------------|-------|-----------|
 | **AWS Week in Review** | AWS updates | Weekly |
-| **Vue.js Developers Newsletter** | Vue ecosystem | Bi-weekly |
-| **Frontend Focus** | Frontend development | Weekly |
+| **Vue.js開発者ニュースレター** | Vueエコシステム | 隔週 |
+| **Frontend Focus** | フロントエンド開発 | 週刊 |
 | **JavaScript Weekly** | JavaScript updates | Weekly |
 
-### Social Media
+### ソーシャルメディア
 
-| Platform | Accounts to Follow |
+| プラットフォーム | フォローすべきアカウント |
 |----------|-------------------|
 | **Twitter** | @awscloud, @vuejs, @amplify, @sapdevs |
 | **LinkedIn** | AWS, Vue.js, SAP Developers |
@@ -391,5 +347,5 @@ subscription OnCreateTodo {
 
 ---
 
-!!! tip "Bookmark This Page"
-    This resources page is your one-stop reference for AWS Amplify development. Bookmark it and refer back regularly as you continue your development journey!
+!!! tip "このページをブックマークしよう"
+    このリソースページは、AWS Amplify開発のワンストップリファレンスです。ブックマークして、開発の旅を続ける中で定期的に参照してください！

@@ -262,7 +262,7 @@ export const useFormStore = defineStore("form", {
 			estimated_cost: (parseInt(this.quantity) * updateUnitPrice(this.product_code)),
 			delivery_date: this.delivery_date,
 			status: "新規",
-			createdAt: new Date().toLocaleString(),
+			created_at: new Date().toLocaleString(),
 		};
 		// 注文リストに追加
 		this.orders.push(newOrder);

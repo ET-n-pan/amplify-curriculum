@@ -1,8 +1,8 @@
 # Day 9: バックエンド連携① - データベース連携とCRUD機能の追加
-
+CRUDとは、Create（作成）、Read（読み取り）、Update（更新）、Delete（削除）の頭文字を取ったもので、データベース操作の基本的な機能を指します。
 ## ゴール
 !!! success "Day 9 Goals"
-    - Amplify DataにDelete/Update/Post機能を追加
+    - Amplify DataにCreateとRead機能を追加
     - フロントエンドデータソースをAmplify Dataに変更
 
 
