@@ -671,7 +671,7 @@ addOrder() {
 reset() {
 	this.customer_code = "15112009";
 	this.quantity = "1";
-	this.unitPrice = updateUnitPrice(this.product_code).toString();
+	this.unit_price = updateUnitPrice(this.product_code).toString();
 	this.delivery_date = new Date().toISOString().split('T')[0];
 },
 ```

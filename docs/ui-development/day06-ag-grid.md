@@ -45,7 +45,7 @@ const theme = ref(themeAlpine);
 
 // テスト用の仮データ
 const rowData = ref([
-  { id: 1, customer_code: "CUST001", product_code: "PROD-A", quantity: 10 }
+  { ID: 1, customer_code: "CUST001", product_code: "PROD-A", quantity: 10 }
 ]);
 
 // グリッドの基本設定
@@ -57,7 +57,7 @@ const defaultColDef = {
 
 // 表示する列の定義
 const columnDefs = ref([
-  { headerName: "注文ID", field: "id", flex: 1 },
+  { headerName: "注文ID", field: "ID", flex: 1 },
   { headerName: "顧客コード", field: "customer_code", flex: 1 },
   { headerName: "商品コード", field: "product_code", flex: 1 },
   { headerName: "数量", field: "quantity", flex: 1 }
@@ -65,7 +65,7 @@ const columnDefs = ref([
 </script>
 ```
 
-`src/pages/AgGridPage`を作成し、以下のコードを追加します。
+`src/pages/AgGridPage.vue`を作成し、以下のコードを追加します。
 ```
 <template>
   <div class="mx-10 my-10">
@@ -157,7 +157,7 @@ const defaultColDef = {
 };
 
 const columnDefs = ref([
-  { headerName: "注文ID", field: "id", flex: 1 },
+  { headerName: "注文ID", field: "ID", flex: 1 },
   { headerName: "顧客コード", field: "customer_code", flex: 1 },
   { headerName: "商品コード", field: "product_code", flex: 1 },
   { headerName: "数量", field: "quantity", flex: 1 },
@@ -204,13 +204,13 @@ const recalculateEstimateCost = (params) => {
   const unitPrice = parseCurrency(data.unit_price);
   
   // 見積金額を計算
-  data.estimatedCost = quantity * unitPrice;
+  data.estimated_cost = quantity * unitPrice;
   
   // グリッドを更新
   params.api.applyTransaction({ update: [data] });
   
   // ストアも更新（永続化のため）
-  formStore.updateOrder(data.id, data);
+  formStore.updateOrder(data.ID, data);
 };
 ```
 セル編集終了時に自動計算関数を呼び出すように指定します。

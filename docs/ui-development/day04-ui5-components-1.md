@@ -67,10 +67,10 @@ amplify-vue-ts-project/
 ```
 
 
-## Step 1: UI5FormComp.js更新
-src/lib/UI5FormComp.jsを以下のコードに更新します。
+## Step 1: UI5FormComp.ts更新
+src/lib/UI5FormComp.tsを以下のコードに更新します。
 ```
-// src/lib/UI5FormComp.js
+// src/lib/UI5FormComp.ts
 import "@ui5/webcomponents/dist/Avatar.js";
 import "@ui5/webcomponents/dist/Input.js";
 import "@ui5/webcomponents/dist/Button.js";
@@ -170,7 +170,7 @@ Mainlayout.vueファイルを以下のコードに更新します。
 </template>
 
 <script setup lang="ts">
-import "@/lib/UI5FormComp.js";
+import "@/lib/UI5FormComp.ts";
 import { Authenticator } from "@aws-amplify/ui-vue";
 import { I18n } from "aws-amplify/utils";
 import {translations} from "@aws-amplify/ui";
@@ -355,5 +355,5 @@ npm run dev
 `vite.config.ts`の設定が正しいか確認してください。特に`isCustomElement`の部分がUI5コンポーネントを認識するように設定されているか確認してください。
 
 ### UI5スタイルが適用されない場合
-`@ui5/webcomponents-theming`が正しくインストールされているか確認し、`UI5FormComp.js`で必要なコンポーネントがインポートされているか確認してください。
+`@ui5/webcomponents-theming`が正しくインストールされているか確認し、`UI5FormComp.ts`で必要なコンポーネントがインポートされているか確認してください。
 
