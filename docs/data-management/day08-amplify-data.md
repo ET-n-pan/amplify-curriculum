@@ -121,6 +121,13 @@ const odataDataSource = backend.data.addHttpDataSource(
 );
 ```
 
+### Step4: `src/main.ts`の修正
+`src/main.ts`で元の`Amplify.configure`を削除し、以下のように修正します
+```
+Amplify.configure(outputs); // 全ての設定を適用
+```
+
+
 ## クライアント連携の実装
 `src/pages/Orders2Page.vue`を編集して、Amplify Dataクライアントを使用してデータを取得
 ```
