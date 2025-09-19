@@ -28,8 +28,8 @@ nav:
     - Day 9 - バックエンド連携①: data-management/day09-backend-integration-1.md
     - Day 10 - バックエンド連携②: data-management/day10-backend-integration-2.md
   - アプリケーション開発:
-    - Day 11 - アプリケーション機能実装①: application/day11-frontend-implementation-1.md
-    - Day 12 - アプリケーション機能実装②: application/day12-frontend-implementation-2.md
+    - Day 11 - アプリケーション機能実装①: application/day11-application-implementation-1.md
+    - Day 12 - アプリケーション機能実装②: application/day12-application-implementation-2.md
     - Day 13 - エラーハンドリングなど: application/day13-error-handling.md
     - Day 14 - ドメイン決定 & API Design: application/day14-domain-api-design.md
   - 振り返り:
