@@ -123,7 +123,7 @@ export const useFormStore = defineStore("form", {
 
 		// 注文データ
 		allOrders: [] as Array<Schema['Order']["type"]>,
-		// フィルタリングされた注文データ
+		// TODO:フィルタリングされた注文データ
 		filteredOrders: [] as Array<Schema['Order']["type"]>,
 
 		// ローディング状態
@@ -164,7 +164,6 @@ export const useFormStore = defineStore("form", {
 			localStorage.removeItem(ORDERS_KEY);
 			localStorage.removeItem(CACHE_TIMESTAMP_KEY);
 			this.allOrders = [];
-			this.filteredOrders = [];
 			this.lastSyncTime = null;
 		},
 
@@ -173,7 +172,6 @@ export const useFormStore = defineStore("form", {
 			// キャッシュから読み込み
 			this.allOrders = this.loadOrdersFromLocalStorage();
 			this.lastSyncTime = this.getCacheTimestamp();
-			this.filteredOrders = [...this.allOrders];
 
 			console.log("lastSyncTime:", this.lastSyncTime);
 			// 必要に応じてサーバーと同期（例: 最後の同期から1時間以上経過している場合、またはキャッシュがない場合）
@@ -182,8 +180,6 @@ export const useFormStore = defineStore("form", {
 				await this.syncWithServer();
 			}
 
-			// フィルタリングをリセット
-			this.filteredOrders = [...this.allOrders];
 			this.page = 1;
 
 		},
@@ -195,7 +191,6 @@ export const useFormStore = defineStore("form", {
 
 				if (result.data) {
 					this.allOrders = result.data;
-					this.filteredOrders = [...this.allOrders];
 					this.lastSyncTime = new Date();
 					this.saveOrdersToLocalStorage();
 					return { success: true, message: "同期に成功しました" };
@@ -276,7 +271,6 @@ export const useFormStore = defineStore("form", {
 				const index = this.allOrders.findIndex((o: { ID: any; }) => o.ID === orderId);
 				if (index !== -1) {
 					this.allOrders[index] = updatedOrder;
-					this.filteredOrders = [...this.allOrders];
 					this.saveOrdersToLocalStorage();
 				} else {
 					return { success: false, message: "注文が見つかりません" };
@@ -321,7 +315,6 @@ export const useFormStore = defineStore("form", {
 				if (result.data) {
 					// ローカルデータに追加
 					this.allOrders.push(result.data);
-					this.filteredOrders.push(result.data);
 					this.saveOrdersToLocalStorage();
 					
 					// フォームをリセット
@@ -342,9 +335,6 @@ export const useFormStore = defineStore("form", {
 			try {
 				// ローカルデータから削除
 				this.allOrders = this.allOrders.filter((order: { ID: string; }) => 
-					!selectedOrderIds.includes(order.ID as string)
-				);
-				this.filteredOrders = this.filteredOrders.filter((order: { ID: string; }) => 
 					!selectedOrderIds.includes(order.ID as string)
 				);
 
@@ -569,6 +559,12 @@ const updateOrder = async (orderId: string, updatedOrder: any) => {
 - 最終同期: `{{ formStore.lastSyncTimeString }}`
     - getterを使用して、関数をプロパティのように扱う
 - フィルターとソートの適用は`formStore`の`applyFiltersAndSort`関数で行う
+- **filteredOrders**を使用して表示
+	- `v-for="order in formStore.filteredOrders"`
+    - `allOrders`と`filteredOrders`を分離し、フィルターとソート後のデータを`filteredOrders`に格納
+    - `clearCache`、`Initialize`、`syncWithServer`関数は`filteredOrders`を更新
+    - `updateOrder`、`addOrder`、`deleteSelectedOrders`関数は`filteredOrders`を更新、詳細は既存の`allOrders`の更新ロジックを参考
+    - 
 - ソートは`Array.prototype.sort`を使用して実装
     - data.sort((a, b) => { ... }), リターン値は{-1,0,1}
     - -1はaがbより前、1はaがbより後、0は同じ
@@ -715,6 +711,29 @@ applyFiltersAndSort(filters: {
     this.filteredOrders = result;
 },
 ```
+`clearCache`、に以下のコードを追加してください。
+```
+this.filteredOrders = [];
+```
+`initialize`、`syncWithServer`、`updateOrder`、関数に以下のコードを追加してください。
+```
+// allOrders更新後にfilteredOrdersも更新
+this.filteredOrders = [...this.allOrders];
+```
+`addOrder`関数に以下のコードを追加してください。
+```
+// allOrders更新後にfilteredOrdersも更新
+this.filteredOrders.push(result.data);
+```
+`deleteSelectedOrders`関数に以下のコードを追加してください。
+```
+// allOrders更新後にfilteredOrdersも更新
+this.filteredOrders = this.filteredOrders.filter((order: { ID: string; }) => 
+					!selectedOrderIds.includes(order.ID as string)
+				);
+```
+
+
 </details>
 &nbsp;
 
@@ -745,4 +764,9 @@ applyFiltersAndSort(filters: {
 - ボタンの配置が崩れる場合、CSSスタイルを調整し、`flex`レイアウトを使用して整列
 
 
-
+### 確認ポイント
+- フィルターを使用して、顧客コード、商品コード、最小数量で注文を絞り込むと、表示が更新されることを確認
+	- ![filter-applied](../images/screenshots/day11-filter-applied.png)
+- ソートを使用して、指定したフィールドと方向で注文が並び替えられることを確認
+	- ![sort-applied](../images/screenshots/day11-sort-applied.png)
+- フィルターとソートのクリアボタンをクリックすると、すべての条件がリセットされ、全注文が表示されること

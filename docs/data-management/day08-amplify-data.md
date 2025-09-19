@@ -102,6 +102,25 @@ export function response(ctx) {
 }
 ```
 
+### Step 3: `backend.ts`の書き換え
+`amplify/backend.ts`を以下のように書き換えます
+```
+import { defineBackend } from '@aws-amplify/backend';
+import { auth } from './auth/resource';
+import { data } from './data/resource';
+
+
+const backend = defineBackend({
+  auth,
+  data,
+});
+
+const odataDataSource = backend.data.addHttpDataSource(
+  "OdataDataSource",
+  "https://8q5zg2p8tj.us-east-1.awsapprunner.com"
+);
+```
+
 ## クライアント連携の実装
 `src/pages/Orders2Page.vue`を編集して、Amplify Dataクライアントを使用してデータを取得
 ```
