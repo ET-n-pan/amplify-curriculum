@@ -115,6 +115,12 @@ OData（Open Data Protocol）は、RESTful APIの設計に基づいたデータ�
 | `$select`     | 取得するフィールドの指定 | `$select=id,amount` |
 
 ## Rest ClientでAPIを試す
+
+!!! warning "学習に利用するAPIについて"
+    この項では上記Payment-サンプルODataサービスとは別に用意したAPIを利用して、基本的なリクエスト方法を学習します。  
+    クエリオプションは同様に利用できますが、上記サービスには該当するAPIがありませんのでご留意ください。  
+    GET/POST/PATCH対象となるOrderDataのプロパティ仕様（型・桁数・NULL可否）について確認したい場合、こちらの[metadata](https://8q5zg2p8tj.us-east-1.awsapprunner.com/odata/v4/order/$metadata)を参照してください。
+
 ### Step 1: Rest Clientのセットアップ
 1. Rest Client拡張機能をVSCodeにインストール
    ![rest-client-install](../images/screenshots/d7-rest-client.png)
@@ -130,7 +136,7 @@ Headers:
 
 ### Step 3: 基本的なGETリクエスト
 ![send-request](../images/screenshots/d7-get-request.png)
-#### リスポンスが返却されることを確認
+#### レスポンスが返却されることを確認
 ![response-check](../images/screenshots/d7-request-response.png)
 
 

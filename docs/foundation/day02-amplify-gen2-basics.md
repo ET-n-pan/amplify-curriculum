@@ -53,6 +53,7 @@ aws sts assume-role \
 $env:AWS_ACCESS_KEY_ID="先ほど生成したAccessKeyIdに変更"
 $env:AWS_SECRET_ACCESS_KEY="先ほど生成したSecretAccessKeyに変更"
 $env:AWS_SESSION_TOKEN="先ほど生成したSessionToken変更"
+$env:AWS_DEFAULT_REGION="ap-northeast-1"
 ```
 
 ![env-setting](../images/screenshots/d2-env-setting.png)

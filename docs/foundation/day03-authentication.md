@@ -141,7 +141,7 @@ import App from './App.vue'
 import router from "./router/index.ts"; 
 import { Amplify } from "aws-amplify";
 import { parseAmplifyConfig } from "aws-amplify/utils";
-import outputs from "@/amplify_outputs.json";
+import outputs from "../amplify_outputs.json";
 
 // Amplify設定: AWSサービスとの接続情報を設定
 const amplifyConfig = parseAmplifyConfig(outputs);
