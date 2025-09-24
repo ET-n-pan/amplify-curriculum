@@ -148,7 +148,7 @@ onMounted(async () => {
 });
 ```
 
-### Step 3: サンドボックスの起動
+### サンドボックスの起動
 Day2を参考に、AWS CloudShellでAWS SecretIDとAWS AccessKeyを取得し、ローカルのターミナルで環境変数を設定します。
 
 !!! info "注意"
@@ -236,8 +236,42 @@ export function request(ctx) {
   };
 }
 ```
+
+### resource.tsの更新
+`amplify/data/resource.ts`にも以下のコードを追加します。
+```typescript
+const schema = a.schema({
+  Order: a.customType({
+      ID: a.string(),
+      <途中省略>
+    }),
+
+    // 
+    getOrder: a
+      .query()
+      //////////  追加  //////////
+      .arguments({
+        orderby: a.string(),
+        filter: a.string(),
+        top: a.integer(),
+        skip: a.integer(),
+        select: a.string(),
+        search: a.string(),
+      })
+      ////////////////////////////
+      .returns(a.ref("Order").array())
+      .authorization(allow => [allow.publicApiKey()]) // APIキー認証を許可
+      .handler(
+        a.handler.custom({
+          dataSource: "OdataDataSource",
+          entry:"./getOrder.js"
+        })
+      ),
+  });
+```
+
 ### oDataQueryBuilder.tsの作成
-`src/utils/odataQueryBuilder.ts`を作成し、ODataクエリパラメータを生成するユーティリティ関数を実装します。
+`src/utils/oDataQueryBuilder.ts`を作成し、ODataクエリパラメータを生成するユーティリティ関数を実装します。
 ```
 export type ODataValue = string | number | boolean | Date;
 
@@ -281,8 +315,8 @@ export class ODataQueryBuilder {
     fields: (...fields: string[]): string => fields.join(','),
   };
 }
-
 ```
+
 ### クエリオプションの利用例
 `src/pages/Orders2Page.vue`でクエリオプションを使用してデータを取得します。
 ```
@@ -366,6 +400,9 @@ const getRecentOrders = async () => {
    return result.data;
 };
 ```
+</details>
+&nbsp;
+
 #### 確認ポイント
 - データを分析して、条件に合った注文が取得できていること
 ![data-fetch-hands-on](../images/screenshots/d8-data-fetch-hands-on.png)
