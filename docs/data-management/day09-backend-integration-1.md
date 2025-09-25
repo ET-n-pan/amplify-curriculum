@@ -7,40 +7,34 @@ CRUDとは、Create（作成）、Read（読み取り）、Update（更新）、
 
 
 ## Step 1: form-store.tsの修正
-`/src/stores/form-store.ts`を修正し、Day7で作成したAmplify Dataを利用するように変更します。
+`/src/stores/form-store.ts`を修正し、Day8で作成したAmplify Dataを利用するように変更します。
 ```
 // 既存のインポートをAmplify Dataクライアントに変更
+// 追加
+import type { Schema } from "@/amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 
 const client = generateClient<Schema>();
 
+// 適切な場所に追加
 setOrders(orders: any) {
-    // 既存の注文をクリア
-		this.orders = []; 
-
-    // SAPから取得したデータをローカルストアに変換して保存
-		orders.forEach((order: any) => {
-			const formattedOrder = {
-				id: order.ID,
-				customerCode: order.customer_code,
-				productCode: order.product_code,
-				quantity: order.quantity,
-				unitPrice: order.unit_price,
-				estimatedCost: order.estimated_cost,
-				deliveryDate: order.delivery_date,
-				status: order.status,
-				createdAt: order.created_at,
-			};
-			this.orders.push(formattedOrder);
-		});
-
-    // ローカルストレージに保存
-		localStorage.setItem('orders', JSON.stringify(this.orders));
+  this.orders = []; // 既存の注文をクリア
+  this.orders = orders;
+  localStorage.setItem('orders', JSON.stringify(this.orders));
+},
+async fetchOrders() {
+  const result = await client.queries.getOrders();
+  if (result.data) {
+    this.setOrders(result.data.items);
+    console.log("Orders fetched:", result.data.items);
+  }else{
+    console.error("Failed to fetch orders");
+  }
 },
 ```
 
 ## Step 2: Orders2Page.vueの修正
-`/src/pages/Orders2Page.vue`を修正し、Day7で作成したAmplify Dataを利用するように変更します。
+`/src/pages/Orders2Page.vue`を修正し、Day8で作成したAmplify Dataを利用するように変更します。
 ```
 // 既存のインポートをAmplify Dataクライアントに変更
 const fetchOrders = async () => {
@@ -58,7 +52,7 @@ const fetchOrders = async () => {
 ```
 
 
-Day7で追加した`onMounted`に`fetchOrders`を呼び出します。
+Day8で追加した`onMounted`において`fetchOrders`を呼び出します。
 ```
 onMounted(async () => {
   // 非同期処理のためawaitを使用
@@ -68,7 +62,7 @@ onMounted(async () => {
 
 ###　オーダーページ更新の確認
 ![orders-page](../images/screenshots/d9-orders-page.png)
-注文の追加、更新、削除が正常に動作するが、、ページをリロードすると追加した注文が消えてしまうことを確認してください。
+注文の追加、更新、削除が正常に動作しますが、ページをリロードすると追加した注文が消えてしまうことを確認してください。
 
 ## ハンズオン 1: Amplify DataのCRUD機能の実装
 `amplify/data/resource.ts`を修正し、`createOrder`関数を追加します。
@@ -76,8 +70,8 @@ onMounted(async () => {
 
 ### ヒント
 - `createOrder`関数は新しい注文を作成し、作成した注文を返します。
-- 各関数は`client.mutations`を使用してGraphQLミューテーションを呼び出します。
-- 詳細はAmplify Dataのドキュメントを参照してください：https://docs.amplify.aws/vue/build-a-backend/data/custom-business-logic/connect-http-datasource/#step-3---define-custom-queries-and-mutations
+- オーダーページからは`client.mutations`を使用してGraphQLミューテーションを呼び出します。
+- 詳細は[Amplify Dataのドキュメント](https://docs.amplify.aws/vue/build-a-backend/data/custom-business-logic/connect-http-datasource/#step-3---define-custom-queries-and-mutations)を参照してください
 
 
 
@@ -113,6 +107,39 @@ export function response(ctx) {
 }
 
 ```
+
+- `resource.ts`へ`createOrder`を追加
+
+```
+getOrder: a
+  .query()
+///中略///
+  ),
+
+createOrder: a
+  .mutation()
+  .arguments({
+    ID: a.string(),
+    customer_code: a.string(),
+    product_code: a.string(),
+    estimated_cost: a.float(),
+    quantity: a.integer(),
+    unit_price: a.float(),
+    delivery_date: a.string(),
+    status: a.string(),
+    created_at: a.string()
+  })
+  .returns(a.ref("Order"))
+  .authorization(allow => [allow.publicApiKey()]) // APIキー認証を許可
+  .handler(
+    a.handler.custom({
+      dataSource: "OdataDataSource",
+      entry:"./createOrder.js"
+    })
+  ),
+///以下省略///
+```
+
 - 'Orders2Page.vue'の`addOrder`関数を修正
 ```
 // 注文追加関数
