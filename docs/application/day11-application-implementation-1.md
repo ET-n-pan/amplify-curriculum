@@ -79,7 +79,7 @@ import "@/lib/UI5FormComp";
 ```
 // stores/form-store.ts
 import { defineStore } from "pinia";
-import type { Schema } from "@/amplify/data/resource";
+import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 
 const client = generateClient<Schema>();
@@ -89,13 +89,6 @@ const productPrices: { [key: string]: number } = {
 	PROD001: 89800,
 	PROD002: 2500,
 	PROD003: 8900,
-};
-
-// 商品名を定義
-const productNames: { [key: string]: string } = {
-	PROD001: "ノートパソコン",
-	PROD002: "マウス",
-	PROD003: "キーボード",
 };
 
 // 商品コードに基づいて単価を設定
@@ -334,8 +327,8 @@ export const useFormStore = defineStore("form", {
 			}
 			try {
 				// ローカルデータから削除
-				this.allOrders = this.allOrders.filter((order: { ID: string; }) => 
-					!selectedOrderIds.includes(order.ID as string)
+				this.allOrders = this.allOrders.filter((order) => 
+					order.ID && !selectedOrderIds.includes(order.ID)
 				);
 
 				this.saveOrdersToLocalStorage();
@@ -682,26 +675,26 @@ applyFiltersAndSort(filters: {
     
     // フィルタリング
     if (filters.customer_code.trim()) {
-        result = result.filter(order => 
-            order.customer_code?.toLowerCase().includes(filters.customer_code.toLowerCase())
-        );
-    }
-    
-    if (filters.product_code) {
-        result = result.filter(order => order.product_code === filters.product_code);
-    }
-    
-    if (filters.min_quantity && !isNaN(Number(filters.min_quantity))) {
-        result = result.filter(order => 
-            Number(order.quantity) >= Number(filters.min_quantity)
-        );
-    }
+		result = result.filter(order => 
+			order.customer_code?.toLowerCase().includes(filters.customer_code.toLowerCase())
+		);
+	}
+	
+	if (filters.product_code) {
+		result = result.filter(order => order.product_code === filters.product_code);
+	}
+	
+	if (filters.min_quantity && !isNaN(Number(filters.min_quantity))) {
+		result = result.filter(order => 
+			Number(order.quantity) >= Number(filters.min_quantity)
+		);
+	}
     
     // ソート
     if (sort.field) {
         result.sort((a, b) => {
-            const aVal = a[sort.field];
-            const bVal = b[sort.field];
+            const aVal = (a as any)[sort.field];
+            const bVal = (b as any)[sort.field];
             
             const comparison = aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
             return sort.direction === 'asc' ? comparison : -comparison;

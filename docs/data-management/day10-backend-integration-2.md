@@ -4,7 +4,6 @@
 !!! success "Day 10 Goals"
     - Amplify DataにUpdateとDelete機能を追加
     - フロントエンドデータソースをAmplify Dataに変更
-    - ファイルアップロード機能の追加
 
 ## ハンズオン 1: Amplify DataのCRUD機能の実装続き
 

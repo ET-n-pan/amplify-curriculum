@@ -156,10 +156,86 @@
 </style>
 ```
 
+### ステップ2: `Resource.ts`、`form-store.ts`の修正
+`amplify/data/resource.ts`を編集し、以下のコードを追加・書き換えます。
+```
+OrderResponse: a.customType({
+      data: a.ref("Order").array(),
+      count: a.integer()
+}),
+
+getOrder: a
+  .query()
+  .arguments({
+    orderby: a.string(),
+    filter: a.string(),
+    top: a.integer(),
+    skip: a.integer(),
+    select: a.string(),
+    search: a.string(),
+  })
+  .returns(a.ref("OrderResponse")) // リスポンス型をOrderResponseに変更
+  .authorization(allow => [allow.publicApiKey()]) 
+  .handler(
+    a.handler.custom({
+      dataSource: "OdataDataSource",
+      entry:"./getOrder.js"
+    })
+),
+```
+リスポンス型を`OrderResponse`に変更し、`data`と`count`を含むようにします。
+`src/stores/form-store.ts`を編集し、以下のコードを追加・書き換えます。
+```
+// サーバーと同期
+		async syncWithServer(): Promise<{ success: boolean; message: string }> {
+			try{
+				this.isLoading = true;
+				const result = await client.queries.getOrder({});
+				console.log("Sync result:", result);
+				if (result.data?.count) {
+					this.count = result.data.count;
+				}
+        
+        // リスポンス型をOrderResponseに変更したため、result.data.dataに変更
+				if (result.data?.data) {
+					this.allOrders = result.data.data as Array<Schema['Order']["type"]>;
+					this.filteredOrders = [...this.allOrders];
+					this.lastSyncTime = new Date();
+					this.saveOrdersToLocalStorage();
+
+          // 全データを取得するためにページングで繰り返し取得
+					while (this.allOrders.length < this.count) {
+						const nextResult = await client.queries.getOrder({
+							skip: this.allOrders.length
+						});
+						if (nextResult.data?.data) {
+							this.allOrders = this.allOrders.concat(nextResult.data.data as Array<Schema['Order']["type"]>);
+							this.filteredOrders = [...this.allOrders];
+							this.saveOrdersToLocalStorage();
+						} else {
+							break;
+						}
+
+					}
+
+					return { success: true, message: "同期に成功しました" };
+				} else {
+					return { success: false, message: "データ取得に失敗しました" };
+				}
+			} catch (error) {
+				console.error("Sync error:", error);
+				return { success: false, message: "同期中にエラーが発生しました" };
+			} finally {
+				this.isLoading = false;
+			}
+		},
+```
+
+
 ### ハンズオン1: ページングロジックの実装
 ページングUIの作動に必要なロジックを`src/stores/formStore.ts`に実装します。
 
-#### ステップ1: ページング状態の追加
+#### ページング状態の追加
 以下の状態を追加します。
 ```
 // 1ページあたりの表示件数
@@ -177,7 +253,7 @@ paginatedOrders() { //TODO }
 paginationInfo() { //TODO }
 ```
 
-#### ステップ2: ページングアクションの追加
+#### ページングアクションの追加
 以下のアクションを追加します。
 ```
 // 現在のページを設定
@@ -192,7 +268,7 @@ goToPreviousPage() { //TODO }
 goToNextPage() { //TODO }
 ```
 
-#### ステップ3: ページサイズ変更の実装
+#### ページサイズ変更の実装
 `src/components/OrderTable.vue`の`<script setup>`セクションに以下
 のコードを追加します。
 ```
