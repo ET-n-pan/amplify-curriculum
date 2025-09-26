@@ -12,21 +12,7 @@
 関数のレスポンスを処理するファイル`updateOrder.js`、`deleteOrder.js`を`amplify/data/`に作成します。
 
 ### Step 2: `/src/stores/form-store.ts`の修正続き
-`/src/stores/form-store.ts`を修正し、Day9で作成したAmplify DataのCRUD関数を利用するように変更します。
-```
-// インポート追加
-// Orders2Page.vueでのインポートを重複しないように削除
-import type { Schema } from "@/amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
-
-// Amplify Dataクライアント生成
-const client = generateClient<Schema>();
-```
-
-
-### Step 2: `Orders2Page.vue`の修正続き
-`/src/pages/Orders2Page.vue`を修正し、Day9で作成したAmplify DataのCRUD関数を利用するように変更します。
-
+`/src/stores/form-store.ts`を修正し、Step1で作成したAmplify DataのCRUD関数を利用するように変更します。
 
 ### Step 3: 動作確認
 
@@ -85,7 +71,7 @@ deleteOrder: a
 ),
 ```
 
-Step2: `amplify/data/updateOrder.js`作成
+Step1: `amplify/data/updateOrder.js`作成
 ```
 import { util } from "@aws-appsync/utils";
 
@@ -115,7 +101,7 @@ export function response(ctx) {
 }
 ```
 
-Step3: `amplify/data/deleteOrder.js`　作成
+Step1: `amplify/data/deleteOrder.js`　作成
 ```
 import { util } from "@aws-appsync/utils";
 
@@ -140,7 +126,7 @@ export function response(ctx) {
 }
 ```
 
-Step 4: '/src/stores/form-store.ts'の修正続き
+Step 2: '/src/stores/form-store.ts'の修正続き
 ```
 // 注文更新関数: AgGrid用
 async updateOrder(orderId: any, updatedData: any) {
