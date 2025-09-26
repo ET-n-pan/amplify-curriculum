@@ -4,6 +4,7 @@
 !!! success "Day 10 Goals"
     - Amplify DataにUpdateとDelete機能を追加
     - フロントエンドデータソースをAmplify Dataに変更
+    - GitHubを使ったソースコード管理
 
 ## ハンズオン 1: Amplify DataのCRUD機能の実装続き
 
@@ -245,4 +246,165 @@ async deleteOrder(selectionElement: { selected: string; } | null, messageElement
                 - データの整合性、ユーザー体験、エラーハンドリング、パフォーマンス、競合状態の管理などを考慮する必要があります。
                 </details>
 &nbsp;
+
+
+
+## GitHubを使ったソースコード管理
+Githubのウェブサイトでリポジトリを作成するか、GitHub CLIを使ってローカルから直接リポジトリを作成することができます。
+### Step 1: GitHubリポジトリの作成
+
+#### GitHubウェブサイトでリポジトリを作成
+![github-create-repo](../images/screenshots/d10-github-create-repo.png)
+![github-repo-settings](../images/screenshots/d10-github-repo-settings.png)
+推奨設定:
+- Privateリポジトリ
+- READEMEを追加
+- .gitignoreをNodeで追加
+- ライセンスはなしで
+
+
+#### GitHub CLIでリポジトリを作成
+まずはターミナルでGitHub CLIを認証します。(ブラウザ連携)
+```
+gh auth login
+
+# 以下の質問に答える
+# ? What account do you want to log into? → GitHub.com
+# ? What is your preferred protocol for Git operations? → HTTPS
+# ? Authenticate Git with your GitHub credentials? → Yes
+# ? How would you like to authenticate GitHub CLI? → Login with a web browser
+# 表示されたコードをブラウザで入力し、認証を完了させる
+```
+![gh-devices](../images/screenshots/d10-gh-devices.png)
+![gh-auth](../images/screenshots/d10-gh-auth.png)
+![gh-authorized](../images/screenshots/d10-gh-authorized.png)
+
+次に、プロジェクトフォルダーで以下のコマンドを実行し、ローカルリポジトリを作成し、GitHubにプッシュします。
+```
+git init
+git switch -c main
+git config user.name "githubのユーザー名に置き換えてください"
+git config user.email "githubのメールアドレスに置き換えてください"
+gh repo create amplify-vue-ts-app --private --source=. --remote=origin --description="Amplify Vue3 + TypeScript Sample App"
+# 対話が出る場合は「Push an existing local repository to GitHub? → Yes」
+```
+オプションの説明:
+- `--private`: プライベートリポジトリを作成
+- `--source=.`: カレントディレクトリをリポジトリとして使用
+- `--remote=origin`: リモートURL名を`origin`に設定
+- `--description="..."`: リポジトリの説明を設定
+以下の手順でGitHub上にリポジトリが作成されることを確認できます。
+![gh-repo-create](../images/screenshots/d10-git-repos.png)
+![gh-repo-created](../images/screenshots/d10-gh-repo-created.png)
+
+### Step 2: ソースコードのコミットとプッシュ
+以下のコマンドでソースコードをコミットし、GitHubにプッシュ
+```
+git add .
+git commit -m "最初のコミット"
+git push origin main
+```
+リポジトリの内容がGitHubに反映されていることを確認します。
+![gh-push](../images/screenshots/d10-gh-push.png)
+
+### gitの基本コマンド
+- `git status`: 変更されたファイルの状態を確認
+- `git add <ファイル名>`: 変更をステージングエリアに追加、すべての変更を追加する場合は`git add .`
+- `git commit -m "メッセージ"`: ステージングエリアの変更をコミット
+- `git push origin <ブランチ名>`: ローカルのコミットをリモートリポジトリにプッシュ
+- `git pull origin <ブランチ名>`: リモートリポジトリの変更をローカルに取得
+- `git clone <リポジトリURL>`: リモートリポジトリをローカルにクローン
+- `git branch`: ブランチの一覧を表示
+- `git checkout <ブランチ名>`: 指定したブランチに切り替え
+- `git merge <ブランチ名>`: 指定したブランチを現在のブランチにマージ
+- `git log`: コミット履歴を表示
+
+###  一般的なGitのワークフロー
+
+#### 1. 変更の確認
+```
+git status
+git diff
+```
+
+#### 2. リモートリポジトリの変更を取得
+```
+git fetch origin # リモートの変更を取得
+git pull origin <ブランチ名> # 取得した変更をローカルにマージ、または
+git pull --rebase origin <ブランチ名> # 取得した変更をローカルにリベース
+```
+
+#### 2. 変更のステージング
+```
+git add <ファイル名>  # 特定のファイルをステージング
+git add .            # すべての変更をステージング
+git add -p          # インタラクティブに変更を選択してステージング
+```
+
+#### 3. 変更のコミット
+```
+git commit -m "変更内容の説明"
+git commit --amend  # 直前のコミットを修正
+```
+
+#### 4. リモートリポジトリへのプッシュ
+```
+git push --set-upstream origin <ブランチ名> # 初回のみ必要
+git push origin <ブランチ名> # 以降はこれでOK
+```
+
+#### 使い分け
+**リモートリポジトリとの同期**
+- `git fetch`: リモートの変更を取得するだけで、ローカルには影響しない
+- `git pull`: リモートの変更を取得し、ローカルにマージまたはリベースする
+
+**ブランチの統合**
+- `git merge`: 他のブランチの変更を現在のブランチに統合する
+- `git rebase`: 他のブランチの変更を現在のブランチの先頭に移動させる、履歴が直線的になる
+
+##### 下の履歴図を見てください。
+- `git merge`は、分岐した履歴をそのまま保持しますので、ローカルの変更とリモートの変更がどのように統合されたかが分かりやすいですが、履歴が複雑になることがあります。
+- `git rebase`は、分岐した履歴を直線的にしますので、履歴がシンプルになりますが、履歴の一部を書き換えるため、共有されたブランチで使用する際には注意が必要です。
+![git-merge-rebase](../images/screenshots/d10-git-merge-rebase.png)
+
+### pull requestの作成とマージ
+
+#### ブランチの作成
+まずは新しいブランチを作成し、切り替えます。
+```
+git checkout -b test-branch
+```
+コードを修正し、コミットとプッシュを行います。
+```
+git add .
+git commit -m "test-branchでの変更"
+git push --set-upstream origin test-branch
+```
+
+#### プールリクエストの作成
+GitHubのウェブサイトで、`Pull requests`タブをクリックし、`New pull request`ボタンをクリックします。  
+![gh-new-pr](../images/screenshots/d10-gh-new-pr.png)  
+![gh-select-branch](../images/screenshots/d10-gh-select-branch.png)
+
+#### プルリクエスト画面
+`Compare & pull request`ボタンをクリックし、プルリクエストのタイトルと説明を入力し、`Create pull request`ボタンをクリックします。
+![gh-create-pr](../images/screenshots/d10-gh-create-pr.png)
+プルリクエストが作成され、レビューとマージが可能になります。
+
+#### 衝突の解決
+または衝突がある場合は、`Resolve conflicts`ボタンをクリックし、衝突を解決します。
+![gh-resolve-conflicts](../images/screenshots/d10-gh-resolve-conflicts.png)
+衝突を解決したら、`Mark as resolved`ボタンをクリックし、`Commit merge`ボタンをクリックします。
+![gh-edit-conflicts](../images/screenshots/d10-gh-edit-conflicts.png)
+![gh-commit-merge](../images/screenshots/d10-commit-merge.png)
+
+#### マージ成功
+最後に、`Merge pull request`ボタンをクリックします。
+![gh-merge-pr](../images/screenshots/d10-merge-pr.png)
+
+Mainで変更が反映されていることを確認します。
+![gh-merged](../images/screenshots/d10-gh-merged.png)
+
+
+
 

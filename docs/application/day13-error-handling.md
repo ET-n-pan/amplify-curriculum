@@ -3,7 +3,44 @@
 ## 目標
 - エラーハンドリングの重要性を理解する
 - Amplifyのエラーハンドリングのベストプラクティスを学ぶ
-- 実際のコードにエラーハンドリングを実装
+- ローディングの実装
+
+## ローディング状態の管理
+ローディングコンポーネントをインストール
+```
+npm install vue-loading-overlay@^6.0 
+```
+
+## Orders2Page.vueの更新
+- 既存の`Orders2Page.vue`にローディングコンポーネントを追加します。
+- ローディング状態を管理するために、`formStore`の`isLoading`状態を使用します。
+- ローディングコンポーネントをテーブルに重ねて表示します。
+```
+<div class="vl-parent" style="max-width: 1500px;">
+    <loading :active="formStore.isLoading" :is-full-page="false"></loading>
+    <ui5-table>
+        ...
+    </ui5-table>
+</div>
+<script setup lang="ts">
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/css/index.css';
+
+...
+</script>
+```
+`addOrder`、`updateOrder`、`deleteOrders`関数で、処理の開始時に`formStore.isLoading = true`、終了時に`formStore.isLoading = false`を設定します。
+
+以下のように、オーダーを追加、更新、削除するとき、テーブルの上にローディングスピナーが表示されます。
+![loading](../images/screenshots/d13-loading.png)
+
+## 画面全体のローディング - オプショナル
+`App.vue`にすでにローディングコンポーネントが追加されています、`global-store`の`isLoading`を使用して、アプリ全体のローディング状態を管理します。
+
+ページごとに`loading`コンポーネントを追加する代わりに、ローディングコンポーネントが画面全体に表示されます。どのページにいても、`globalStore.isLoading`を`true`に設定すると、画面全体にローディングスピナーが表示されます。
+![global-loading](../images/screenshots/day13-full-page-loading.png)
+
+
 
 ## エラーハンドリングとは？
 
@@ -24,7 +61,7 @@
 
 ### 1. try-catch文の使い方
 
-```javascript
+```
 // 基本的な形
 try {
   // エラーが起きる可能性のあるコード
@@ -34,95 +71,17 @@ try {
   console.error('エラーが発生しました:', error);
 }
 ```
-
-### 2. Reactでのエラーハンドリング
-
-```javascript
-const MyComponent = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const handleSubmit = async () => {
-    try {
-      setLoading(true);
-      setError(null); // 前回のエラーをクリア
-
-      const result = await apiCall();
-      // 成功時の処理
-
-    } catch (err) {
-      setError('操作に失敗しました。もう一度お試しください。');
-    } finally {
-      setLoading(false); // 必ず実行される
-    }
-  };
-
-  if (error) {
-    return <div style={{color: 'red'}}>{error}</div>;
-  }
-
-  return (
-    // 通常の表示
-  );
-};
-```
-
-## Amplifyでのよくあるエラーとその対処法
-
-### 1. 認証エラー
-
-```javascript
-import { signIn } from 'aws-amplify/auth';
-
-const handleSignIn = async (username, password) => {
-  try {
-    await signIn({ username, password });
-  } catch (error) {
-    switch (error.name) {
-      case 'UserNotFoundException':
-        setError('ユーザーが見つかりません');
-        break;
-      case 'NotAuthorizedException':
-        setError('パスワードが間違っています');
-        break;
-      default:
-        setError('ログインに失敗しました');
-    }
-  }
-};
-```
-
-### 2. データ取得エラー
-
-```javascript
-import { generateClient } from 'aws-amplify/api';
-
-const client = generateClient();
-
-const fetchTodos = async () => {
-  try {
-    const result = await client.graphql({
-      query: listTodos
-    });
-    setTodos(result.data.listTodos.items);
-  } catch (error) {
-    console.error('データ取得エラー:', error);
-    setError('データの読み込みに失敗しました');
-  }
-};
-```
-
 ## エラーハンドリングのベストプラクティス
 
 ### 1. 適切なエラーメッセージ
 
-```javascript
-// ❌ 悪い例
+```
+// 悪い例
 catch (error) {
   setError(error.message); // 技術的すぎるメッセージ
 }
 
-// ✅ 良い例
+// 良い例
 catch (error) {
   console.error('技術的な詳細:', error); // 開発者用
   setError('保存に失敗しました。もう一度お試しください。'); // ユーザー用
@@ -131,7 +90,7 @@ catch (error) {
 
 ### 2. ローディング状態の管理
 
-```javascript
+```
 const [isLoading, setIsLoading] = useState(false);
 
 const handleAction = async () => {
@@ -148,7 +107,7 @@ const handleAction = async () => {
 
 ### 3. エラーの分類
 
-```javascript
+```
 const handleError = (error) => {
   if (error.name === 'NetworkError') {
     setError('インターネット接続を確認してください');
@@ -164,7 +123,6 @@ const handleError = (error) => {
 
 - [ ] エラーが起きても画面が真っ白にならない
 - [ ] ユーザーに分かりやすいメッセージを表示する
-- [ ] ローディング状態を適切に管理する
 - [ ] コンソールに技術的な詳細を記録する
 - [ ] エラー後も操作を続けられるようにする
 
@@ -186,9 +144,10 @@ const handleError = (error) => {
 
 **なぜ必要？**
 ユーザーが間違った値を入力した時に、事前にエラーを見つけて分かりやすく教えることができます。
+悪意のある入力も防げます。例えば、数量が負の数や文字列だった場合に負の金額になってしまうなど。
 
 **基本的なパターン：**
-```javascript
+```
 const validateForm = () => {
   const errors = [];
 
@@ -212,7 +171,7 @@ const validateForm = () => {
 - アップロード中の通信エラー
 
 **対処方法：**
-```javascript
+```
 // アップロード前の検証
 if (!file.name.endsWith('.csv')) {
   showError('CSVファイルを選択してください');
@@ -244,7 +203,7 @@ try {
 - 数値の変換エラー
 
 **対処方法：**
-```javascript
+```
 const updateOrder = async (orderId, orderData) => {
   // 1. 入力チェック（事前に防ぐ）
   if (!orderId) {
@@ -275,7 +234,7 @@ const updateOrder = async (orderId, orderData) => {
 時間のかかる処理（CSVアップロードなど）で、途中でエラーが起きた時の対応
 
 **対処方法：**
-```javascript
+```
 // 状態を細かく管理
 switch (job.status) {
   case 'PROCESSING':
@@ -302,7 +261,7 @@ switch (job.status) {
 複数のデータを処理する時、一部が失敗した場合の対応
 
 **考え方：**
-```javascript
+```
 // 悪い例：1つ失敗したら全部止める
 // 良い例：成功したものは処理を続け、結果をまとめて報告
 
@@ -332,15 +291,15 @@ showResult(`${successCount}件成功、${failCount}件失敗`);
 ## エラーハンドリングの考え方
 
 ### レベル1：エラーを隠さない
-```javascript
-// ❌ 悪い例
+```
+// 悪い例
 try {
   await riskyOperation();
 } catch (error) {
   // エラーを無視（最悪）
 }
 
-// ✅ 良い例
+// 良い例
 try {
   await riskyOperation();
 } catch (error) {
@@ -350,7 +309,7 @@ try {
 ```
 
 ### レベル2：エラーの種類を区別
-```javascript
+```
 if (error.name === 'NetworkError') {
   showError('通信エラーです');
 } else if (error.message.includes('404')) {
@@ -361,10 +320,243 @@ if (error.name === 'NetworkError') {
 ```
 
 ### レベル3：ユーザーが次にできることを示す
-```javascript
+```
 if (error.name === 'NetworkError') {
   showError('通信エラーです。接続を確認してから再試行してください');
   showRetryButton();
 }
 ```
+
+### ハンズオン: エラーハンドリング実践
+これまでの内容を踏まえ:
+1. ここまでのコードに追加したエラーハンドリングをレビューしましょう。
+2. Day11・Day12で作成したコードにエラーハンドリングを追加してみましょう。
+
+## カリキュラムで使用されているエラーハンドリングコード例
+
+ここでは、これまでのカリキュラムで実装したエラーハンドリングのコード例を分類して紹介します。実際のハンズオンでは、これらの例を参考にして自分のコードを改善してみましょう。
+
+### 1. データ同期エラーの処理
+
+**docs/application/day11-application-implementation-1.md:193-198**
+```
+// データ同期時のエラーハンドリング
+} catch (error) {
+    console.error("Sync error:", error);
+    return { success: false, message: "同期中にエラーが発生しました" };
+} finally {
+    this.isLoading = false; // 必ずローディング状態をリセット
+}
+```
+
+**ポイント：**
+- `finally`ブロックでローディング状態を確実にリセット
+- コンソールに技術的詳細、ユーザーには分かりやすいメッセージ
+
+### 2. データベース操作エラー
+
+**注文更新時のエラー処理（day11-application-implementation-1.md:277-280）**
+```
+} catch (error) {
+    console.error("Update order error:", error);
+    return { success: false, message: "更新中にエラーが発生しました" };
+}
+```
+
+**注文追加時のエラー処理（day11-application-implementation-1.md:318-320）**
+```
+} catch (error) {
+    console.error("Add order error:", error);
+    return { success: false, message: "追加中にエラーが発生しました" };
+}
+```
+
+**注文削除時のエラー処理（day11-application-implementation-1.md:345-347）**
+```
+} catch (error) {
+    console.error("Delete orders error:", error);
+    return { success: false, message: "削除中にエラーが発生しました" };
+}
+```
+
+**ポイント：**
+- 操作の種類ごとに適切なエラーメッセージを設定
+- 戻り値で成功・失敗を明確に示す
+
+### 3. バリデーション（入力検証）エラー
+
+#### 3.1 バリデーション関数の実装
+
+**完全なvalidateForm関数（day11-application-implementation-1.md:215-235）**
+```
+validateForm() {
+    const errors = [];
+
+    if (this.customer_code === null || this.customer_code.trim() === "") {
+        errors.push("顧客コードは必須です");
+    }
+
+    if (this.product_code === null || (this.product_code in productPrices) === false) {
+        errors.push("商品を選択してください");
+    }
+
+    if (this.quantity === null || parseInt(this.quantity) <= 0) {
+        errors.push("数量は1以上の数値を入力してください");
+    }
+
+    if (this.delivery_date == null || this.delivery_date.trim() === "") {
+        errors.push("納期は必須です");
+    }
+
+    return errors;
+}
+```
+
+**段階的なvalidateForm関数（day05-ui5-components-2.md:639-665）**
+```
+validateForm() {
+    const errors = [];
+
+    // 必須項目チェック
+    if (this.customer_code.trim() === "") {
+        errors.push("顧客コードは必須です");
+    }
+
+    // 商品コードの選択チェック
+    if (this.product_code === null || (this.product_code in productPrices) === false) {
+        errors.push("商品を選択してください");
+    }
+
+    // 数量の値チェック
+    if (this.quantity.trim() === "" || parseInt(this.quantity) <= 0) {
+        errors.push("数量は1以上の数値を入力してください");
+    }
+
+    // 納期の必須チェック
+    if (this.delivery_date === null || this.delivery_date.trim() === "") {
+        errors.push("納期は必須です");
+    }
+
+    return errors;
+}
+```
+
+#### 3.2 バリデーションエラーの処理
+
+**day11-application-implementation-1.md:285-290**
+```
+// フォームバリデーション結果の処理
+const validationErrors = this.validateForm();
+
+if (validationErrors.length > 0) {
+    const errorMessage = validationErrors.join('\n');
+    return { success: false, message: errorMessage };
+}
+```
+
+**day05-ui5-components-2.md:241-247**
+```
+// UI5コンポーネントでのバリデーション処理
+const validationErrors = this.validateForm();
+
+if (validationErrors.length > 0) {
+    const errorMessage = validationErrors.join('\n');
+    return errorMessage;
+}
+```
+
+**ポイント：**
+- **段階的チェック**：必須項目 → 形式チェック → ビジネスルールチェック
+- **分かりやすいメッセージ**：技術的な内容ではなく、ユーザーが理解できる言葉
+- **複数エラーの処理**：`join('\n')`で読みやすいメッセージにフォーマット
+- **早期リターン**：バリデーションエラーがあれば処理を続行しない
+- **型変換の考慮**：`parseInt()`や`trim()`で安全に値をチェック
+
+### 4. ファイル処理エラー
+
+**空ファイルチェック（day12-application-implementation-2.md:528）**
+```
+if (!csvContent) throw new Error('Empty CSV file');
+```
+
+**ファイル処理の包括的エラーハンドリング（day12-application-implementation-2.md:601-616）**
+```
+} catch (error) {
+    console.error(`Error processing ${key}:`, error);
+
+    // ジョブをFAILEDに更新
+    await dynamoClient.send(new PutItemCommand({
+        TableName: process.env.PROCESSING_JOB_TABLE!,
+        Item: {
+            id: { S: jobId },
+            fileName: { S: key },
+            status: { S: 'FAILED' },
+            errorMessage: { S: error instanceof Error ? error.message : String(error) },
+            endTime: { S: new Date().toISOString() },
+            updatedAt: { S: new Date().toISOString() },
+            __typename: { S: 'ProcessingJob' }
+        }
+    }));
+}
+```
+
+**ポイント：**
+- エラー情報をデータベースに永続化
+- `instanceof Error`でエラーオブジェクトの型チェック
+- 処理状態を適切に更新
+
+### 5. ポーリング処理でのエラー
+
+**day12-application-implementation-2.md:1111**
+```
+} catch (error) {
+    console.error('Polling error:', error);
+}
+```
+
+**進捗監視でのエラー処理**
+```
+case 'FAILED':
+    showError(`エラー: ${job.errorMessage}`);
+    stopPolling(); // 無限ループを防ぐ
+    break;
+```
+
+**ポイント：**
+- 長時間実行される処理では無限ループを防ぐ
+- エラー時は処理を適切に停止
+
+### 6. 一括処理での部分的失敗への対応
+
+**day13-error-handling.md:236-247で紹介した例**
+```
+let successCount = 0;
+let failCount = 0;
+
+for (const item of items) {
+    try {
+        await processItem(item);
+        successCount++;
+    } catch (error) {
+        failCount++;
+        // 個別のエラーはログに記録するが処理は続行
+        console.error(`Item ${item.id} failed:`, error);
+    }
+}
+
+// 処理結果をまとめて報告
+showResult(`${successCount}件成功、${failCount}件失敗`);
+```
+
+**ポイント：**
+- 1つの失敗で全体を止めない
+- 成功・失敗の件数を集計して報告
+- 部分的な成功も価値があることを伝える
+
+
+### 改善のヒント
+1. **段階的に改善**：完璧を目指さず、まずは基本的なtry-catchから始める
+2. **ユーザー視点**：技術的なエラーメッセージをユーザー向けに翻訳する
+3. **状態管理**：エラー後もアプリケーションが正常に動作するよう状態を適切に管理する
+4. **ログ記録**：デバッグ時に役立つよう、詳細な情報をコンソールに記録する
 
