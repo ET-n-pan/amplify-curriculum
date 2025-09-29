@@ -656,18 +656,22 @@ const columnDefs = ref([
 **ハンズオンに進む前に、コードをレビューし、修正した部分を理解してください。**
 
 
-### ハンズオン 1:　フィルターとソート実装
+## ハンズオン 1:　フィルターとソート実装
 次のステップで、フロントエンドで注文のフィルターとソート機能を実装します。まずはフィルターとソートのUIを追加し、その後にロジックを実装します。
 
 `/src/pages/Orders2Page.vue`の注文一覧テーブルの上にフィルターとソートのUIを追加します。
 ![フィルターとソートUI](../images/screenshots/day11-filter-sort-ui.png)
 
-#### ヒント
+### ヒント
 
-- オーダー注文のセクションに参照してください。
+- 注文入力のセクションを参考に、フィルタ・ソートのセクションを追加してください。
 - `reactive`を使用してフィルターとソートの状態を管理します。
-    - 
-    ```
+    - `filters`オブジェクトで顧客コード、商品コード、最小数量のフィルター条件を管理します。
+    - `sortConfig`オブジェクトでソートするフィールドと方向を管理します。
+    - v-modelを使用してUIコンポーネントと状態をバインドしてください。
+
+    ```Typescript
+    // Orders2Page.vue
     // フィルターとソートの状態管理
     const filters = reactive({
         // 顧客コードフィルター
@@ -682,33 +686,35 @@ const columnDefs = ref([
         field: '',
         // ソート方向 'asc' or 'desc' (昇順 or 降順)
         direction: 'asc' as 'asc' | 'desc'
-});　```
-    - `filters`オブジェクトで顧客コード、商品コード、最小数量のフィルター条件を管理
-    - `sortConfig`オブジェクトでソートするフィールドと方向を管理
-    - v-modelを使用してUIコンポーネントと状態をバインド
-- 表示: `{{ formStore.filteredOrders.length }} / 全体: {{ formStore.ordersCount }}`
-- 最終同期: `{{ formStore.lastSyncTimeString }}`
-    - getterを使用して、関数をプロパティのように扱う
-- フィルターとソートの適用は`formStore`の`applyFiltersAndSort`関数で行う
-- **filteredOrders**を使用して表示
-	- `v-for="order in formStore.filteredOrders"`
-    - `allOrders`と`filteredOrders`を分離し、フィルターとソート後のデータを`filteredOrders`に格納
-    - `clearCache`、`Initialize`、`syncWithServer`関数は`filteredOrders`を更新
-    - `updateOrder`、`addOrder`、`deleteSelectedOrders`関数は`filteredOrders`を更新、詳細は既存の`allOrders`の更新ロジックを参考
-    - 
-- ソートは`Array.prototype.sort`を使用して実装
-    - data.sort((a, b) => { ... }), リターン値は{-1,0,1}
-    - -1はaがbより前、1はaがbより後、0は同じ
+    });
+    ```
+
+- 表示件数・全体件数を"表示: n / 全体: N"のように表示します。  
+  表示件数は`{{ formStore.filteredOrders.length }}`から、全体件数は`{{ formStore.ordersCount }}`から取得します。  
+  getterに定義した関数の処理結果はプロパティと同様に参照することができます。
+- 最終同期時刻を表示します。  
+  同様に、getter定義した関数を利用して、"最終同期: `{{ formStore.lastSyncTimeString }}`"と記述します。
+- フィルターとソートの適用は`formStore`の`applyFiltersAndSort`関数で行います。
+- フィルターとソートを適用した結果は`formStore`の`filteredOrders`を使用して表示します。
+	- オーダー一覧で繰り返し表示するデータを`v-for="order in formStore.filteredOrders"`に変更します。
+    - `allOrders`と`filteredOrders`を分離し、フィルターとソート後のデータを`filteredOrders`に格納します。
+    - `clearCache`、`Initialize`、`syncWithServer`関数は`filteredOrders`を更新します。
+    - `updateOrder`、`addOrder`、`deleteSelectedOrders`関数は`filteredOrders`を更新します。  
+    詳細は既存の`allOrders`の更新ロジックを参考にしてください。
+- ソートは`Array.prototype.sort`を使用して実装します。  
+  data.sort((a, b) => { ... })のように利用します。  
+  この時、sortへ渡す関数は要素a,bを比較した結果のリターン値が{-1,0,1}となるようにします。
+    - -1はaがbより前、1はaがbより後、0は同じであることを意味します。
     - 昇順: a < b -> -1, a > b -> 1
     - 降順: a < b -> 1, a > b -> -1
-- フィルターは`Array.prototype.filter`を使用して実装
-    - data.filter(item => { ... })
-    - 条件に合う場合はtrue、合わない場合はfalseを返す
-    - 複数条件を組み合わせる場合は論理演算子を使用
+- フィルターは`Array.prototype.filter`を使用して実装します。
+    - data.filter(item => { ... })のように利用します。
+    - filterへ渡す関数は、配列の要素（item）がフィルタ条件に合う場合はtrue、合わない場合はfalseを返すように定義します。
+    - 複数条件を組み合わせる場合は論理演算子を使用してください。
     
 <details>
 <summary>解答例</summary>
-`Orders2Page.vue`のコードを以下のコードを追加してください。
+`Orders2Page.vue`に以下のコードを追加してください。
 ```
 	<!-- フィルタリング・ソートパネル -->
     <ui5-panel header-text="フィルタ・ソート" style="max-width: 1500px; margin-bottom: 10px;">
@@ -773,6 +779,20 @@ const columnDefs = ref([
         ...
     </ui5-table-row>
 
+// <省略>
+// フィルタリングとソートの状態管理
+// reactiveを使用して、オブジェクト内容が変更されたときにリアクティブに反応するようにする
+const filters = reactive({
+    customer_code: '',
+    product_code: '',
+    min_quantity: ''
+});
+const sortConfig = reactive({
+    field: '',
+    direction: 'asc' as 'asc' | 'desc'
+});
+// <省略>
+
 // サーバーから最新データを取得
 const refreshFromServer = async () => {
     const result = await formStore.syncWithServer();
@@ -797,6 +817,7 @@ const clearFilters = () => {
     sortConfig.direction = 'asc';
     applyFilters();
 };
+
 ```
 `form-store.ts`の`applyFiltersAndSort`関数を以下のコードに置き換えてください。
 ```
@@ -868,36 +889,38 @@ this.filteredOrders = this.filteredOrders.filter((order: { ID: string; }) =>
 </details>
 &nbsp;
 
-#### 解説
 
-- フィルターとソートのUIを追加し、`filters`と`sortConfig`で状態を管理
-- `applyFilters`関数でフィルターとソートを適用し、`formStore.applyFiltersAndSort`を呼び出し
-    - `nextTick`を使用して状態更新後にフィルターを適用、UIの反映を確実に
-- `clearFilters`関数でフィルターとソート条件をリセット
-- `formStore`の`applyFiltersAndSort`関数でフィルターとソートのロジックを実装
-    - `Array.prototype.filter`を使用して顧客コード、商品コード、最小数量でフィルタリング
-    - `Array.prototype.sort`を使用して指定されたフィールドと方向でソート
-- フィルターとソートの適用後、`filteredOrders`に結果を設定し、表示を更新
-- 注文一覧表示を`formStore.allOrders`から`formStore.filteredOrders`に変更し、フィルターとソートの結果を反映
-- フィルターとソートのUIは`ui5-panel`内に配置し、フォームアイテムとして各フィルター条件とソート条件を追加
-- フィルターとソートの適用は、各入力フィールドの`@input`または`@change`イベントでトリガー
-- フィルターとソートの状態は`reactive`で管理し、UIと双方向バインディング
-- フィルターとソートのクリアボタンを追加し、すべての条件をリセットして再適用
-- フィルターとソートの適用状況を表示する情報セクションを追加し、現在の表示件数と最終同期時間を表示
-- サーバーから最新データを取得する「更新」ボタンを追加し、`formStore.syncWithServer`を呼び出してデータを同期
+### 解説
 
-## トラブルシューティング
-- フィルターやソートが正しく動作しない場合、`allOrders`と`filteredOrders`の状態を確認
+- フィルターとソートのUIは`ui5-panel`内に配置し、フォームアイテムとして各フィルター条件とソート条件を追加しています。
+- フィルターとソートの状態は`filters`と`sortConfig`のオブジェクトで管理し、これらを`reactive`と指定することで、UIと双方向バインディングしています。
+- フィルターとソートの適用は、各入力フィールドの`@input`または`@change`イベントでトリガーします。
+- `applyFilters`関数でフィルターとソートを適用し、`formStore.applyFiltersAndSort`を呼び出します。  
+  `nextTick`を使用してモデルの状態を更新した後にフィルターを適用、UIの変更内容の反映を確実にしています。
+- `formStore`の`applyFiltersAndSort`関数でフィルターとソートのロジックを実装しています。
+    - `Array.prototype.filter`を使用して顧客コード、商品コード、最小数量でフィルタリングを実装しています。
+    - `Array.prototype.sort`を使用して指定されたフィールドと方向でのソートを実装しています。
+- フィルターとソートの適用後、`filteredOrders`に結果を設定し、表示を更新します。
+- 注文一覧の表示対象を全データである`formStore.allOrders`からフィルタ・ソート結果を適用したデータである`formStore.filteredOrders`に変更し、フィルターとソートの結果を反映しています。
+- フィルターとソートのクリアボタンを追加し、すべての条件をリセットして再適用でるようにしています。  
+  `clearFilters`関数でフィルターとソート条件をリセットしています。
+- フィルターとソートの適用状況を表示する情報セクションを追加し、現在の表示件数と最終同期時間を表示しています。
+- サーバーから最新データを取得する「更新」ボタンを追加し、`formStore.syncWithServer`を呼び出してデータを同期しています。
+
+### 確認ポイント
+- フィルターを使用して、顧客コード、商品コード、最小数量で注文を絞り込むと、表示が更新されることを確認します。
+	- ![filter-applied](../images/screenshots/day11-filter-applied.png)
+- ソートを使用して、指定したフィールドと方向で注文が並び替えられることを確認
+	- ![sort-applied](../images/screenshots/day11-sort-applied.png)
+- フィルターとソートのクリアボタンをクリックすると、すべての条件がリセットされ、全注文が表示されること
+
+### トラブルシューティング
+- フィルターやソートが正しく動作しない場合、`allOrders`と`filteredOrders`の状態を確認してください。
     - `console.log`を使用してデバッグ
+      出力結果はF12開発者ツールのコンソールから確認可能。
     - `applyFiltersAndSort`関数内でフィルターとソートの結果をログ出力
 - 商品コードのフィルターが正しく動作しない場合、`nextTick`を使用して状態更新後にフィルターを適用
 - 最終同期時間が正しく表示されない場合、`lastSyncTimeString`のgetterを確認
 - ボタンの配置が崩れる場合、CSSスタイルを調整し、`flex`レイアウトを使用して整列
 
 
-### 確認ポイント
-- フィルターを使用して、顧客コード、商品コード、最小数量で注文を絞り込むと、表示が更新されることを確認
-	- ![filter-applied](../images/screenshots/day11-filter-applied.png)
-- ソートを使用して、指定したフィールドと方向で注文が並び替えられることを確認
-	- ![sort-applied](../images/screenshots/day11-sort-applied.png)
-- フィルターとソートのクリアボタンをクリックすると、すべての条件がリセットされ、全注文が表示されること
