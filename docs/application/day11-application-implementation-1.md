@@ -12,11 +12,14 @@
 
 
 ## Step 1: コードベースの整理
-次のステップで機能追加を行う前に、コードベースを整理します。コードの可読性と保守性を向上させるために、以下の整理を行います。
+次のステップで機能追加を行う前に、コードベースを整理します。  
+コードの可読性と保守性を向上させるために、以下の整理を行います。
+
 ### `/lib/UI5FormComp.js`と`/src/pages/Orders2Page.vue`インポートの修正
 `/src/lib/UI5FormComp.js`を更新し、UI5 Web Componentsのインポートを行います。
-```
+```TypeScript
 // UI5 Web Componentsのインポート
+// /src/lib/UI5FormComp.js
 import "@ui5/webcomponents/dist/Avatar.js";
 import "@ui5/webcomponents/dist/Input.js";
 import "@ui5/webcomponents/dist/Button.js";
@@ -66,17 +69,17 @@ import "@ui5/webcomponents-fiori/dist/illustrations/NoData.js";
 import "@ui5/webcomponents-icons/dist/AllIcons.js";
 ```
 
-`/src/pages/Orders2Page.vue`を更新し、UI5 Web Componentsのインポートを削除します。
-```
+`/src/pages/Orders2Page.vue`に`UI5FormComp`のimportを追加し、重複するUI5 Web Componentsのインポートを削除します。
+```TypeScript
 // UI5 Web Componentsのインポートを削除
 // 以下を追加
 import "@/lib/UI5FormComp";
 ```
 
 ### `/src/stores/form-store.ts`と`/src/pages/Orders2Page.vue`の修正
-フロントエンド処理とデータ処理を分離するために、`/src/stores/form-store.ts`にロジックを移動します。
-`/src/stores/form-store.ts`に以下のコードを書き換えます。
-```
+フロントエンド処理とデータ処理を分離するために、`/src/stores/form-store.ts`にロジックを移動します。  
+`/src/stores/form-store.ts`のコードを以下のように書き換えます。
+```TypeScript
 // stores/form-store.ts
 import { defineStore } from "pinia";
 import type { Schema } from "../../amplify/data/resource";
@@ -375,7 +378,7 @@ export const useFormStore = defineStore("form", {
     - 関数パラメータの型を明示的に定義
     - `as Date | null`のように状態の型を定義
 
-`/src/pages/Orders2Page.vue`に以下のコードを書き換えます。
+`/src/pages/Orders2Page.vue`のコードを以下のように書き換えます。
 ```
 <template>
   	<div class="mx-5 my-5">
@@ -516,7 +519,142 @@ const updateOrder = async (orderId: string, updatedOrder: any) => {
 - UI5コンポーネントのイベントハンドラで`formStore`の関数を呼び出し
 - `onMounted`フックで`formStore.initialize()`を呼び出し、初期データを取得
 
-**次に進める前に、コードをレビューし、修正した部分を理解してください。**
+
+### `/src/components/base/AgGridTable.vue`の修正
+同様に、`/src/components/base/AgGridTable.vue`も以下のように書き換え、`onMounted`フックで`formStore.initialize()`により初期データを取得するようにします。
+
+```
+<template>
+  <div class="mt-20 mx-5">
+    <ui5-title level="H2" size="H2">AgGridTable</ui5-title>
+    <ag-grid-vue
+      :columnDefs="columnDefs"
+      :headerHeight="30"
+      :rowHeight="35"
+      :rowData="formStore.allOrders"
+      :defaultColDef="defaultColDef"
+      :theme="theme"
+      style="height: 66vh"
+    ></ag-grid-vue>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { AgGridVue } from "ag-grid-vue3";
+import { themeAlpine, AllCommunityModule, ModuleRegistry } from "ag-grid-community";
+import "@ui5/webcomponents/dist/Title.js";
+import { useFormStore } from "@/stores/form-store";
+
+onMounted(async () => {
+  console.log("Initializing form store...");
+  await formStore.initialize();
+});
+
+// コミュニティ版のモジュール登録
+ModuleRegistry.registerModules([AllCommunityModule]);
+const theme = ref(themeAlpine);
+
+// フォームストアの使用
+const formStore = useFormStore();
+
+// Emits for parent component
+const emit = defineEmits(['selection-changed']);
+
+// デフォルトのカラム定義
+const defaultColDef = {
+  sortable: true,
+  filter: true,
+  resizable: true,
+  editable: true
+};
+
+// 通貨文字列を数値に変換する関数
+const parseCurrency = (val: any) => {
+  if (typeof val === "string") {
+    return parseFloat(val.replace(/[¥,]/g, "")) || 0;
+  }
+  return val || 0;
+};
+
+// 数値を通貨形式の文字列に変換する関数
+const formatCurrency = (val: any) => {
+  const num = parseFloat(val);
+  if (isNaN(num)) return "";
+  return `¥${num.toLocaleString()}`;
+};
+
+const recalculateEstimateCost = (params: any) => {
+  const data = params.data;
+  const quantity = parseCurrency(data.quantity);
+  const unitPrice = parseCurrency(data.unit_price);
+  data.estimated_cost = quantity * unitPrice;
+  // テーブルとストアの両方を更新
+  params.api.applyTransaction({ update: [data] });
+  formStore.updateOrder(data.ID, data);
+};
+
+const columnDefs = ref([
+  {
+    headerName: "注文ID",
+    field: "ID",
+    flex: 1,
+    minWidth: 120
+  },
+  {
+    headerName: "顧客コード",
+    field: "customer_code",
+    flex: 1,
+  },
+  {
+    headerName: "商品コード",
+    field: "product_code",
+    flex: 1,
+  },
+  {
+    headerName: "数量",
+    field: "quantity",
+    flex: 1,
+    editable: true,
+    type: 'numericColumn',
+    onCellValueChanged: recalculateEstimateCost,
+  },
+  {
+    headerName: "単価",
+    field: "unit_price",
+    flex: 1,
+    editable:true,
+    type: 'numericColumn',
+    valueFormatter: (params: any) => formatCurrency(params.value),
+    valueParser: (params: any) => parseCurrency(params.newValue),
+    onCellValueChanged: recalculateEstimateCost,
+  },
+  {
+    headerName: "見積り",
+    field: "estimated_cost",
+    flex: 1,
+    type: 'numericColumn',
+    valueFormatter: (params: any) => formatCurrency(params.value),
+    valueParser: (params: any) => parseCurrency(params.newValue),
+    onCellValueChanged: recalculateEstimateCost,
+  },
+  {
+    headerName: "納期",
+    field: "delivery_date",
+    flex: 1,
+  },
+  {
+    headerName: "作成日時",
+    field: "created_at",
+    flex: 1,
+  }
+]);
+
+</script>
+```
+
+**ハンズオンに進む前に、コードをレビューし、修正した部分を理解してください。**
+
 
 ### ハンズオン 1:　フィルターとソート実装
 次のステップで、フロントエンドで注文のフィルターとソート機能を実装します。まずはフィルターとソートのUIを追加し、その後にロジックを実装します。
