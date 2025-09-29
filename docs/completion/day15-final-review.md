@@ -1,159 +1,44 @@
 # Day 15: 最終レビューとGitデプロイ
 
-## 学習目標
+## ゴール
+!!! success "Day 15 Goals"
+    - 15日間の学習内容の総復習
+    - GitHubを使ったコード管理とAWS Amplifyへのデプロイ
+    - 最終プロジェクトの完成と振り返り
+    - 現システムの制限事項と今後の学習方向性の理解
 
-この日の終わりには、以下のことができるようになります：
 
-- コードレビューと最適化の完了
-- 本番環境への実アプリケーションデプロイ
-- モニタリングとロギングの設定
-- 最終アーキテクチャの文書化
-- 将来の改善と保守の計画
-
-## 15日間カリキュラム総括
-
-### 基盤構築フェーズ (Day 1-3)
-
-**Day 1: 開発環境のセットアップ**
-- Node.js、AWS CLI、VS Codeなどの必要ツールのインストール
-- Vue 3 + TypeScript プロジェクトの作成
-- 開発環境の基礎構築
-
-**Day 2: AWS Amplify Gen2の基盤**
-- Amplifyの基本概念とGen2アーキテクチャの理解
-- Amplifyサンドボックス環境の構築
-- プロジェクト構成とbackend.tsの設定
-
-**Day 3: 認証システム (Amazon Cognito)**
-- Vue Routerによるページ遷移の実装
-- Amazon Cognitoを使った認証機能の構築
-- ユーザー管理とセキュアなセッション管理
-
-### UI開発フェーズ (Day 4-6)
-
-**Day 4: UI5 Web Components基礎**
-- UI5コンポーネントのインストールと設定
-- ナビゲーションバーとサイドバーの実装
-- ユーザーメニューとレイアウト構築
-
-**Day 5: UI5 Web Components応用**
-- Piniaを使った状態管理の実装
-- 複雑なフォームコンポーネントの構築
-- データの永続化（localStorage）とリアクティビティ
-- 入力検証とエラー防止機能
-
-**Day 6: Ag-Gridテーブル**
-- 高機能なデータテーブルの実装
-- セル編集機能とエクセルライクな操作性
-- 自動計算機能とリアルタイム更新
-
-### データ管理フェーズ (Day 7-10)
-
-**Day 7: HTTP APIとSAP ODataの基礎**
-- RESTful APIとODataプロトコルの理解
-- HTTPメソッド（GET、POST、PATCH、DELETE）の実践
-- クエリオプション（$filter、$orderby、$top等）の活用
-- Rest Clientを使った実際のAPI操作
-
-**Day 8: Amplify Dataの基本**
-- GraphQL APIとしてのAmplify Dataの理解
-- データスキーマの定義とカスタムクエリの実装
-- HTTP DataSourceとしてのOData統合
-- TypeScript型安全性の確保
-
-**Day 9: バックエンド連携① (CRUD基本)**
-- Create（作成）とRead（読み取り）機能の実装
-- フロントエンドとバックエンドの連携
-- 楽観的更新による UX 改善
-
-**Day 10: バックエンド連携② (CRUD完成)**
-- Update（更新）とDelete（削除）機能の実装
-- データの整合性管理
-- エラーハンドリングと競合状態の対応
-- GitHubを使ったソースコード管理
-
-### アプリケーション開発フェーズ (Day 11-14)
-
-**Day 11: アプリケーション機能実装①**
-- コードベースの整理とリファクタリング
-- フィルターとソート機能の実装
-- パフォーマンスとコード品質の向上
-
-**Day 12: アプリケーション機能実装②**
-- ページネーション機能の実装
-- CSV一括アップロード機能の構築
-- S3、Lambda、SQSを使った非同期処理システム
-- DynamoDBでの処理状況管理
-
-**Day 13: エラーハンドリング**
-- 包括的なエラーハンドリング戦略
-- ユーザーフレンドリーなエラーメッセージ
-- バリデーション、ファイル処理、データベース操作のエラー対応
-- 非同期処理とプログレス管理
-
-**Day 14: 売上ページとデータビジュアライゼーション**
-- Chart.jsを使ったデータ可視化
-- 動的なグラフ表示機能
-- 売上分析とレポート機能
-
-## 最終アプリケーション概要
-
-![最終アプリケーションアーキテクチャ](../images/diagrams/final-application-architecture-placeholder.png)
-
-### 技術スタック
-
-**フロントエンド**
-- Vue.js 3 with Composition API
-- TypeScript
-- UI5 Web Components
-- Ag-Grid
-- Chart.js
-- Pinia（状態管理）
-- Vue Router
-
-**バックエンド**
-- AWS Amplify Gen2
-- AWS AppSync（GraphQL API）
-- AWS Lambda（サーバーレス関数）
-- Amazon Cognito（認証）
-- Amazon S3（ファイルストレージ）
-- Amazon SQS（メッセージキュー）
-- Amazon DynamoDB（NoSQLデータベース）
-
-**外部統合**
-- SAP OData API
-- RESTful API統合
-
+## 15日間の学習内容の総復習
+この15日間のトレーニングプログラムでは、以下の主要なトピックと技術を学びました：
 ### 主要機能
 
 1. **認証システム**
-   - ユーザー登録・ログイン
-   - セキュアなセッション管理
-   - 多言語対応（日本語）
+      - ユーザー登録・ログイン
+      - セキュアなセッション管理
+      - 多言語対応（日本語）
 
 2. **注文管理機能**
-   - 注文の作成、更新、削除
-   - リアルタイムデータ同期
-   - フィルタリング・ソート機能
-   - ページネーション
+      - 注文の作成、更新、削除
+      - リアルタイムデータ同期
+      - フィルタリング・ソート機能
+      - ページネーション
 
 3. **データ可視化**
-   - インタラクティブなテーブル表示
-   - 動的グラフとチャート
-   - 売上分析レポート
+      - インタラクティブなテーブル表示
+      - 動的グラフとチャート
+      - 売上分析レポート
 
 4. **ファイル処理**
-   - CSV一括アップロード
-   - 非同期バッチ処理
-   - 処理状況のリアルタイム追跡
+      - CSV一括アップロード
+      - 非同期バッチ処理
+      - 処理状況のリアルタイム追跡
 
 5. **エラーハンドリング**
-   - 包括的なエラー処理
-   - ユーザーフレンドリーなメッセージ
-   - 復旧機能
+      - 包括的なエラー処理
+      - ユーザーフレンドリーなメッセージ
+      - 復旧機能
 
 ## 習得したスキルセット
-
 このカリキュラムを通じて、以下のスキルを習得しました：
 
 ### フロントエンド開発
@@ -172,14 +57,75 @@
 ### クラウドサービス
 - **AWS Amplify**: フルスタックアプリケーションの開発・デプロイ
 - **AWS サービス統合**: S3、Lambda、SQS、DynamoDB、Cognitoの連携
-- **インフラストラクチャ as Code**: CDKを使ったインフラ管理
 
-### エンタープライズ統合
-- **SAP連携**: ODataプロトコルを使ったSAPシステム統合
-- **データ変換**: 異なるシステム間でのデータフォーマット変換
-- **レガシーシステム統合**: 既存システムとの連携パターン
 
-![アプリケーションデプロイメントスクリーンショット](../images/screenshots/final-deployment-placeholder.png)
+## アプリケーションのAWS Amplifyへのデプロイ
+### package.jsonのbuildスクリプトの確認
+まず、`package.json`ファイルを開き、`build`スクリプトが正しく設定されていることを確認します。以下のようになっているはずです：
+```
+"scripts": {
+    "dev": "vite",
+    "build": "vite build",　// ここを確認、vue-tsc -bを削除、vite buildのみにする
+    "preview": "vite preview"
+  },
+```
+
+### AWS Amplifyコンソールでの設定
+
+#### 1.新しいアプリの作成
+AWS Amplifyコンソールにログインし、「新しいアプリを作成」をクリックします。
+![Amplifyコンソールの新しいアプリ作成](../images/screenshots/day15-amplify-create-app.png)
+
+#### 2.GitHubを選択
+リポジトリプロバイダーとして「GitHub」を選択し、次に進みます。
+![GitHub接続](../images/screenshots/day15-amplify-github-connect.png)
+
+#### 3.リポジトリとブランチの選択
+まず、GitHubアカウントをAmplifyに接続します。次に、デプロイしたいリポジトリとブランチを選択します。
+![GitHub-Account-Connection](../images/screenshots/day15-account-connection.png)
+![Github-install-amplify](../images/screenshots/day15-amplify-github-install.png)
+
+ログイン後、リポジトリを選択しますか、全リポジトリのアクセスを許可しますかを選択します。
+![Amplify-Select-Repo](../images/screenshots/day15-amplify-select-repo.png)
+![Amplify-Select-Branch](../images/screenshots/day15-amplify-select-branch.png)
+#### 4.ビルド設定の確認
+Amplifyは自動的にビルド設定を検出しますが、「YMLファイルを編集」をクリックして、以下のように`build`コマンドを修正します。
+```
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+```
+
+![Amplify-edit-yml](../images/screenshots/day15-amplify-edit-yml.png)
+
+#### 5.デプロイの開始
+設定が完了したら、「保存してデプロイ」をクリックします。Amplifyがビルドとデプロイを開始します。
+![Amplify-Deploy](../images/screenshots/day15-amplify-deploy.png)
+#### 6.デプロイの進行状況の確認
+デプロイの進行状況はAmplifyコンソールで確認できます。ビルドが成功すると、「デプロイ済み」と表示されます。
+![Amplify-Build-Success](../images/screenshots/day15-amplify-build-success.png)
+#### 7.アプリケーションのアクセス
+デプロイが完了すると、提供されたURLをクリックしてアプリケーションにアクセスできます。従来のローカル環境とは異なり、インターネット上でアプリケーションが利用可能になります。
+![Amplify-App-URL](../images/screenshots/day15-amplify-app-url.png)
+
+#### 8. アプリケーションの確認
+提供されたURLをクリックして、アプリケーションが正しくデプロイされていることを確認します。すべての機能が期待通りに動作することを確認してください。
+
+#### 9. アプリケーションの更新
+アプリケーションに変更を加えた場合、変更をGitHubリポジトリにプッシュするだけで、Amplifyが自動的に再ビルドと再デプロイを行います。これにより、継続的なデリバリーが実現されます。
 
 ## 総括
 
