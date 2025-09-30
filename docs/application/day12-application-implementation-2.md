@@ -8,7 +8,7 @@
     - Lambda関数でODataバッチ処理の実装
 
 
-## ページングの実装
+## Step1: ページングの実装
 以下のようにページングを実装します。
 ![paging](../images/screenshots/d12-paging.png)
 
@@ -458,7 +458,7 @@ amplify-vue-ts-project/
 │        |── updateOrder.js
 │   ├── storage/                # S3バケット定義フォルダー
 │        |── resource.ts
-│   ├── function/               # Lambda関数定義フォルダー
+│   ├── functions/               # Lambda関数定義フォルダー
 │       ├── csv-reader/         # CSV読み取り関数
 │           |── resource.ts
 │           |── handler.ts
@@ -480,7 +480,37 @@ npm install @aws-sdk/client-s3 @aws-sdk/client-sqs @aws-sdk/client-dynamodb
 npm install --save-dev @types/node
 ```
 
-### ステップ1: S3バケットの作成
+### ステップ1:  ProcessingJobテーブル追加
+`amplify/data/resource.ts`に以下のコードを追加します。
+```
+    // <省略>
+    OrderResponse: a.customType({
+      data: a.ref("Order").array(),
+      count: a.integer()
+    // })
+    // 文末のカンマを追加
+    }),
+    //////// 追加 ////////
+    ProcessingJob: a.model({
+      fileName: a.string().required(),
+      totalRows: a.integer().required(),
+      processedRows: a.integer().default(0),
+      totalBatches: a.integer(),
+      processedBatches: a.integer().default(0),
+      successfulOrders: a.integer().default(0),
+      failedOrders: a.integer().default(0),
+      status: a.enum(['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED']),
+      startTime: a.datetime().required(),
+      endTime: a.datetime(),
+      errorMessage: a.string()
+    })
+    .authorization((allow) => [allow.publicApiKey()]),
+    ///////////////////// 
+    getOrder: a
+    // <省略>
+```
+
+### ステップ2: S3バケットの作成
 `amplify/storage/resource.ts`を作成し、以下のコードを追加します。
 ```
 import { defineStorage } from '@aws-amplify/backend';
@@ -496,9 +526,9 @@ export const storage = defineStorage({
 });
 ```
 
-### ステップ2:　Lambda関数の作成
+### ステップ3: Lambda関数の作成
 #### CSV読み取り関数
-`amplify/function/csv-reader/resource.ts`を作成し、以下のLambdaリソース定義関数を追加します。
+`amplify/functions/csv-reader/resource.ts`を作成し、以下のLambdaリソース定義関数を追加します。
 ```
 import { defineFunction } from '@aws-amplify/backend';
 export const csvReader = defineFunction({
@@ -509,7 +539,7 @@ export const csvReader = defineFunction({
   resourceGroupName: 'storage'
 });
 ```
-`amplify/function/csv-reader/handler.ts`を作成し、以下のcsv読み取り、解析、SQS送信のコードを追加します。
+`amplify/functions/csv-reader/handler.ts`を作成し、以下のcsv読み取り、解析、SQS送信のコードを追加します。
 ```
 // amplify/functions/csv-reader/handler.ts
 import { S3Event } from 'aws-lambda';
@@ -630,7 +660,7 @@ export const handler = async (event: S3Event) => {
 ```
 
 #### ジョブ処理関数
-`amplify/function/job-processor/resource.ts`を作成し、以下のリスース定義関数を追加します。
+`amplify/functions/job-processor/resource.ts`を作成し、以下のリスース定義関数を追加します。
 ```
 import { defineFunction } from '@aws-amplify/backend';
 
@@ -643,7 +673,7 @@ export const jobProcessor = defineFunction({
 });
 ```
 
-`amplify/function/job-processor/handler.ts`を作成し、以下のバッチ処理関数を追加します。
+`amplify/functions/job-processor/handler.ts`を作成し、以下のバッチ処理関数を追加します。
 ```
 // amplify/functions/job-processor/handler.ts
 import { SQSEvent } from 'aws-lambda';
@@ -769,7 +799,7 @@ export const handler = async (event: SQSEvent) => {
 };
 ```
 
-### ステップ3: `backend.ts`の更新
+### ステップ4: `backend.ts`の更新
 `amplify/backend.ts`を編集し、以下のコードを書き換えます。
 ```
 // amplify/backend.ts
@@ -861,9 +891,9 @@ backend.addOutput({
 });
 ```
 
-### ステップ4: フロントエンドの実装
+### ステップ5: フロントエンドの実装
 #### コンポーネントの作成
-`src/components/UploadComponent.vue`を作成し、以下のコードを追加します
+`src/components/base/UploadComponent.vue`を作成し、以下のコードを追加します
 ```
 <template>
   <div class="upload-container">
@@ -1268,7 +1298,7 @@ import UploadComponent from "@/components/base/UploadComponent.vue";
 ```
 
 
-### ステップ5: ルーティングの追加
+### ステップ6: ルーティングの追加
 `src/router/index.ts`を編集し、以下のコードを追加します。
 ```
 {
@@ -1281,7 +1311,6 @@ import UploadComponent from "@/components/base/UploadComponent.vue";
         component: () => import("@/pages/UploadPage.vue"), //UploadPage コンポーネントを表示
       },
     ],
-  }
 }
 ```
 `src/layout/MainLayout.vue`を編集し、ナビゲーションメニューに以下のコードを追加します。
