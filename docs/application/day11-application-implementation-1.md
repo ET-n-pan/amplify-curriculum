@@ -497,8 +497,9 @@ const deleteOrder = async () => {
     showToast(result.message);
     
     if (result.success) {
-        // Clear selection
-		formStore.reset();
+      // Clear selection
+      selectionRef.value.selected = "";
+      formStore.reset();
     }
 };
 
