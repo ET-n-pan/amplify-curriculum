@@ -37,7 +37,7 @@
 
 
 ### ステップ1: UIの追加
-`src/components/OrderTable.vue`のテンプレートに以下のコードを追加します
+`src/pages/Orders2Page.vue`のテンプレートに以下のコードを追加します
 ```
 <!-- ページネーション情報・コントロール -->
 <ui5-panel header-text="ページネーション" style="max-width: 1500px; margin-bottom: 10px;">
@@ -112,7 +112,7 @@
 </ui5-panel>
 ```
 
-`<script/>`セクションに以下のコードを追加します。
+`<script>`セクションの後に以下のコードを追加します。
 ```
 <style scoped>
 .pagination-container {
@@ -157,7 +157,7 @@
 ```
 
 ### ステップ2: `Resource.ts`、`form-store.ts`の修正
-`amplify/data/resource.ts`を編集し、以下のコードを追加・書き換えます。
+`amplify/data/resource.ts`を編集し、以下のコードを追加・書き換えて、レスポンス型を`OrderResponse`に変更し、`data`と`count`を含むようにます。  
 ```
 OrderResponse: a.customType({
       data: a.ref("Order").array(),
@@ -174,7 +174,7 @@ getOrder: a
     select: a.string(),
     search: a.string(),
   })
-  .returns(a.ref("OrderResponse")) // リスポンス型をOrderResponseに変更
+  .returns(a.ref("OrderResponse")) // レスポンス型をOrderResponseに変更
   .authorization(allow => [allow.publicApiKey()]) 
   .handler(
     a.handler.custom({
@@ -183,52 +183,56 @@ getOrder: a
     })
 ),
 ```
-リスポンス型を`OrderResponse`に変更し、`data`と`count`を含むようにします。
 `src/stores/form-store.ts`を編集し、以下のコードを追加・書き換えます。
-```
-// サーバーと同期
-		async syncWithServer(): Promise<{ success: boolean; message: string }> {
-			try{
-				this.isLoading = true;
-				const result = await client.queries.getOrder({});
-				console.log("Sync result:", result);
-				if (result.data?.count) {
-					this.count = result.data.count;
-				}
-        
-        // リスポンス型をOrderResponseに変更したため、result.data.dataに変更
-				if (result.data?.data) {
-					this.allOrders = result.data.data as Array<Schema['Order']["type"]>;
-					this.filteredOrders = [...this.allOrders];
-					this.lastSyncTime = new Date();
-					this.saveOrdersToLocalStorage();
+```TypeScript
+    // <省略>
+    filteredOrders: [] as Array<Schema['Order']["type"]>,
+    // stateに以下の項目を追加します
+    count: 0,
+    // <省略>
+
+    // サーバーと同期
+    async syncWithServer(): Promise<{ success: boolean; message: string }> {
+      try {
+        this.isLoading = true;
+        const result = await client.queries.getOrder({});
+        console.log("Sync result:", result);
+        if (result.data?.count) {
+          this.count = result.data.count;
+        }
+
+        // レスポンス型をOrderResponseに変更したため、result.data.dataに変更
+        if (result.data?.data) {
+          this.allOrders = result.data.data as Array<Schema['Order']["type"]>;
+          this.filteredOrders = [...this.allOrders];
+          this.lastSyncTime = new Date();
+          this.saveOrdersToLocalStorage();
 
           // 全データを取得するためにページングで繰り返し取得
-					while (this.allOrders.length < this.count) {
-						const nextResult = await client.queries.getOrder({
-							skip: this.allOrders.length
-						});
-						if (nextResult.data?.data) {
-							this.allOrders = this.allOrders.concat(nextResult.data.data as Array<Schema['Order']["type"]>);
-							this.filteredOrders = [...this.allOrders];
-							this.saveOrdersToLocalStorage();
-						} else {
-							break;
-						}
+          while (this.allOrders.length < this.count) {
+            const nextResult = await client.queries.getOrder({
+              skip: this.allOrders.length
+            });
+            if (nextResult.data?.data) {
+              this.allOrders = this.allOrders.concat(nextResult.data.data as Array<Schema['Order']["type"]>);
+              this.filteredOrders = [...this.allOrders];
+              this.saveOrdersToLocalStorage();
+            } else {
+              break;
+            }
+          }
+          return { success: true, message: "同期に成功しました" };
+        } else {
+          return { success: false, message: "データ取得に失敗しました" };
+        }
+      } catch (error) {
+        console.error("Sync error:", error);
+        return { success: false, message: "同期中にエラーが発生しました" };
+      } finally {
+        this.isLoading = false;
+      }
+    },
 
-					}
-
-					return { success: true, message: "同期に成功しました" };
-				} else {
-					return { success: false, message: "データ取得に失敗しました" };
-				}
-			} catch (error) {
-				console.error("Sync error:", error);
-				return { success: false, message: "同期中にエラーが発生しました" };
-			} finally {
-				this.isLoading = false;
-			}
-		},
 ```
 
 
@@ -269,7 +273,7 @@ goToNextPage() { //TODO }
 ```
 
 #### ページサイズ変更の実装
-`src/components/OrderTable.vue`の`<script setup>`セクションに以下
+`src/pages/Orders2Page.vue`の`<script setup>`セクションに以下
 のコードを追加します。
 ```
 // ページサイズ変更
@@ -356,7 +360,13 @@ actions:{
     },
 }
 ```
+
 `src/pages/Orders2Page.vue`を編集します。
+```
+<!-- オーダー一覧の対象データを以下のように書き換えます -->
+<ui5-table-row v-for="order in formStore.paginatedOrders" :row-key="order.ID" :key="order.ID">
+```
+
 ```
 // ページネーション関連の関数
 const changeRowsPerPage = (event: any) => {
