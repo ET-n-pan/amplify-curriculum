@@ -134,9 +134,11 @@
 ## 学習リソース
 
 ### オンラインコース
+MDNが最も推奨されるウェブ開発学習リソースです。
 
 | プラットフォーム | コース | フォーカス |
 |----------|---------|-------|
+| **Mozilla Developer Network (MDN)** | [developer.mozilla.org](https://developer.mozilla.org) | Web標準とベストプラクティス |
 | **AWS Training** | [aws.training](https://aws.training) | AWSサービスと認定 |
 | **Vue Mastery** | [vuemastery.com](https://vuemastery.com) | Vue.js 3とエコシステム |
 | **Frontend Masters** | [frontendmasters.com](https://frontendmasters.com) | モダンWeb開発 |

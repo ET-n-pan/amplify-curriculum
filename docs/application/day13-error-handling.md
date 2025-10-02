@@ -356,9 +356,7 @@ if (error.name === 'NetworkError') {
 ```
 
 ### ハンズオン: エラーハンドリング実践
-これまでの内容を踏まえ:
-1. ここまでのコードに追加したエラーハンドリングをレビューしましょう。
-2. Day11・Day12で作成したコードにエラーハンドリングを追加してみましょう。
+これまで作っていたアプリケーションに、既に細かくエラーハンドリングが実装されています。それらを探し、理解し、お互いの認識を合わせましょう。
 
 ## カリキュラムで使用されているエラーハンドリングコード例
 
@@ -366,7 +364,7 @@ if (error.name === 'NetworkError') {
 
 ### 1. データ同期エラーの処理
 
-**docs/application/day11-application-implementation-1.md:193-198**
+**`src/stores/form-store.ts` の `syncOrders`メソッド**
 ```
 // データ同期時のエラーハンドリング
 } catch (error) {
@@ -383,7 +381,7 @@ if (error.name === 'NetworkError') {
 
 ### 2. データベース操作エラー
 
-**注文更新時のエラー処理（day11-application-implementation-1.md:277-280）**
+**注文更新時のエラー処理 - `src/stores/form-store.ts` の `updateOrder`メソッド**
 ```
 } catch (error) {
     console.error("Update order error:", error);
@@ -391,7 +389,7 @@ if (error.name === 'NetworkError') {
 }
 ```
 
-**注文追加時のエラー処理（day11-application-implementation-1.md:318-320）**
+**注文追加時のエラー処理 - `src/stores/form-store.ts` の `addOrder`メソッド**
 ```
 } catch (error) {
     console.error("Add order error:", error);
@@ -399,7 +397,7 @@ if (error.name === 'NetworkError') {
 }
 ```
 
-**注文削除時のエラー処理（day11-application-implementation-1.md:345-347）**
+**注文削除時のエラー処理 - `src/stores/form-store.ts` の `deleteSelectedOrders`メソッド**
 ```
 } catch (error) {
     console.error("Delete orders error:", error);
@@ -415,7 +413,7 @@ if (error.name === 'NetworkError') {
 
 #### 3.1 バリデーション関数の実装
 
-**完全なvalidateForm関数（day11-application-implementation-1.md:215-235）**
+**完全なvalidateForm関数 - `src/stores/form-store.ts` の `validateForm`メソッド**
 ```
 validateForm() {
     const errors = [];
@@ -440,38 +438,9 @@ validateForm() {
 }
 ```
 
-**段階的なvalidateForm関数（day05-ui5-components-2.md:639-665）**
-```
-validateForm() {
-    const errors = [];
-
-    // 必須項目チェック
-    if (this.customer_code.trim() === "") {
-        errors.push("顧客コードは必須です");
-    }
-
-    // 商品コードの選択チェック
-    if (this.product_code === null || (this.product_code in productPrices) === false) {
-        errors.push("商品を選択してください");
-    }
-
-    // 数量の値チェック
-    if (this.quantity.trim() === "" || parseInt(this.quantity) <= 0) {
-        errors.push("数量は1以上の数値を入力してください");
-    }
-
-    // 納期の必須チェック
-    if (this.delivery_date === null || this.delivery_date.trim() === "") {
-        errors.push("納期は必須です");
-    }
-
-    return errors;
-}
-```
-
 #### 3.2 バリデーションエラーの処理
 
-**day11-application-implementation-1.md:285-290**
+**`src/stores/form-store.ts` の `addOrder`メソッド内でのバリデーション**
 ```
 // フォームバリデーション結果の処理
 const validationErrors = this.validateForm();
@@ -482,7 +451,7 @@ if (validationErrors.length > 0) {
 }
 ```
 
-**day05-ui5-components-2.md:241-247**
+**UI5コンポーネントでのバリデーション処理**
 ```
 // UI5コンポーネントでのバリデーション処理
 const validationErrors = this.validateForm();
@@ -494,6 +463,7 @@ if (validationErrors.length > 0) {
 ```
 
 **ポイント：**
+
 - **段階的チェック**：必須項目 → 形式チェック → ビジネスルールチェック
 - **分かりやすいメッセージ**：技術的な内容ではなく、ユーザーが理解できる言葉
 - **複数エラーの処理**：`join('\n')`で読みやすいメッセージにフォーマット
@@ -502,12 +472,12 @@ if (validationErrors.length > 0) {
 
 ### 4. ファイル処理エラー
 
-**空ファイルチェック（day12-application-implementation-2.md:528）**
+**空ファイルチェック - `amplify/functions/csv-reader/handler.ts` の `handler`関数**
 ```
 if (!csvContent) throw new Error('Empty CSV file');
 ```
 
-**ファイル処理の包括的エラーハンドリング（day12-application-implementation-2.md:601-616）**
+**ファイル処理の包括的エラーハンドリング - `amplify/functions/csv-reader/handler.ts` の `handler`関数のcatchブロック**
 ```
 } catch (error) {
     console.error(`Error processing ${key}:`, error);
@@ -529,20 +499,21 @@ if (!csvContent) throw new Error('Empty CSV file');
 ```
 
 **ポイント：**
+
 - エラー情報をデータベースに永続化
 - `instanceof Error`でエラーオブジェクトの型チェック
 - 処理状態を適切に更新
 
 ### 5. ポーリング処理でのエラー
 
-**day12-application-implementation-2.md:1111**
+**`src/pages/Orders2Page.vue` のポーリング処理のエラーハンドリング**
 ```
 } catch (error) {
     console.error('Polling error:', error);
 }
 ```
 
-**進捗監視でのエラー処理**
+**進捗監視でのエラー処理 - `src/pages/Orders2Page.vue` のステータス処理**
 ```
 case 'FAILED':
     showError(`エラー: ${job.errorMessage}`);
@@ -551,12 +522,13 @@ case 'FAILED':
 ```
 
 **ポイント：**
+
 - 長時間実行される処理では無限ループを防ぐ
 - エラー時は処理を適切に停止
 
 ### 6. 一括処理での部分的失敗への対応
 
-**day13-error-handling.md:236-247で紹介した例**
+**一括処理の実装例（概念コード）**
 ```
 let successCount = 0;
 let failCount = 0;
