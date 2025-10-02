@@ -35,11 +35,39 @@ import 'vue-loading-overlay/dist/css/index.css';
 ![loading](../images/screenshots/d13-loading.png)
 
 ## 画面全体のローディング - オプショナル
-`App.vue`にすでにローディングコンポーネントが追加されています、`global-store`の`isLoading`を使用して、アプリ全体のローディング状態を管理します。
+ページごとに`loading`コンポーネントを追加する代わりに、`App.vue`にローディングコンポーネントと`global-store`を追加し、`global-store`の`isLoading`を使用して、アプリ全体のローディング状態を管理します。  
 
-ページごとに`loading`コンポーネントを追加する代わりに、ローディングコンポーネントが画面全体に表示されます。どのページにいても、`globalStore.isLoading`を`true`に設定すると、画面全体にローディングスピナーが表示されます。
+この場合は、ローディングコンポーネントが画面全体に表示されます。  
+どのページにいても、`globalStore.isLoading`を`true`に設定すると、画面全体にローディングスピナーが表示されます。
 ![global-loading](../images/screenshots/day13-full-page-loading.png)
 
+<details>
+<summary>実装例</summary>
+`App.vue`に以下のコードを追加してください。
+```
+<!-- App.vue -->
+<template>
+  <!-- 追加 -->
+  <loading :active="globalStore.isLoading" :is-full-page="true"></loading>
+  <!--      -->
+  <router-view />
+</template>
+
+<script setup>
+//////// 追加 ////////
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/css/index.css';
+import { useGlobalStore } from "./stores/global-store";
+const globalStore = useGlobalStore();
+//////////////////////
+</script>
+```
+
+`App.vue`と同様に、`Order2Page.vue`にも`global-store`をimportして`globalStore`インスタンスを生成するコードを追加してください。  
+その上で、`addOrder`、`updateOrder`、`deleteOrders`関数に追加した、`formStore`の`isLoading`の制御を`globalStore.isLoading`へ変更します。
+
+</details>
+&nbsp;
 
 
 ## エラーハンドリングとは？
